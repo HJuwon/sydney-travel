@@ -264,6 +264,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   transition: 0.14s;
 }
 .food-card:hover { box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+.food-card.selected { outline: 2px solid var(--coral); outline-offset: -1px; box-shadow: 0 0 0 3px rgba(216,90,48,0.15); }
 .food-emoji { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 26px; }
 .food-body { padding: 8px 10px 10px; }
 .food-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
@@ -855,14 +856,26 @@ function renderSchedule(day) {
 function renderFoodSection(day) {
   const rows = DATA.food.filter(r => Number(r.day) === day);
   if (!rows.length) return '';
+
+  // schedule 시트에서 좌표 룩업 맵 생성
+  const scheduleCoords = {};
+  DATA.schedule.forEach(s => {
+    if (s.lat && s.lng) scheduleCoords[s.name] = { lat: parseFloat(s.lat), lng: parseFloat(s.lng), addr: s.addr || '' };
+  });
+
   let html = `<div class="cat-section" data-cat="food">`;
   html += `<div class="day-heading"><h2>Day ${day} · 추천 맛집</h2></div>`;
   html += `<div class="food-grid">`;
   rows.forEach(r => {
-    html += `<div class="food-card">
+    const coords = scheduleCoords[r.name];
+    const pinCall = coords
+      ? `onclick="pinMap('${r.name.replace(/'/g,"\\'")}',{lat:${coords.lat},lng:${coords.lng}},'${coords.addr.replace(/'/g,"\\'")}',this)"`
+      : '';
+    const cursorStyle = coords ? 'cursor:pointer;' : '';
+    html += `<div class="food-card" ${pinCall} style="${cursorStyle}">
       <div class="food-emoji" style="background:#${r.bg_color || 'F5F5F5'}">${r.emoji || '🍽️'}</div>
       <div class="food-body">
-        <div class="food-name">${r.name}</div>
+        <div class="food-name">${r.name}${coords ? ' <span style="font-size:9px;color:#D85A30;font-weight:600;">📍</span>' : ''}</div>
         <div class="food-desc">${r.description || ''}</div>
         <div class="food-price">${r.price_level || ''}</div>
       </div>
@@ -947,7 +960,7 @@ const dayViews = {
   6:    { center:[-33.9399, 151.1753], zoom: 14 }
 };
 
-let map, staticMarkers = [], activeMarker = null;
+let map, staticMarkers = [], foodMarkers = [], activeMarker = null;
 let currentDay = 'all', currentCat = 'schedule';
 
 function initMap() {
@@ -977,6 +990,14 @@ function makePinIcon(color) {
   });
 }
 
+function makeFoodIcon(emoji) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:32px;height:32px;background:#D85A30;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.30);display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;">${emoji}</div>`,
+    iconSize:[32,32], iconAnchor:[16,16]
+  });
+}
+
 function renderMarkers(dayFilter) {
   staticMarkers.forEach(m => map.removeLayer(m));
   staticMarkers = [];
@@ -992,6 +1013,29 @@ function renderMarkers(dayFilter) {
     });
 }
 
+function renderFoodMarkers(dayFilter) {
+  // 기존 맛집 마커 제거
+  foodMarkers.forEach(m => map.removeLayer(m));
+  foodMarkers = [];
+
+  // schedule 시트에서 food 타입이고 좌표 있는 항목 수집
+  // + food 시트 이름과 매칭해서 emoji 가져오기
+  const foodNameToEmoji = {};
+  DATA.food.forEach(f => { foodNameToEmoji[f.name] = f.emoji || '🍽️'; });
+
+  DATA.schedule
+    .filter(r => r.type === 'food' && r.lat && r.lng)
+    .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
+    .forEach(r => {
+      const emoji = foodNameToEmoji[r.name] || '🍽️';
+      const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeFoodIcon(emoji) })
+        .addTo(map)
+        .bindTooltip(`🍴 ${r.name}`, { direction:'top', offset:[0,-14] });
+      m.on('click', () => showInfo(r.name, r.addr || ''));
+      foodMarkers.push(m);
+    });
+}
+
 /* ════════════════════════════════════════════════════
    6. UI 인터랙션
 ═══════════════════════════════════════════════════════ */
@@ -1003,6 +1047,7 @@ function selectDay(day, btn) {
   const v = dayViews[day] || dayViews['all'];
   if (map) map.flyTo(v.center, v.zoom, { duration: 1.0 });
   renderMarkers(day);
+  if (currentCat === 'food') renderFoodMarkers(day);
   updateView();
 }
 
@@ -1010,6 +1055,25 @@ function selectCat(cat, btn) {
   document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentCat = cat;
+  closePlace();
+
+  if (cat === 'food') {
+    // 일정 마커 숨기고 맛집 마커 표시
+    staticMarkers.forEach(m => map.removeLayer(m));
+    staticMarkers = [];
+    renderFoodMarkers(currentDay);
+    // 맛집이 분포하는 뷰로 전환 (전체 범위 fit)
+    if (foodMarkers.length > 0) {
+      const group = L.featureGroup(foodMarkers);
+      map.fitBounds(group.getBounds().pad(0.25), { duration: 0.8 });
+    }
+  } else {
+    // 맛집 마커 제거하고 일정 마커 표시
+    foodMarkers.forEach(m => map.removeLayer(m));
+    foodMarkers = [];
+    renderMarkers(currentDay);
+  }
+
   updateView();
 }
 
@@ -1051,7 +1115,7 @@ function showInfo(name, addr) {
 function closePlace() {
   document.getElementById('place-info').classList.remove('show');
   document.getElementById('gmaps-btn').classList.remove('show');
-  document.querySelectorAll('.stop-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.stop-card, .food-card').forEach(c => c.classList.remove('selected'));
   if (activeMarker && map) { map.removeLayer(activeMarker); activeMarker = null; }
 }
 
