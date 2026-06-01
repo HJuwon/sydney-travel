@@ -7,8 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- SheetJS: Excel 파일 파싱 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Google Sheets CSV 파싱용 (SheetJS 불필요) -->
 <style>
 :root {
   --teal: #1A6B5A;
@@ -518,7 +517,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .loading-bar-wrap { width: 180px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
 .loading-bar { height: 100%; background: var(--teal); border-radius: 4px; width: 0; transition: width 0.4s ease; }
 
-/* ── FILE DROP ZONE ── */
+/* ── ERROR / FILE ZONE ── */
 #file-zone {
   position: fixed; inset: 0;
   background: var(--cream);
@@ -527,34 +526,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   align-items: center; justify-content: center;
   z-index: 9998;
   gap: 20px;
+  text-align: center;
+  padding: 24px;
 }
 #file-zone.show { display: flex; }
-.drop-area {
-  width: 340px; padding: 40px;
-  border: 2px dashed var(--teal);
-  border-radius: 20px;
-  text-align: center; cursor: pointer;
-  transition: 0.15s;
-  background: var(--white);
-}
-.drop-area:hover, .drop-area.drag-over { background: var(--teal-light); }
-.drop-area svg { width: 40px; height: 40px; stroke: var(--teal); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; }
-.drop-area h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: var(--dark); }
-.drop-area p { font-size: 12px; color: var(--mid); line-height: 1.6; }
-.drop-file-name { font-size: 13px; font-weight: 600; color: var(--teal); padding: 8px 18px; background: var(--teal-light); border-radius: 100px; display: none; }
-.drop-file-name.show { display: inline-block; }
+.fz-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--dark); }
+.fz-sub { font-size: 13px; color: var(--mid); line-height: 1.6; max-width: 320px; }
 #load-btn {
   height: 40px; padding: 0 28px;
   background: var(--teal); color: #fff;
   border: none; border-radius: 10px;
   font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: 0.13s; display: none;
+  cursor: pointer; transition: 0.13s;
 }
-#load-btn.show { display: block; }
 #load-btn:hover { background: var(--teal-mid); }
-#file-input { display: none; }
-.fz-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--dark); }
-.fz-sub { font-size: 12px; color: var(--mid); }
 </style>
 </head>
 <body>
@@ -569,22 +554,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
 </div>
 
-<!-- 파일 선택 화면 (데이터 파일 없을 때) -->
+<!-- 에러 화면 (Google Sheets 로드 실패 시) -->
 <div id="file-zone">
   <div class="loading-logo" style="background:var(--teal)">
     <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
   </div>
   <div class="fz-title">Sydney Travel Plan</div>
-  <div class="fz-sub">일정 데이터 파일(sydney_travel_data.xlsx)을 불러와 주세요</div>
-  <div class="drop-area" id="drop-area" onclick="document.getElementById('file-input').click()">
-    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="12" y2="12"/><line x1="15" y1="15" x2="12" y2="12"/></svg>
-    <h3>xlsx 파일을 여기에 드래그하거나 클릭하여 선택</h3>
-    <p>sydney_travel_data.xlsx 파일을 선택하면<br>자동으로 일정이 표시됩니다</p>
-    <div class="drop-file-name" id="drop-file-name"></div>
-  </div>
-  <input type="file" id="file-input" accept=".xlsx,.xls">
-  <button id="load-btn" onclick="loadSelectedFile()">일정 불러오기</button>
-  <div style="font-size:11px;color:var(--mid);margin-top:8px;">💡 HTML 파일과 같은 폴더에 xlsx 파일을 두면 자동으로 로드됩니다</div>
+  <div class="fz-sub" id="fz-error-msg">Google Sheets 데이터를 불러오지 못했습니다</div>
+  <button id="load-btn" class="show" onclick="location.reload()" style="display:block;margin-top:8px;">다시 시도</button>
+  <div style="font-size:11px;color:var(--mid);margin-top:12px;">💡 Google Sheets 공유 설정이 <strong>링크가 있는 모든 사용자 (뷰어)</strong>인지 확인해 주세요</div>
 </div>
 
 <!-- ── APP SHELL ── -->
@@ -601,9 +579,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     </button>
     <div id="day-buttons-container" style="display:contents"></div>
     <div class="sidebar-sep"></div>
-    <div class="sb-icon" title="데이터 파일 변경" onclick="reloadFile()" style="margin-top:auto;">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-    </div>
     <div class="sb-icon" title="설정">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </div>
@@ -676,110 +651,73 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
    1. 데이터 상태
 ═══════════════════════════════════════════════════════ */
 let DATA = { schedule: [], food: [], tips: [], sights: [], map_places: [] };
-let selectedFile = null;
+
+// ── Google Sheets 설정 ──────────────────────────────
+const SHEET_ID = '1A5YDClkB7E2IlULZU3SMbgy20qIZo21Jphj-fyqAV6o';
+const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'map_places'];
 
 /* ════════════════════════════════════════════════════
-   2. 파일 로드 & 파싱
+   2. Google Sheets CSV 로드 & 파싱
 ═══════════════════════════════════════════════════════ */
 
-// 페이지 로드 시: HTML과 같은 폴더의 xlsx 자동 시도
+// CSV 텍스트 → 객체 배열
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  // 헤더 파싱 (따옴표 처리 포함)
+  const headers = splitCSVRow(lines[0]);
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const vals = splitCSVRow(lines[i]);
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h.trim()] = (vals[idx] || '').trim(); });
+    rows.push(obj);
+  }
+  return rows;
+}
+
+// RFC 4180 CSV 행 파싱 (따옴표 처리)
+function splitCSVRow(row) {
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < row.length; i++) {
+    const c = row[i];
+    if (c === '"') {
+      if (inQ && row[i+1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (c === ',' && !inQ) {
+      result.push(cur); cur = '';
+    } else {
+      cur += c;
+    }
+  }
+  result.push(cur);
+  return result;
+}
+
+// 시트 하나를 CSV로 fetch
+async function fetchSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`시트 "${sheetName}" 로드 실패 (${resp.status})`);
+  const text = await resp.text();
+  return parseCSV(text);
+}
+
+// 전체 시트 로드
 window.addEventListener('load', async () => {
   setLoadingBar(10);
+  setLoadingMsg('Google Sheets에서 데이터 불러오는 중...');
   try {
-    // 같은 폴더의 파일을 fetch로 시도
-    const resp = await fetch('sydney_travel_data.xlsx');
-    if (resp.ok) {
-      setLoadingMsg('데이터 파싱 중...');
-      setLoadingBar(40);
-      const ab = await resp.arrayBuffer();
-      parseAndRender(ab);
-    } else {
-      showFileZone();
+    const total = SHEET_NAMES.length;
+    for (let i = 0; i < total; i++) {
+      const name = SHEET_NAMES[i];
+      setLoadingMsg(`시트 로딩 중: ${name} (${i+1}/${total})`);
+      setLoadingBar(10 + Math.round((i / total) * 65));
+      DATA[name] = await fetchSheet(name);
     }
-  } catch(e) {
-    showFileZone();
-  }
-});
-
-function showFileZone() {
-  document.getElementById('loading-screen').classList.add('hidden');
-  setTimeout(() => {
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('file-zone').classList.add('show');
-  }, 400);
-}
-
-// 파일 드래그 & 드랍 / 선택
-const dropArea = document.getElementById('drop-area');
-const fileInput = document.getElementById('file-input');
-
-dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.classList.add('drag-over'); });
-dropArea.addEventListener('dragleave', () => dropArea.classList.remove('drag-over'));
-dropArea.addEventListener('drop', e => {
-  e.preventDefault();
-  dropArea.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file) setFile(file);
-});
-fileInput.addEventListener('change', () => {
-  if (fileInput.files[0]) setFile(fileInput.files[0]);
-});
-
-function setFile(file) {
-  selectedFile = file;
-  const nameEl = document.getElementById('drop-file-name');
-  nameEl.textContent = file.name;
-  nameEl.classList.add('show');
-  document.getElementById('load-btn').classList.add('show');
-}
-
-function loadSelectedFile() {
-  if (!selectedFile) return;
-  const reader = new FileReader();
-  reader.onload = e => parseAndRender(e.target.result);
-  reader.readAsArrayBuffer(selectedFile);
-  document.getElementById('file-zone').classList.remove('show');
-  document.getElementById('loading-screen').style.display = 'flex';
-  document.getElementById('loading-screen').classList.remove('hidden');
-  setLoadingMsg('데이터 파싱 중...');
-  setLoadingBar(40);
-}
-
-function reloadFile() {
-  document.getElementById('file-input').click();
-}
-
-/* ════════════════════════════════════════════════════
-   3. Excel → DATA 파싱
-═══════════════════════════════════════════════════════ */
-function parseAndRender(arrayBuffer) {
-  try {
-    setLoadingBar(55);
-    const wb = XLSX.read(arrayBuffer, { type: 'array' });
-
-    // schedule 시트
-    if (wb.SheetNames.includes('schedule')) {
-      const ws = wb.Sheets['schedule'];
-      DATA.schedule = XLSX.utils.sheet_to_json(ws);
-    }
-    // food 시트
-    if (wb.SheetNames.includes('food')) {
-      DATA.food = XLSX.utils.sheet_to_json(wb.Sheets['food']);
-    }
-    // tips 시트
-    if (wb.SheetNames.includes('tips')) {
-      DATA.tips = XLSX.utils.sheet_to_json(wb.Sheets['tips']);
-    }
-    // sights 시트
-    if (wb.SheetNames.includes('sights')) {
-      DATA.sights = XLSX.utils.sheet_to_json(wb.Sheets['sights']);
-    }
-    // map_places 시트
-    if (wb.SheetNames.includes('map_places')) {
-      DATA.map_places = XLSX.utils.sheet_to_json(wb.Sheets['map_places']);
-    }
-
-    setLoadingBar(75);
+    setLoadingBar(80);
     setLoadingMsg('화면 구성 중...');
     setTimeout(() => {
       renderAll();
@@ -796,9 +734,25 @@ function parseAndRender(arrayBuffer) {
       }, 300);
     }, 50);
   } catch(err) {
-    setLoadingMsg('❌ 파일 파싱 오류: ' + err.message);
+    setLoadingMsg('❌ 로드 오류: ' + err.message);
     console.error(err);
+    setTimeout(() => {
+      document.getElementById('loading-screen').classList.add('hidden');
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('fz-error-msg').textContent = '오류: ' + err.message;
+        document.getElementById('file-zone').classList.add('show');
+      }, 400);
+    }, 1500);
   }
+});
+
+function showFileZone() {
+  document.getElementById('loading-screen').classList.add('hidden');
+  setTimeout(() => {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('file-zone').classList.add('show');
+  }, 400);
 }
 
 function setLoadingMsg(msg) { document.getElementById('loading-msg').textContent = msg; }
