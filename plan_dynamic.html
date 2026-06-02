@@ -93,6 +93,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sb-icon:hover { background: var(--gray-light); color: var(--dark); }
 .sb-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 
+/* Info tab button in sidebar */
+.info-day-btn {
+  width: 46px; height: 48px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px;
+  transition: all 0.15s ease;
+  color: var(--mid);
+  font-family: 'DM Sans', sans-serif;
+}
+.info-day-btn:hover { background: var(--gray-light); }
+.info-day-btn.active { background: var(--amber); border-color: var(--amber); color: #fff; }
+.info-day-btn .d-num { font-size: 13px; font-weight: 700; line-height: 1; }
+.info-day-btn .d-lbl { font-size: 8.5px; font-weight: 500; line-height: 1; opacity: 0.72; letter-spacing: 0.3px; }
+.info-day-btn.active .d-lbl { opacity: 0.85; }
+
 .main-col { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 
 .topbar {
@@ -277,6 +296,147 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sight-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
 .sight-text { font-size: 11px; color: var(--mid); line-height: 1.5; }
 
+/* ══════════════════════════════
+   INFO PANEL (overlay on map)
+══════════════════════════════ */
+.info-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: var(--cream);
+  z-index: 500;
+  overflow-y: auto;
+  padding: 20px 18px 40px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.info-overlay::-webkit-scrollbar { width: 4px; }
+.info-overlay::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.info-overlay.show { display: block; }
+
+.info-section { margin-bottom: 20px; }
+.info-section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 15px; color: var(--dark);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.info-section-title span { font-size: 16px; }
+
+/* Info cards */
+.info-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.info-card-header {
+  background: var(--teal);
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+}
+.info-card-header.amber { background: var(--amber); }
+.info-card-header.coral { background: var(--coral); }
+.info-card-header.blue  { background: var(--blue);  }
+.info-card-header.gray  { background: var(--gray);  }
+.info-rows { padding: 4px 0; }
+.info-row {
+  display: flex; align-items: center;
+  padding: 8px 14px; gap: 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.info-row-label { color: var(--mid); flex-shrink: 0; min-width: 80px; font-size: 11px; }
+.info-row-value { font-weight: 500; color: var(--dark); flex: 1; }
+.info-row-value.highlight { color: var(--teal); font-weight: 700; font-size: 13px; }
+.info-row-value.coral { color: var(--coral); font-weight: 600; }
+
+/* Budget bar */
+.budget-bar-wrap {
+  padding: 12px 14px 14px;
+}
+.budget-total {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px;
+}
+.budget-total-label { font-size: 12px; color: var(--mid); font-weight: 500; }
+.budget-total-value { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--dark); }
+.budget-items { display: flex; flex-direction: column; gap: 6px; }
+.budget-item { display: flex; align-items: center; gap: 10px; }
+.budget-item-label { font-size: 11px; color: var(--mid); width: 70px; flex-shrink: 0; }
+.budget-item-bar-wrap { flex: 1; height: 8px; background: var(--gray-light); border-radius: 4px; overflow: hidden; }
+.budget-item-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+.budget-item-val { font-size: 11px; font-weight: 600; color: var(--dark); width: 90px; text-align: right; flex-shrink: 0; }
+
+/* Checklist */
+.checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.checklist-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 12px;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; transition: 0.14s;
+  user-select: none;
+}
+.checklist-item:hover { border-color: var(--border-hover); }
+.checklist-item.checked {
+  background: var(--teal-light);
+  border-color: var(--teal);
+}
+.checklist-check {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--border-hover);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: 0.14s;
+  background: var(--white);
+}
+.checklist-item.checked .checklist-check {
+  background: var(--teal); border-color: var(--teal);
+}
+.checklist-check svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; display: none; }
+.checklist-item.checked .checklist-check svg { display: block; }
+.checklist-icon { font-size: 15px; }
+.checklist-label { font-size: 12px; font-weight: 500; color: var(--dark); }
+.checklist-item.checked .checklist-label { color: var(--teal-mid); text-decoration: line-through; opacity: 0.7; }
+.checklist-progress {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; padding: 10px 14px;
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+}
+.checklist-progress-bar-wrap { flex: 1; height: 6px; background: var(--gray-light); border-radius: 3px; overflow: hidden; }
+.checklist-progress-bar { height: 100%; background: var(--teal); border-radius: 3px; transition: width 0.3s ease; }
+.checklist-progress-label { font-size: 11px; font-weight: 600; color: var(--teal); min-width: 40px; text-align: right; }
+
+/* Exchange rate display */
+.exchange-big {
+  padding: 14px 14px 10px;
+  text-align: center;
+}
+.exchange-rate-display {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px; color: var(--dark);
+  margin-bottom: 4px;
+}
+.exchange-rate-sub { font-size: 11px; color: var(--mid); }
+.exchange-calc {
+  display: flex; gap: 8px; align-items: center;
+  padding: 10px 14px;
+  background: var(--amber-light);
+  border-top: 1px solid rgba(186,117,23,0.15);
+}
+.exchange-calc-label { font-size: 11px; color: var(--amber); font-weight: 600; flex: 1; }
+.exchange-calc-val { font-size: 12px; font-weight: 600; color: var(--dark); }
+
+/* Map panel */
 .map-panel { flex: 1; position: relative; overflow: hidden; background: #dce8e4; }
 #leaflet-map { width: 100%; height: 100%; }
 
@@ -319,29 +479,18 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 
 .map-toggle-btn { display: none; }
 
+/* ── MOBILE ── */
 @media (max-width: 768px) {
   html, body { overflow: hidden; height: 100%; }
   .app { flex-direction: column; height: 100%; }
   .sidebar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    width: 100%;
-    height: 44px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    padding: 0 8px;
-    gap: 4px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    z-index: 400;
-    background: var(--white);
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    box-sizing: border-box;
+    position: fixed; top: 0; left: 0; right: 0; width: 100%;
+    height: 44px; display: flex; flex-direction: row; flex-wrap: nowrap;
+    align-items: center; padding: 0 8px; gap: 4px;
+    overflow-x: scroll; overflow-y: hidden;
+    border-right: none; border-bottom: 1px solid var(--border);
+    z-index: 400; background: var(--white);
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
   }
   .sidebar::-webkit-scrollbar { display: none; }
   .sidebar-logo { margin-bottom: 0; flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px; }
@@ -350,79 +499,44 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   .day-btn { width: 40px; height: 34px; flex-shrink: 0; border-radius: 9px; }
   .day-btn .d-num { font-size: 13px; }
   .day-btn .d-lbl { font-size: 7.5px; }
+  .info-day-btn { width: 40px; height: 34px; flex-shrink: 0; border-radius: 9px; }
+  .info-day-btn .d-num { font-size: 11px; }
+  .info-day-btn .d-lbl { font-size: 7.5px; }
   .sb-icon { display: none; }
   .main-col { display: contents; }
   .topbar {
-    position: fixed;
-    top: 44px; left: 0; right: 0;
-    height: 44px;
-    padding: 0 12px;
-    z-index: 390;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
+    position: fixed; top: 44px; left: 0; right: 0; height: 44px;
+    padding: 0 12px; z-index: 390; background: var(--white);
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
   }
   .topbar-title { font-size: 15px; }
   .tb-badge { font-size: 10px; padding: 3px 8px; }
   .filter-bar {
-    position: fixed;
-    top: 88px; left: 0; right: 0;
-    height: 38px;
-    padding: 0 10px;
-    z-index: 380;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
+    position: fixed; top: 88px; left: 0; right: 0; height: 38px;
+    padding: 0 10px; z-index: 380; background: var(--white);
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
   }
   .content-area { display: contents; }
   .map-panel {
-    position: fixed;
-    top: 126px;
-    left: 0; right: 0;
-    width: 100%;
-    height: 200px;
-    z-index: 370;
-    transition: height 0.28s ease, opacity 0.28s ease;
-    overflow: hidden;
-    background: #dce8e4;
+    position: fixed; top: 126px; left: 0; right: 0; width: 100%; height: 200px;
+    z-index: 370; transition: height 0.28s ease, opacity 0.28s ease;
+    overflow: hidden; background: #dce8e4;
   }
-  .map-panel.map-collapsed {
-    height: 0 !important;
-    opacity: 0;
-    pointer-events: none;
-  }
+  .map-panel.map-collapsed { height: 0 !important; opacity: 0; pointer-events: none; }
   .map-toggle-btn {
-    display: flex !important;
-    position: fixed;
-    left: 0; right: 0;
-    top: 346px;
-    height: 32px;
-    z-index: 360;
-    background: var(--white);
-    border: none;
-    border-top: 2px solid var(--teal);
-    border-bottom: 1px solid var(--border);
-    padding: 0 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 600;
-    color: var(--teal);
-    cursor: pointer;
-    align-items: center; gap: 6px;
-    transition: top 0.28s ease;
+    display: flex !important; position: fixed; left: 0; right: 0; top: 346px;
+    height: 32px; z-index: 360; background: var(--white); border: none;
+    border-top: 2px solid var(--teal); border-bottom: 1px solid var(--border);
+    padding: 0 14px; font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 600; color: var(--teal);
+    cursor: pointer; align-items: center; gap: 6px; transition: top 0.28s ease;
   }
-  .map-toggle-btn.collapsed {
-    top: 126px;
-    border-top-color: var(--border);
-    border-top-width: 1px;
-  }
+  .map-toggle-btn.collapsed { top: 126px; border-top-color: var(--border); border-top-width: 1px; }
   .map-toggle-btn:active { background: var(--teal-light); }
   .map-toggle-btn svg.chevron {
-    width: 14px; height: 14px;
-    stroke: currentColor; fill: none;
+    width: 14px; height: 14px; stroke: currentColor; fill: none;
     stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
-    transition: transform 0.28s;
-    margin-left: auto;
-    flex-shrink: 0;
+    transition: transform 0.28s; margin-left: auto; flex-shrink: 0;
   }
   .map-toggle-btn.collapsed svg.chevron { transform: rotate(180deg); }
   .map-toggle-label { flex: 1; text-align: left; }
@@ -432,44 +546,38 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     padding: 2px 8px; border-radius: 100px;
   }
   .map-toggle-icon {
-    width: 13px; height: 13px;
-    stroke: var(--teal); fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    flex-shrink: 0;
+    width: 13px; height: 13px; stroke: var(--teal); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
   }
   .timeline-panel {
-    position: fixed;
-    top: 378px;
-    left: 0; right: 0;
-    bottom: 0;
-    width: 100%;
-    height: auto !important;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    border-right: none;
-    padding: 14px 12px 40px;
-    background: var(--cream);
-    z-index: 350;
-    transition: top 0.28s ease;
+    position: fixed; top: 378px; left: 0; right: 0; bottom: 0;
+    width: 100%; height: auto !important; overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; border-right: none;
+    padding: 14px 12px 40px; background: var(--cream);
+    z-index: 350; transition: top 0.28s ease;
   }
   .map-gmaps-btn { top: 8px; right: 8px; font-size: 11px; padding: 5px 10px; }
   .map-place-info { bottom: 8px; left: 8px; right: 8px; }
+
+  /* Info overlay on mobile */
+  .info-overlay {
+    position: fixed !important;
+    top: 126px !important; left: 0; right: 0; bottom: 0;
+    z-index: 355 !important;
+    padding: 14px 12px 40px;
+  }
+  .info-overlay.show { display: block; }
 }
 
+/* Loading */
 #loading-screen {
-  position: fixed; inset: 0;
-  background: var(--cream);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  z-index: 9999;
-  gap: 16px;
-  transition: opacity 0.4s ease;
+  position: fixed; inset: 0; background: var(--cream);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9999; gap: 16px; transition: opacity 0.4s ease;
 }
 #loading-screen.hidden { opacity: 0; pointer-events: none; }
 .loading-logo {
-  width: 52px; height: 52px;
-  background: var(--teal); border-radius: 16px;
+  width: 52px; height: 52px; background: var(--teal); border-radius: 16px;
   display: flex; align-items: center; justify-content: center;
 }
 .loading-logo svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -479,86 +587,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .loading-bar { height: 100%; background: var(--teal); border-radius: 4px; width: 0; transition: width 0.4s ease; }
 
 #file-zone {
-  position: fixed; inset: 0;
-  background: var(--cream);
-  display: none;
-  flex-direction: column;
-  align-items: center; justify-content: center;
-  z-index: 9998;
-  gap: 20px;
-  text-align: center;
-  padding: 24px;
+  position: fixed; inset: 0; background: var(--cream); display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  z-index: 9998; gap: 20px; text-align: center; padding: 24px;
 }
 #file-zone.show { display: flex; }
 .fz-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--dark); }
 .fz-sub { font-size: 13px; color: var(--mid); line-height: 1.6; max-width: 320px; }
 #load-btn {
-  height: 40px; padding: 0 28px;
-  background: var(--teal); color: #fff;
+  height: 40px; padding: 0 28px; background: var(--teal); color: #fff;
   border: none; border-radius: 10px;
   font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
   cursor: pointer; transition: 0.13s;
 }
 #load-btn:hover { background: var(--teal-mid); }
-
-/* ── INFO PANEL ── */
-.info-panel-wrap { display: none; }
-.info-panel-wrap.visible {
-  display: block;
-  padding: 18px 14px 40px;
-}
-.info-section { margin-bottom: 22px; }
-.info-section-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: 16px; color: var(--dark);
-  margin-bottom: 10px;
-  display: flex; align-items: center; gap: 7px;
-}
-.info-section-title span { font-size: 18px; }
-.info-rows { display: flex; flex-direction: column; gap: 6px; }
-.info-row {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 13px;
-  display: flex; justify-content: space-between; align-items: center; gap: 10px;
-}
-.info-row-label { font-size: 11.5px; color: var(--mid); font-weight: 500; flex-shrink: 0; }
-.info-row-value { font-size: 12px; color: var(--dark); font-weight: 600; text-align: right; }
-
-/* 예산 섹션 강조 */
-.info-row.budget-total {
-  background: var(--teal-light);
-  border-color: var(--teal);
-}
-.info-row.budget-total .info-row-label { color: var(--teal-mid); }
-.info-row.budget-total .info-row-value { color: var(--teal); font-size: 13px; }
-
-/* 체크리스트 */
-.checklist-rows { display: flex; flex-direction: column; gap: 5px; }
-.checklist-item {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 9px 13px;
-  display: flex; align-items: center; gap: 10px;
-  cursor: pointer; transition: 0.13s;
-}
-.checklist-item:hover { border-color: var(--teal); }
-.checklist-item.checked { background: var(--teal-light); border-color: var(--teal); }
-.checklist-check {
-  width: 18px; height: 18px; flex-shrink: 0;
-  border-radius: 5px; border: 2px solid var(--border-hover);
-  display: flex; align-items: center; justify-content: center;
-  transition: 0.13s;
-}
-.checklist-item.checked .checklist-check {
-  background: var(--teal); border-color: var(--teal);
-}
-.checklist-check svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; display: none; }
-.checklist-item.checked .checklist-check svg { display: block; }
-.checklist-label { font-size: 12px; font-weight: 500; color: var(--dark); }
-.checklist-item.checked .checklist-label { color: var(--teal-mid); text-decoration: line-through; }
 </style>
 </head>
 <body>
@@ -593,6 +635,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     </button>
     <div id="day-buttons-container" style="display:contents"></div>
     <div class="sidebar-sep"></div>
+    <!-- Info tab button -->
+    <button class="info-day-btn" id="info-day-btn" onclick="selectInfoTab(this)" title="여행 정보">
+      <span class="d-num">ℹ</span>
+      <span class="d-lbl">정보</span>
+    </button>
+    <div class="sidebar-sep"></div>
     <div class="sb-icon" title="설정">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </div>
@@ -611,7 +659,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
       </div>
     </header>
 
-    <div class="filter-bar">
+    <div class="filter-bar" id="main-filter-bar">
       <button class="f-btn active" onclick="selectCat('schedule',this)">
         <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         전체 일정
@@ -628,16 +676,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         여행 팁
       </button>
-      <button class="f-btn" onclick="selectCat('info',this)">
-        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        여행 정보
-      </button>
+    </div>
+
+    <!-- Info filter bar (hidden by default) -->
+    <div class="filter-bar" id="info-filter-bar" style="display:none;">
+      <button class="f-btn active" onclick="selectInfoCat('flight',this)">✈️ 항공</button>
+      <button class="f-btn" onclick="selectInfoCat('exchange',this)">💱 환율</button>
+      <button class="f-btn" onclick="selectInfoCat('hotel',this)">🏨 숙소</button>
+      <button class="f-btn" onclick="selectInfoCat('transport',this)">🚌 교통</button>
+      <button class="f-btn" onclick="selectInfoCat('budget',this)">💰 예산</button>
+      <button class="f-btn" onclick="selectInfoCat('checklist',this)">📋 체크리스트</button>
     </div>
 
     <div class="content-area">
       <div class="timeline-panel" id="timeline-panel">
         <div id="timeline-content"></div>
-        <div class="info-panel-wrap" id="info-panel"></div>
       </div>
     </div>
   </div>
@@ -652,6 +705,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 
 <div class="map-panel" id="map-panel-el">
   <div id="leaflet-map"></div>
+  <!-- Info overlay lives inside map panel -->
+  <div class="info-overlay" id="info-overlay">
+    <div id="info-content"></div>
+  </div>
   <a class="map-gmaps-btn" id="gmaps-btn" href="#" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
     Google Maps에서 열기
@@ -725,7 +782,13 @@ window.addEventListener('load', async () => {
       const name = SHEET_NAMES[i];
       setLoadingMsg(`시트 로딩 중: ${name} (${i+1}/${total})`);
       setLoadingBar(10 + Math.round((i / total) * 65));
-      DATA[name] = await fetchSheet(name);
+      try {
+        DATA[name] = await fetchSheet(name);
+      } catch(e) {
+        // info sheet might not exist yet — gracefully continue
+        console.warn(`시트 "${name}" 로드 건너뜀:`, e.message);
+        DATA[name] = [];
+      }
     }
     setLoadingBar(80);
     setLoadingMsg('화면 구성 중...');
@@ -761,7 +824,7 @@ function setLoadingMsg(msg) { document.getElementById('loading-msg').textContent
 function setLoadingBar(pct) { document.getElementById('loading-bar').style.width = pct + '%'; }
 
 /* ═══════════════════════════════════════════════════
-   3. 렌더링
+   3. 렌더링 (기존)
 ═══════════════════════════════════════════════════ */
 function getDays() {
   const days = [...new Set(DATA.schedule.map(r => Number(r.day)))].sort((a,b) => a-b);
@@ -793,14 +856,12 @@ function tagClass(tag) { return tagClassMap[tag] || 'tip'; }
 function renderSchedule(day) {
   const rows = DATA.schedule.filter(r => Number(r.day) === day);
   if (!rows.length) return '';
-
   const dateStr = rows[0].date || '';
   const dayTitle = rows.find(r => r.title && r.title.trim())?.title?.trim() || `Day ${day}`;
   let html = `<div class="day-section visible" id="day-${day}" data-day="${day}">`;
   html += `<div class="cat-section visible" data-cat="schedule">`;
   html += `<div class="day-heading"><h2>Day ${day} · ${dayTitle}</h2><p>${dateStr}</p></div>`;
-
-  rows.forEach((row, i) => {
+  rows.forEach((row) => {
     const type = (row.type || 'sight').trim();
     const icon = typeIcons[type] || typeIcons.sight;
     const tags = (row.tags || '').split(',').map(t => t.trim()).filter(Boolean);
@@ -810,7 +871,6 @@ function renderSchedule(day) {
     const addr = row.addr || '';
     const name = row.name || '';
     const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
-
     html += `<div class="stop-item">
       <div class="stop-dot type-${type}">${icon}</div>
       <div class="stop-card" ${pinCall}>
@@ -820,7 +880,6 @@ function renderSchedule(day) {
         ${tagHtml ? `<div class="sc-tags">${tagHtml}</div>` : ''}
       </div>
     </div>`;
-
     if (row.transit_next) {
       html += `<div class="transit-row">
         <div class="transit-pill">${typeIcons.transit} ${row.transit_next}</div>
@@ -828,7 +887,6 @@ function renderSchedule(day) {
       </div>`;
     }
   });
-
   html += `</div>`;
   html += renderFoodSection(day);
   html += renderSightSection(day);
@@ -849,9 +907,7 @@ function renderFoodSection(day) {
   html += `<div class="food-grid">`;
   rows.forEach(r => {
     const coords = scheduleCoords[r.name];
-    const pinCall = coords
-      ? `onclick="pinMap('${r.name.replace(/'/g,"\\'")}',{lat:${coords.lat},lng:${coords.lng}},'${coords.addr.replace(/'/g,"\\'")}',this)"`
-      : '';
+    const pinCall = coords ? `onclick="pinMap('${r.name.replace(/'/g,"\\'")}',{lat:${coords.lat},lng:${coords.lng}},'${coords.addr.replace(/'/g,"\\'")}',this)"` : '';
     const cursorStyle = coords ? 'cursor:pointer;' : '';
     html += `<div class="food-card" ${pinCall} style="${cursorStyle}">
       <div class="food-emoji" style="background:#${r.bg_color || 'F5F5F5'}">${r.emoji || '🍽️'}</div>
@@ -874,10 +930,7 @@ function renderSightSection(day) {
   rows.forEach(r => {
     html += `<div class="sight-card">
       <div class="sight-icon">${r.icon || '📍'}</div>
-      <div>
-        <div class="sight-title">${r.title}</div>
-        <div class="sight-text">${r.description || ''}</div>
-      </div>
+      <div><div class="sight-title">${r.title}</div><div class="sight-text">${r.description || ''}</div></div>
     </div>`;
   });
   html += `</div>`;
@@ -893,10 +946,7 @@ function renderTipsSection(day) {
   rows.forEach(r => {
     html += `<div class="tip-card">
       <div class="tip-icon">${r.icon || '💡'}</div>
-      <div>
-        <div class="tip-title">${r.title}</div>
-        <div class="tip-text">${r.content || ''}</div>
-      </div>
+      <div><div class="tip-title">${r.title}</div><div class="tip-text">${r.content || ''}</div></div>
     </div>`;
   });
   html += `</div></div>`;
@@ -923,79 +973,267 @@ function renderAll() {
   let html = '';
   days.forEach(d => { html += renderSchedule(d); });
   document.getElementById('timeline-content').innerHTML = html;
-  renderInfo();
 }
 
 /* ═══════════════════════════════════════════════════
-   여행 정보 패널 렌더링
+   4. INFO 탭 렌더링
 ═══════════════════════════════════════════════════ */
-const categoryMeta = {
-  flight:    { label: '✈️ 항공권 정보', icon: '✈️' },
-  exchange:  { label: '💱 환율 / 환전',  icon: '💱' },
-  hotel:     { label: '🏨 숙소 정보',    icon: '🏨' },
-  transport: { label: '🚌 교통 패스',    icon: '🚌' },
-  budget:    { label: '💰 예산 정리',    icon: '💰' },
-  checklist: { label: '📋 준비물 체크리스트', icon: '📋' },
-};
+let currentInfoCat = 'flight';
+let checklistState = {};
 
-function renderInfo() {
-  const rows = DATA.info;
-  if (!rows.length) {
-    document.getElementById('info-panel').innerHTML =
-      `<div style="padding:40px 0;text-align:center;color:var(--mid);font-size:13px;">
-        구글 시트 <strong>info</strong> 탭에 데이터를 추가해주세요
-      </div>`;
-    return;
+function getInfoBy(cat) {
+  return DATA.info.filter(r => r.category === cat);
+}
+
+function renderInfoContent(cat) {
+  const rows = getInfoBy(cat);
+  let html = '';
+
+  if (cat === 'flight') {
+    html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
+  } else if (cat === 'exchange') {
+    html += renderExchangeCard(rows);
+  } else if (cat === 'hotel') {
+    html += renderInfoCard('🏨', '숙소 정보', 'blue', rows);
+  } else if (cat === 'transport') {
+    html += renderInfoCard('🚌', '교통 정보', 'amber', rows);
+  } else if (cat === 'budget') {
+    html += renderBudgetCard(rows);
+  } else if (cat === 'checklist') {
+    html += renderChecklistCard(rows);
   }
 
-  // category별 그룹핑
-  const groups = {};
-  rows.forEach(r => {
-    const cat = (r.category || '').trim();
-    if (!cat) return;
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(r);
-  });
+  if (!rows.length && cat !== 'checklist' && cat !== 'budget') {
+    html = `<div style="text-align:center;padding:40px 20px;color:var(--mid);">
+      <div style="font-size:32px;margin-bottom:10px;">📭</div>
+      <div style="font-size:13px;font-weight:500;">데이터가 없습니다</div>
+      <div style="font-size:11px;margin-top:5px;opacity:0.7;">Google Sheets의 info 시트에 category: <strong>${cat}</strong> 데이터를 추가하세요</div>
+    </div>`;
+  }
 
-  let html = '';
-  Object.entries(groups).forEach(([cat, items]) => {
-    const meta = categoryMeta[cat] || { label: cat, icon: '📌' };
-    html += `<div class="info-section">`;
-    html += `<div class="info-section-title"><span>${meta.icon}</span>${meta.label.replace(/^.{1,2}\s/,'')}</div>`;
+  document.getElementById('info-content').innerHTML = html;
 
-    if (cat === 'checklist') {
-      html += `<div class="checklist-rows">`;
-      items.forEach((item, i) => {
-        html += `<div class="checklist-item" id="chk-${i}" onclick="toggleCheck(this)">
-          <div class="checklist-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
-          <span class="checklist-label">${item.label || ''}</span>
-        </div>`;
+  // Animate budget bars after render
+  if (cat === 'budget') {
+    setTimeout(() => {
+      document.querySelectorAll('.budget-item-bar[data-pct]').forEach(bar => {
+        bar.style.width = bar.getAttribute('data-pct') + '%';
       });
-      html += `</div>`;
-    } else {
-      html += `<div class="info-rows">`;
-      items.forEach(item => {
-        const isBudgetTotal = cat === 'budget' && (item.label || '').includes('합계');
-        html += `<div class="info-row${isBudgetTotal ? ' budget-total' : ''}">
-          <span class="info-row-label">${item.label || ''}</span>
-          <span class="info-row-value">${item.value || ''}</span>
-        </div>`;
-      });
-      html += `</div>`;
-    }
-    html += `</div>`;
-  });
-
-  document.getElementById('info-panel').innerHTML = html;
+    }, 50);
+  }
 }
 
-function toggleCheck(el) {
-  el.classList.toggle('checked');
+function renderInfoCard(iconEmoji, title, colorClass, rows) {
+  if (!rows.length) return '';
+  let html = `<div class="info-section">
+    <div class="info-card">
+      <div class="info-card-header ${colorClass}">${iconEmoji} ${title}</div>
+      <div class="info-rows">`;
+  rows.forEach(r => {
+    html += `<div class="info-row">
+      <div class="info-row-icon">${r.icon || ''}</div>
+      <div class="info-row-label">${r.label || ''}</div>
+      <div class="info-row-value">${r.value || ''}</div>
+    </div>`;
+  });
+  html += `</div></div></div>`;
+  return html;
+}
+
+function renderExchangeCard(rows) {
+  if (!rows.length) return '';
+  // Look for main rate row
+  const rateRow = rows.find(r => r.label && r.label.includes('환율')) || rows[0];
+  const calcRow = rows.find(r => r.label && r.label.includes('환전'));
+  let rateDisplay = rateRow ? rateRow.value : '-';
+
+  let html = `<div class="info-section">
+    <div class="info-card">
+      <div class="info-card-header amber">💱 환율 정보</div>
+      <div class="exchange-big">
+        <div class="exchange-rate-display">${rateDisplay}</div>
+        <div class="exchange-rate-sub">현재 AUD → KRW 환율</div>
+      </div>`;
+  if (calcRow) {
+    html += `<div class="exchange-calc">
+      <div class="exchange-calc-label">💡 ${calcRow.label}</div>
+      <div class="exchange-calc-val">${calcRow.value}</div>
+    </div>`;
+  }
+  // Other rows
+  const others = rows.filter(r => r !== rateRow && r !== calcRow);
+  if (others.length) {
+    html += `<div class="info-rows">`;
+    others.forEach(r => {
+      html += `<div class="info-row">
+        <div class="info-row-icon">${r.icon || ''}</div>
+        <div class="info-row-label">${r.label || ''}</div>
+        <div class="info-row-value">${r.value || ''}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  html += `</div></div>`;
+  return html;
+}
+
+function renderBudgetCard(rows) {
+  if (!rows.length) return '';
+  // Parse amounts — strip non-numeric except commas/periods, look for totals
+  const totalRow = rows.find(r => r.label && (r.label.includes('합계') || r.label.includes('총')));
+  const itemRows = rows.filter(r => r !== totalRow);
+
+  // Try to extract numbers for bar chart
+  function parseAmt(val) {
+    if (!val) return 0;
+    const m = val.replace(/,/g, '').match(/[\d.]+/);
+    return m ? parseFloat(m[0]) : 0;
+  }
+
+  const maxAmt = Math.max(...itemRows.map(r => parseAmt(r.value)), 1);
+
+  let html = `<div class="info-section">
+    <div class="info-card">
+      <div class="info-card-header coral">💰 여행 예산</div>
+      <div class="budget-bar-wrap">`;
+
+  if (totalRow) {
+    html += `<div class="budget-total">
+      <div class="budget-total-label">총 예산</div>
+      <div class="budget-total-value">${totalRow.value}</div>
+    </div>`;
+  }
+
+  const barColors = ['#1A6B5A','#378ADD','#D85A30','#BA7517','#9B59B6','#5F5E5A'];
+  html += `<div class="budget-items">`;
+  itemRows.forEach((r, i) => {
+    const amt = parseAmt(r.value);
+    const pct = maxAmt > 0 ? Math.round((amt / maxAmt) * 100) : 0;
+    const color = barColors[i % barColors.length];
+    html += `<div class="budget-item">
+      <div class="budget-item-label">${r.icon || ''} ${r.label || ''}</div>
+      <div class="budget-item-bar-wrap">
+        <div class="budget-item-bar" data-pct="${pct}" style="background:${color};width:0%"></div>
+      </div>
+      <div class="budget-item-val">${r.value}</div>
+    </div>`;
+  });
+  html += `</div></div></div></div>`;
+  return html;
+}
+
+function renderChecklistCard(rows) {
+  // Init state for new items
+  rows.forEach((r, i) => {
+    const key = `chk_${i}`;
+    if (!(key in checklistState)) checklistState[key] = false;
+  });
+
+  const total = rows.length;
+  const done = rows.filter((r, i) => checklistState[`chk_${i}`]).length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  let html = `<div class="info-section">
+    <div class="info-card">
+      <div class="info-card-header gray">📋 준비물 체크리스트</div>
+      <div style="padding:10px 14px 4px;">
+        <div class="checklist-progress">
+          <div class="checklist-progress-bar-wrap">
+            <div class="checklist-progress-bar" style="width:${pct}%"></div>
+          </div>
+          <div class="checklist-progress-label">${done}/${total}</div>
+        </div>`;
+
+  if (rows.length) {
+    html += `<div class="checklist-grid">`;
+    rows.forEach((r, i) => {
+      const key = `chk_${i}`;
+      const checked = checklistState[key];
+      html += `<div class="checklist-item${checked ? ' checked' : ''}" onclick="toggleCheck(${i})">
+        <div class="checklist-check">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="checklist-icon">${r.icon || '📌'}</div>
+        <div class="checklist-label">${r.title || r.label || r.value || ''}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div style="text-align:center;padding:20px;color:var(--mid);font-size:12px;">체크리스트 항목이 없습니다<br><span style="opacity:0.6;font-size:11px;">info 시트에 category: checklist 추가</span></div>`;
+  }
+
+  html += `</div></div></div>`;
+  return html;
+}
+
+function toggleCheck(idx) {
+  const key = `chk_${idx}`;
+  checklistState[key] = !checklistState[key];
+  renderInfoContent(currentInfoCat);
+  // Animate bars after re-render
+  if (currentInfoCat === 'checklist') {
+    setTimeout(() => {
+      document.querySelectorAll('.checklist-progress-bar').forEach(bar => {
+        bar.style.transition = 'width 0.3s ease';
+      });
+    }, 10);
+  }
 }
 
 /* ═══════════════════════════════════════════════════
-   4. 지도 & 마커
-   ★ 핵심 수정: schedule 시트 좌표도 마커로 표시
+   5. Info 탭 UI 인터랙션
+═══════════════════════════════════════════════════ */
+let infoTabActive = false;
+
+function selectInfoTab(btn) {
+  infoTabActive = true;
+  // Deactivate day buttons
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Switch filter bars
+  document.getElementById('main-filter-bar').style.display = 'none';
+  document.getElementById('info-filter-bar').style.display = '';
+
+  // Show info overlay, hide map controls
+  document.getElementById('info-overlay').classList.add('show');
+  document.getElementById('place-info').classList.remove('show');
+  document.getElementById('gmaps-btn').classList.remove('show');
+
+  // Hide map toggle on mobile (info replaces map area)
+  const toggleBtn = document.getElementById('map-toggle-btn');
+  if (toggleBtn) toggleBtn.style.display = 'none';
+
+  // Render default info category
+  selectInfoCat('flight', document.querySelector('#info-filter-bar .f-btn'));
+
+  // On mobile: collapse timeline, expand info overlay
+  if (isMobile()) {
+    const overlay = document.getElementById('info-overlay');
+    overlay.style.top = '126px';
+  }
+}
+
+function selectInfoCat(cat, btn) {
+  currentInfoCat = cat;
+  document.querySelectorAll('#info-filter-bar .f-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderInfoContent(cat);
+}
+
+function exitInfoTab() {
+  infoTabActive = false;
+  document.getElementById('main-filter-bar').style.display = '';
+  document.getElementById('info-filter-bar').style.display = 'none';
+  document.getElementById('info-overlay').classList.remove('show');
+
+  // Restore map toggle on mobile
+  const toggleBtn = document.getElementById('map-toggle-btn');
+  if (toggleBtn && isMobile()) toggleBtn.style.display = '';
+}
+
+/* ═══════════════════════════════════════════════════
+   6. 지도 & 마커
 ═══════════════════════════════════════════════════ */
 const dayColors = { 0:'#E74C3C', 1:'#1A6B5A', 2:'#D85A30', 3:'#378ADD', 4:'#9B59B6', 5:'#BA7517', 6:'#7F8C8D' };
 const dayViews = {
@@ -1047,14 +1285,9 @@ function makeFoodIcon(emoji) {
   });
 }
 
-/* ★★★ 수정된 renderMarkers ★★★
-   map_places 시트 마커 + schedule 시트 좌표 마커를 함께 표시
-   → 5일차처럼 map_places에 데이터가 없어도 자동으로 마커가 나옴 */
 function renderMarkers(dayFilter) {
   staticMarkers.forEach(m => map.removeLayer(m));
   staticMarkers = [];
-
-  // 1) map_places 시트 마커 (기존 방식)
   const mapPlacesAdded = new Set();
   DATA.map_places
     .filter(p => dayFilter === 'all' || Number(p.day) == dayFilter)
@@ -1067,9 +1300,6 @@ function renderMarkers(dayFilter) {
       staticMarkers.push(m);
       mapPlacesAdded.add(Number(p.day) + '_' + p.name);
     });
-
-  // 2) schedule 시트에 lat/lng가 있는 항목도 마커로 추가
-  //    (transit 타입 제외, map_places에 이미 있는 항목은 중복 방지)
   DATA.schedule
     .filter(r => r.lat && r.lng && r.type !== 'transit')
     .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
@@ -1087,10 +1317,8 @@ function renderMarkers(dayFilter) {
 function renderFoodMarkers(dayFilter) {
   foodMarkers.forEach(m => map.removeLayer(m));
   foodMarkers = [];
-
   const foodNameToEmoji = {};
   DATA.food.forEach(f => { foodNameToEmoji[f.name] = f.emoji || '🍽️'; });
-
   DATA.schedule
     .filter(r => r.type === 'food' && r.lat && r.lng)
     .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
@@ -1105,10 +1333,12 @@ function renderFoodMarkers(dayFilter) {
 }
 
 /* ═══════════════════════════════════════════════════
-   5. UI 인터랙션
+   7. UI 인터랙션
 ═══════════════════════════════════════════════════ */
 function selectDay(day, btn) {
+  if (infoTabActive) exitInfoTab();
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('info-day-btn').classList.remove('active');
   btn.classList.add('active');
   currentDay = day;
   closePlace();
@@ -1124,7 +1354,6 @@ function selectCat(cat, btn) {
   btn.classList.add('active');
   currentCat = cat;
   closePlace();
-
   if (cat === 'food') {
     staticMarkers.forEach(m => map.removeLayer(m));
     staticMarkers = [];
@@ -1138,7 +1367,6 @@ function selectCat(cat, btn) {
     foodMarkers = [];
     renderMarkers(currentDay);
   }
-
   updateView();
 }
 
@@ -1198,7 +1426,7 @@ function pinMap(name, coords, addr, el) {
 }
 
 /* ═══════════════════════════════════════════════════
-   6. 모바일 지도 토글
+   8. 모바일 지도 토글
 ═══════════════════════════════════════════════════ */
 const PX = { sidebar:44, topbar:44, filter:38, map:200, toggle:32 };
 const TOP = {
