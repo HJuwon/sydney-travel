@@ -299,20 +299,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 /* ══════════════════════════════
    INFO PANEL (overlay on map)
 ══════════════════════════════ */
-.info-overlay {
-  display: none;
-  position: absolute;
-  inset: 0;
-  background: var(--cream);
-  z-index: 500;
-  overflow-y: auto;
-  padding: 20px 18px 40px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-.info-overlay::-webkit-scrollbar { width: 4px; }
-.info-overlay::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-.info-overlay.show { display: block; }
+
 
 .info-section { margin-bottom: 20px; }
 .info-section-title {
@@ -440,6 +427,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .map-panel { flex: 1; position: relative; overflow: hidden; background: #dce8e4; }
 #leaflet-map { width: 100%; height: 100%; }
 
+/* Desktop: info overlay fills the content-area beside timeline */
+.info-overlay {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  background: var(--cream);
+  padding: 20px 18px 40px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.info-overlay::-webkit-scrollbar { width: 4px; }
+.info-overlay::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.info-overlay.show { display: block; }
+
 .map-place-info {
   position: absolute; bottom: 14px; left: 12px; right: 12px;
   background: rgba(255,255,255,0.97);
@@ -559,14 +560,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   .map-gmaps-btn { top: 8px; right: 8px; font-size: 11px; padding: 5px 10px; }
   .map-place-info { bottom: 8px; left: 8px; right: 8px; }
 
-  /* Info overlay on mobile */
-  .info-overlay {
+  /* Info overlay on mobile — z-index must beat map(370) + toggle(360) */
+  .info-overlay.show {
+    display: block !important;
     position: fixed !important;
-    top: 126px !important; left: 0; right: 0; bottom: 0;
-    z-index: 355 !important;
-    padding: 14px 12px 40px;
+    top: 126px !important;
+    left: 0 !important; right: 0 !important; bottom: 0 !important;
+    z-index: 500 !important;
+    background: var(--cream) !important;
+    overflow-y: auto !important;
+    padding: 14px 12px 40px !important;
   }
-  .info-overlay.show { display: block; }
 }
 
 /* Loading */
@@ -688,9 +692,26 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
       <button class="f-btn" onclick="selectInfoCat('checklist',this)">📋 체크리스트</button>
     </div>
 
-    <div class="content-area">
+    <div class="content-area" id="content-area">
       <div class="timeline-panel" id="timeline-panel">
         <div id="timeline-content"></div>
+      </div>
+      <!-- Info overlay: sibling of timeline, fills same flex space as map -->
+      <div class="info-overlay" id="info-overlay">
+        <div id="info-content"></div>
+      </div>
+      <!-- Map panel: also a sibling in content-area -->
+      <div class="map-panel" id="map-panel-el">
+        <div id="leaflet-map"></div>
+        <a class="map-gmaps-btn" id="gmaps-btn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Google Maps에서 열기
+        </a>
+        <div class="map-place-info" id="place-info">
+          <button class="mpi-close" onclick="closePlace()">✕</button>
+          <div class="mpi-name" id="place-name"></div>
+          <div class="mpi-addr" id="place-addr"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -702,23 +723,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   <span class="map-toggle-pill" id="map-toggle-pill">접기</span>
   <svg class="chevron" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
-
-<div class="map-panel" id="map-panel-el">
-  <div id="leaflet-map"></div>
-  <!-- Info overlay lives inside map panel -->
-  <div class="info-overlay" id="info-overlay">
-    <div id="info-content"></div>
-  </div>
-  <a class="map-gmaps-btn" id="gmaps-btn" href="#" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-    Google Maps에서 열기
-  </a>
-  <div class="map-place-info" id="place-info">
-    <button class="mpi-close" onclick="closePlace()">✕</button>
-    <div class="mpi-name" id="place-name"></div>
-    <div class="mpi-addr" id="place-addr"></div>
-  </div>
-</div>
 
 <script>
 /* ═══════════════════════════════════════════════════
@@ -1190,23 +1194,29 @@ function selectInfoTab(btn) {
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 
+  // Swap filter bars
   document.getElementById('main-filter-bar').style.display = 'none';
   document.getElementById('info-filter-bar').style.display = '';
+
+  // Hide map popups
   document.getElementById('place-info').classList.remove('show');
   document.getElementById('gmaps-btn').classList.remove('show');
 
+  // Hide timeline on BOTH mobile and desktop
+  document.getElementById('timeline-panel').style.display = 'none';
+
   if (isMobile()) {
-    // Fully hide map and toggle, show info as full-screen panel
+    // Fully hide map panel and toggle so info overlay is unobstructed
     document.getElementById('map-panel-el').style.display = 'none';
     const toggleBtn = document.getElementById('map-toggle-btn');
     if (toggleBtn) toggleBtn.style.display = 'none';
-    document.getElementById('timeline-panel').style.display = 'none';
-
-    const overlay = document.getElementById('info-overlay');
-    overlay.style.cssText = 'position:fixed;top:126px;left:0;right:0;bottom:0;z-index:360;background:var(--cream);overflow-y:auto;padding:14px 12px 40px;display:block;';
   } else {
-    document.getElementById('info-overlay').classList.add('show');
+    // Desktop: hide map panel entirely so info fills the right column
+    document.getElementById('map-panel-el').style.display = 'none';
   }
+
+  // Show info overlay — on mobile CSS handles positioning via .info-overlay.show
+  document.getElementById('info-overlay').classList.add('show');
 
   selectInfoCat('flight', document.querySelector('#info-filter-bar .f-btn'));
 }
@@ -1222,21 +1232,20 @@ function exitInfoTab() {
   infoTabActive = false;
   document.getElementById('main-filter-bar').style.display = '';
   document.getElementById('info-filter-bar').style.display = 'none';
+  document.getElementById('info-overlay').classList.remove('show');
+
+  // Restore timeline
+  document.getElementById('timeline-panel').style.display = '';
 
   if (isMobile()) {
     document.getElementById('map-panel-el').style.display = '';
     const toggleBtn = document.getElementById('map-toggle-btn');
     if (toggleBtn) toggleBtn.style.display = '';
-    document.getElementById('timeline-panel').style.display = '';
-
-    const overlay = document.getElementById('info-overlay');
-    overlay.style.cssText = '';
-    overlay.classList.remove('show');
-
     applyTimelineOffset();
     setTimeout(() => { if (map) map.invalidateSize(); }, 50);
   } else {
-    document.getElementById('info-overlay').classList.remove('show');
+    document.getElementById('map-panel-el').style.display = '';
+    setTimeout(() => { if (map) map.invalidateSize(); }, 50);
   }
 }
 
@@ -1449,17 +1458,8 @@ let mapExpanded = true;
 function isMobile() { return window.innerWidth <= 768; }
 
 function repositionMapPanel() {
-  const mapPanelEl = document.getElementById('map-panel-el');
-  const contentArea = document.querySelector('.content-area');
-  if (!mapPanelEl || !contentArea) return;
-  if (window.innerWidth > 768) {
-    if (mapPanelEl.parentNode !== contentArea) contentArea.appendChild(mapPanelEl);
-    mapPanelEl.style.cssText = '';
-    setTimeout(() => { if (map) map.invalidateSize(); }, 50);
-  } else {
-    if (mapPanelEl.parentNode !== document.body) document.body.appendChild(mapPanelEl);
-    setTimeout(() => { if (map) map.invalidateSize(); }, 50);
-  }
+  // map-panel is always inside content-area — just invalidate map size
+  setTimeout(() => { if (map) map.invalidateSize(); }, 50);
 }
 
 function applyTimelineOffset() {
