@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Google Sheets CSV 파싱용 (SheetJS 불필요) -->
 <style>
 :root {
   --teal: #1A6B5A;
@@ -35,10 +34,8 @@
 html, body { height: 100%; overflow: hidden; }
 body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); }
 
-/* ── APP SHELL ── */
 .app { display: flex; height: 100vh; overflow: hidden; }
 
-/* ── SIDEBAR ── */
 .sidebar {
   width: 64px;
   background: var(--white);
@@ -96,10 +93,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sb-icon:hover { background: var(--gray-light); color: var(--dark); }
 .sb-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ── MAIN COLUMN ── */
 .main-col { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
 
-/* ── TOPBAR ── */
 .topbar {
   height: 50px;
   background: var(--white);
@@ -118,7 +113,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 }
 .tb-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ── FILTER BAR ── */
 .filter-bar {
   height: 42px;
   background: var(--white);
@@ -146,10 +140,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .f-btn:hover { border-color: var(--teal); color: var(--teal); }
 .f-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
 
-/* ── CONTENT AREA ── */
 .content-area { flex: 1; display: flex; overflow: hidden; }
 
-/* ── TIMELINE PANEL ── */
 .timeline-panel {
   width: 320px; flex-shrink: 0;
   background: var(--cream);
@@ -166,7 +158,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .day-heading h2 { font-family: 'DM Serif Display', serif; font-size: 19px; color: var(--dark); margin-bottom: 1px; }
 .day-heading p { font-size: 11px; color: var(--mid); }
 
-/* CATEGORY TABS */
 .cat-tabs { display: flex; gap: 5px; margin-bottom: 16px; }
 .cat-tab {
   flex: 1; padding: 6px 0;
@@ -178,15 +169,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .cat-tab:hover { border-color: var(--teal); color: var(--teal); }
 .cat-tab.active { background: var(--teal); border-color: var(--teal); color: #fff; }
 
-/* DAY SECTIONS */
 .day-section { display: none; }
 .day-section.visible { display: block; }
 
-/* CAT SECTIONS */
 .cat-section { display: none; }
 .cat-section.visible { display: block; }
 
-/* ── STOP ITEM ── */
 .stop-item {
   position: relative;
   padding-left: 30px;
@@ -242,7 +230,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sc-tag.tip     { background: var(--gray-light);  color: var(--gray); }
 .sc-tag.activity{ background: #F3E8FD; color: #6B3A9A; }
 
-/* TRANSIT ROW */
 .transit-row {
   display: flex; align-items: center; gap: 7px;
   padding: 4px 0 10px 0;
@@ -256,7 +243,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .transit-pill svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .transit-info { font-size: 10px; color: var(--mid); opacity: 0.8; }
 
-/* FOOD GRID */
 .food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .food-card {
   background: var(--white); border: 1px solid var(--border);
@@ -271,7 +257,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .food-desc { font-size: 10.5px; color: var(--mid); line-height: 1.4; }
 .food-price { font-size: 10px; color: var(--coral); font-weight: 600; margin-top: 4px; }
 
-/* TIPS */
 .tips-list { display: flex; flex-direction: column; gap: 8px; }
 .tip-card {
   background: var(--white); border: 1px solid var(--border);
@@ -282,7 +267,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .tip-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
 .tip-text { font-size: 11px; color: var(--mid); line-height: 1.5; }
 
-/* SIGHTS */
 .sight-card {
   background: var(--white); border: 1px solid var(--border);
   border-radius: 12px; padding: 11px 13px;
@@ -293,7 +277,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sight-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
 .sight-text { font-size: 11px; color: var(--mid); line-height: 1.5; }
 
-/* ── MAP PANEL ── */
 .map-panel { flex: 1; position: relative; overflow: hidden; background: #dce8e4; }
 #leaflet-map { width: 100%; height: 100%; }
 
@@ -334,18 +317,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .map-gmaps-btn.show { display: flex; }
 .map-gmaps-btn:hover { background: var(--teal); color: #fff; }
 
-/* 지도 토글 버튼: 데스크탑에서는 숨김 */
 .map-toggle-btn { display: none; }
 
-/* ── MOBILE ── */
 @media (max-width: 768px) {
-
-  /* body 스크롤 완전 차단 — 일정 패널만 자체 스크롤 */
   html, body { overflow: hidden; height: 100%; }
-
   .app { flex-direction: column; height: 100%; }
-
-  /* ① 사이드바(Day 탭): 최상단 fixed */
   .sidebar {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -375,11 +351,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   .day-btn .d-num { font-size: 13px; }
   .day-btn .d-lbl { font-size: 7.5px; }
   .sb-icon { display: none; }
-
-  /* main-col: 레이아웃에서 제거 */
   .main-col { display: contents; }
-
-  /* ② topbar: fixed */
   .topbar {
     position: fixed;
     top: 44px; left: 0; right: 0;
@@ -392,11 +364,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   }
   .topbar-title { font-size: 15px; }
   .tb-badge { font-size: 10px; padding: 3px 8px; }
-
-  /* ③ filterbar: fixed */
   .filter-bar {
     position: fixed;
-    top: 88px; left: 0; right: 0;   /* 44+44 */
+    top: 88px; left: 0; right: 0;
     height: 38px;
     padding: 0 10px;
     z-index: 380;
@@ -404,14 +374,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
   }
-
-  /* content-area: 레이아웃에서 제거 */
   .content-area { display: contents; }
-
-  /* ④ 지도 패널: fixed — filterbar 바로 아래 */ /*// 지도 크기 변경 map 부분 변경 */
   .map-panel {
     position: fixed;
-    top: 126px;          /* 44+44+38 */
+    top: 126px;
     left: 0; right: 0;
     width: 100%;
     height: 200px;
@@ -425,13 +391,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     opacity: 0;
     pointer-events: none;
   }
-
-  /* ⑤ 지도 토글 버튼: fixed — 지도 바로 아래 */
   .map-toggle-btn {
     display: flex !important;
     position: fixed;
     left: 0; right: 0;
-    top: 346px;          /* 126+220 */
+    top: 346px;
     height: 32px;
     z-index: 360;
     background: var(--white);
@@ -473,11 +437,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     flex-shrink: 0;
   }
-
-  /* ⑥ 타임라인: 토글버튼 아래부터 화면 끝까지, 자체 스크롤 */
   .timeline-panel {
     position: fixed;
-    top: 378px;          /* 346+32 */
+    top: 378px;
     left: 0; right: 0;
     bottom: 0;
     width: 100%;
@@ -491,12 +453,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     z-index: 350;
     transition: top 0.28s ease;
   }
-
   .map-gmaps-btn { top: 8px; right: 8px; font-size: 11px; padding: 5px 10px; }
   .map-place-info { bottom: 8px; left: 8px; right: 8px; }
 }
 
-/* ── LOADING SCREEN ── */
 #loading-screen {
   position: fixed; inset: 0;
   background: var(--cream);
@@ -518,7 +478,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .loading-bar-wrap { width: 180px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
 .loading-bar { height: 100%; background: var(--teal); border-radius: 4px; width: 0; transition: width 0.4s ease; }
 
-/* ── ERROR / FILE ZONE ── */
 #file-zone {
   position: fixed; inset: 0;
   background: var(--cream);
@@ -545,7 +504,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 </head>
 <body>
 
-<!-- 로딩 화면 -->
 <div id="loading-screen">
   <div class="loading-logo">
     <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -555,7 +513,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
 </div>
 
-<!-- 에러 화면 (Google Sheets 로드 실패 시) -->
 <div id="file-zone">
   <div class="loading-logo" style="background:var(--teal)">
     <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -566,10 +523,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   <div style="font-size:11px;color:var(--mid);margin-top:12px;">💡 Google Sheets 공유 설정이 <strong>링크가 있는 모든 사용자 (뷰어)</strong>인지 확인해 주세요</div>
 </div>
 
-<!-- ── APP SHELL ── -->
 <div class="app" id="app" style="display:none">
-
-  <!-- SIDEBAR -->
   <nav class="sidebar">
     <div class="sidebar-logo" title="Sydney Travel Plan">
       <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -585,7 +539,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     </div>
   </nav>
 
-  <!-- MAIN -->
   <div class="main-col">
     <header class="topbar">
       <div class="topbar-title" id="topbar-title">Sydney <em>Travel Plan</em></div>
@@ -626,7 +579,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   </div>
 </div>
 
-<!-- 모바일 지도 토글 버튼 & 지도 -->
 <button class="map-toggle-btn" id="map-toggle-btn" onclick="toggleMap()">
   <svg class="map-toggle-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
   <span class="map-toggle-label">지도</span>
@@ -648,24 +600,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 </div>
 
 <script>
-/* ════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════
    1. 데이터 상태
-═══════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════ */
 let DATA = { schedule: [], food: [], tips: [], sights: [], map_places: [] };
 
-// ── Google Sheets 설정 ──────────────────────────────
 const SHEET_ID = '1A5YDClkB7E2IlULZU3SMbgy20qIZo21Jphj-fyqAV6o';
 const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'map_places'];
 
-/* ════════════════════════════════════════════════════
-   2. Google Sheets CSV 로드 & 파싱
-═══════════════════════════════════════════════════════ */
-
-// CSV 텍스트 → 객체 배열
+/* ═══════════════════════════════════════════════════
+   2. Google Sheets CSV 로드
+═══════════════════════════════════════════════════ */
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   if (lines.length < 2) return [];
-  // 헤더 파싱 (따옴표 처리 포함)
   const headers = splitCSVRow(lines[0]);
   const rows = [];
   for (let i = 1; i < lines.length; i++) {
@@ -678,7 +626,6 @@ function parseCSV(text) {
   return rows;
 }
 
-// RFC 4180 CSV 행 파싱 (따옴표 처리)
 function splitCSVRow(row) {
   const result = [];
   let cur = '', inQ = false;
@@ -697,7 +644,6 @@ function splitCSVRow(row) {
   return result;
 }
 
-// 시트 하나를 CSV로 fetch
 async function fetchSheet(sheetName) {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
   const resp = await fetch(url);
@@ -706,7 +652,6 @@ async function fetchSheet(sheetName) {
   return parseCSV(text);
 }
 
-// 전체 시트 로드
 window.addEventListener('load', async () => {
   setLoadingBar(10);
   setLoadingMsg('Google Sheets에서 데이터 불러오는 중...');
@@ -748,34 +693,17 @@ window.addEventListener('load', async () => {
   }
 });
 
-function showFileZone() {
-  document.getElementById('loading-screen').classList.add('hidden');
-  setTimeout(() => {
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('file-zone').classList.add('show');
-  }, 400);
-}
-
 function setLoadingMsg(msg) { document.getElementById('loading-msg').textContent = msg; }
 function setLoadingBar(pct) { document.getElementById('loading-bar').style.width = pct + '%'; }
 
-/* ════════════════════════════════════════════════════
-   4. 렌더링
-═══════════════════════════════════════════════════════ */
-
-// 고유한 day 목록 추출
+/* ═══════════════════════════════════════════════════
+   3. 렌더링
+═══════════════════════════════════════════════════ */
 function getDays() {
   const days = [...new Set(DATA.schedule.map(r => Number(r.day)))].sort((a,b) => a-b);
   return days;
 }
 
-// day별 메타 (날짜, 부제목)
-function getDayMeta(day) {
-  const first = DATA.schedule.find(r => Number(r.day) === day);
-  return first ? first.date || '' : '';
-}
-
-// type → SVG 아이콘 (인라인)
 const typeIcons = {
   food:     `<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
   coffee:   `<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
@@ -785,27 +713,24 @@ const typeIcons = {
   activity: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
 };
 
-// type → 태그 CSS class 매핑
 const tagClassMap = {
   '랜드마크':'sight','투어':'activity','점심':'food','하버뷰':'sight','공원':'sight',
   '무료':'tip','역사지구':'sight','맛집거리':'food','버킷리스트':'activity','저녁':'food',
   '맥주':'coffee','브런치':'food','해변':'activity','수영':'activity','트레킹':'activity',
   '트레일 종착':'tip','해변뷰':'sight','교통':'tip','동물원':'activity','선셋뷰':'sight',
   '쇼핑':'shop','카페':'coffee','야경':'sight','산책':'activity','건축':'sight',
-  '쇼핑몰':'shop','투어버스':'activity','사전예약':'tip','전망대':'sight','트레킹':'activity',
+  '쇼핑몰':'shop','투어버스':'activity','사전예약':'tip','전망대':'sight',
   '별보기':'activity','겨울 추천':'tip','그래피티':'sight','빈티지':'shop','미술관':'sight',
   '절경':'sight','포토스팟':'sight','씨푸드':'food','출국 준비':'tip','공항':'transit',
-  '면세쇼핑':'shop','귀국':'tip','역사건물':'sight','포토스팟':'sight','케이블카':'activity',
+  '면세쇼핑':'shop','귀국':'tip','역사건물':'sight','케이블카':'activity',
 };
 function tagClass(tag) { return tagClassMap[tag] || 'tip'; }
 
-// 일정(schedule) 렌더링
 function renderSchedule(day) {
   const rows = DATA.schedule.filter(r => Number(r.day) === day);
   if (!rows.length) return '';
 
   const dateStr = rows[0].date || '';
-  // 첫 번째 항목으로 heading 생성
   let html = `<div class="day-section visible" id="day-${day}" data-day="${day}">`;
   html += `<div class="cat-section visible" data-cat="schedule">`;
   html += `<div class="day-heading"><h2>Day ${day} · ${rows[0].name}</h2><p>${dateStr}</p></div>`;
@@ -831,7 +756,6 @@ function renderSchedule(day) {
       </div>
     </div>`;
 
-    // transit row
     if (row.transit_next) {
       html += `<div class="transit-row">
         <div class="transit-pill">${typeIcons.transit} ${row.transit_next}</div>
@@ -840,29 +764,21 @@ function renderSchedule(day) {
     }
   });
 
-  html += `</div>`; // cat-section schedule
-
-  // 맛집 섹션
+  html += `</div>`;
   html += renderFoodSection(day);
-  // 관광지 섹션
   html += renderSightSection(day);
-  // 팁 섹션
   html += renderTipsSection(day);
-
-  html += `</div>`; // day-section
+  html += `</div>`;
   return html;
 }
 
 function renderFoodSection(day) {
   const rows = DATA.food.filter(r => Number(r.day) === day);
   if (!rows.length) return '';
-
-  // schedule 시트에서 좌표 룩업 맵 생성
   const scheduleCoords = {};
   DATA.schedule.forEach(s => {
     if (s.lat && s.lng) scheduleCoords[s.name] = { lat: parseFloat(s.lat), lng: parseFloat(s.lng), addr: s.addr || '' };
   });
-
   let html = `<div class="cat-section" data-cat="food">`;
   html += `<div class="day-heading"><h2>Day ${day} · 추천 맛집</h2></div>`;
   html += `<div class="food-grid">`;
@@ -922,7 +838,6 @@ function renderTipsSection(day) {
   return html;
 }
 
-// 사이드바 day 버튼 생성
 function renderDayButtons() {
   const days = getDays();
   const dayLabels = { 1:'하버', 2:'본다이', 3:'맨리', 4:'블루산', 5:'왓슨', 6:'귀국' };
@@ -937,7 +852,6 @@ function renderDayButtons() {
   document.getElementById('day-buttons-container').innerHTML = html;
 }
 
-// 전체 렌더링
 function renderAll() {
   renderDayButtons();
   const days = getDays();
@@ -946,9 +860,10 @@ function renderAll() {
   document.getElementById('timeline-content').innerHTML = html;
 }
 
-/* ════════════════════════════════════════════════════
-   5. 지도 & 마커
-═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   4. 지도 & 마커
+   ★ 핵심 수정: schedule 시트 좌표도 마커로 표시
+═══════════════════════════════════════════════════ */
 const dayColors = { 1:'#1A6B5A', 2:'#D85A30', 3:'#378ADD', 4:'#9B59B6', 5:'#BA7517', 6:'#7F8C8D' };
 const dayViews = {
   'all': { center:[-33.8500, 151.2100], zoom: 11 },
@@ -998,28 +913,47 @@ function makeFoodIcon(emoji) {
   });
 }
 
+/* ★★★ 수정된 renderMarkers ★★★
+   map_places 시트 마커 + schedule 시트 좌표 마커를 함께 표시
+   → 5일차처럼 map_places에 데이터가 없어도 자동으로 마커가 나옴 */
 function renderMarkers(dayFilter) {
   staticMarkers.forEach(m => map.removeLayer(m));
   staticMarkers = [];
+
+  // 1) map_places 시트 마커 (기존 방식)
+  const mapPlacesAdded = new Set();
   DATA.map_places
     .filter(p => dayFilter === 'all' || Number(p.day) == dayFilter)
     .forEach(p => {
       const color = dayColors[p.day] || '#1A6B5A';
       const m = L.marker([p.lat, p.lng], { icon: makeIcon(color, 26, p.day) })
         .addTo(map)
-        .bindTooltip(`[Day ${p.day}] ${p.name}`, { direction:'top', offset:[0,-10] });
+        .bindTooltip('[Day ' + p.day + '] ' + p.name, { direction:'top', offset:[0,-10] });
       m.on('click', () => showInfo(p.name, p.addr));
+      staticMarkers.push(m);
+      mapPlacesAdded.add(Number(p.day) + '_' + p.name);
+    });
+
+  // 2) schedule 시트에 lat/lng가 있는 항목도 마커로 추가
+  //    (transit 타입 제외, map_places에 이미 있는 항목은 중복 방지)
+  DATA.schedule
+    .filter(r => r.lat && r.lng && r.type !== 'transit')
+    .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
+    .filter(r => !mapPlacesAdded.has(Number(r.day) + '_' + r.name))
+    .forEach(r => {
+      const color = dayColors[r.day] || '#1A6B5A';
+      const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeIcon(color, 26, r.day) })
+        .addTo(map)
+        .bindTooltip('[Day ' + r.day + '] ' + r.name, { direction:'top', offset:[0,-10] });
+      m.on('click', () => showInfo(r.name, r.addr || ''));
       staticMarkers.push(m);
     });
 }
 
 function renderFoodMarkers(dayFilter) {
-  // 기존 맛집 마커 제거
   foodMarkers.forEach(m => map.removeLayer(m));
   foodMarkers = [];
 
-  // schedule 시트에서 food 타입이고 좌표 있는 항목 수집
-  // + food 시트 이름과 매칭해서 emoji 가져오기
   const foodNameToEmoji = {};
   DATA.food.forEach(f => { foodNameToEmoji[f.name] = f.emoji || '🍽️'; });
 
@@ -1030,15 +964,15 @@ function renderFoodMarkers(dayFilter) {
       const emoji = foodNameToEmoji[r.name] || '🍽️';
       const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeFoodIcon(emoji) })
         .addTo(map)
-        .bindTooltip(`🍴 ${r.name}`, { direction:'top', offset:[0,-14] });
+        .bindTooltip('🍴 ' + r.name, { direction:'top', offset:[0,-14] });
       m.on('click', () => showInfo(r.name, r.addr || ''));
       foodMarkers.push(m);
     });
 }
 
-/* ════════════════════════════════════════════════════
-   6. UI 인터랙션
-═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   5. UI 인터랙션
+═══════════════════════════════════════════════════ */
 function selectDay(day, btn) {
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1058,17 +992,14 @@ function selectCat(cat, btn) {
   closePlace();
 
   if (cat === 'food') {
-    // 일정 마커 숨기고 맛집 마커 표시
     staticMarkers.forEach(m => map.removeLayer(m));
     staticMarkers = [];
     renderFoodMarkers(currentDay);
-    // 맛집이 분포하는 뷰로 전환 (전체 범위 fit)
     if (foodMarkers.length > 0) {
       const group = L.featureGroup(foodMarkers);
       map.fitBounds(group.getBounds().pad(0.25), { duration: 0.8 });
     }
   } else {
-    // 맛집 마커 제거하고 일정 마커 표시
     foodMarkers.forEach(m => map.removeLayer(m));
     foodMarkers = [];
     renderMarkers(currentDay);
@@ -1132,9 +1063,9 @@ function pinMap(name, coords, addr, el) {
   _pinMapCore(name, coords, addr, el);
 }
 
-/* ════════════════════════════════════════════════════
-   7. 모바일 지도 토글 & 레이아웃
-═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   6. 모바일 지도 토글
+═══════════════════════════════════════════════════ */
 const PX = { sidebar:44, topbar:44, filter:38, map:200, toggle:32 };
 const TOP = {
   map:               PX.sidebar + PX.topbar + PX.filter,
