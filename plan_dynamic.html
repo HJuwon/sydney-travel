@@ -840,7 +840,7 @@ function renderTipsSection(day) {
 
 function renderDayButtons() {
   const days = getDays();
-  const dayLabels = { 1:'하버', 2:'본다이', 3:'맨리', 4:'블루산', 5:'왓슨', 6:'귀국' };
+  const dayLabels = { 0:'출발', 1:'하버', 2:'본다이', 3:'맨리', 4:'블루산', 5:'왓슨', 6:'귀국' };
   let html = '';
   days.forEach(d => {
     const label = dayLabels[d] || `D${d}`;
@@ -864,9 +864,10 @@ function renderAll() {
    4. 지도 & 마커
    ★ 핵심 수정: schedule 시트 좌표도 마커로 표시
 ═══════════════════════════════════════════════════ */
-const dayColors = { 1:'#1A6B5A', 2:'#D85A30', 3:'#378ADD', 4:'#9B59B6', 5:'#BA7517', 6:'#7F8C8D' };
+const dayColors = { 0:'#E74C3C', 1:'#1A6B5A', 2:'#D85A30', 3:'#378ADD', 4:'#9B59B6', 5:'#BA7517', 6:'#7F8C8D' };
 const dayViews = {
   'all': { center:[-33.8500, 151.2100], zoom: 11 },
+  0:    { center:[37.4602, 126.4407], zoom: 13 },
   1:    { center:[-33.8600, 151.2100], zoom: 14 },
   2:    { center:[-33.9060, 151.2680], zoom: 13 },
   3:    { center:[-33.8200, 151.2600], zoom: 13 },
