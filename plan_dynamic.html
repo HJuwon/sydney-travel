@@ -629,17 +629,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     <div class="sidebar-logo" title="Sydney Travel Plan">
       <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
     </div>
+    <!-- Info tab button — first, before day buttons -->
+    <button class="info-day-btn" id="info-day-btn" onclick="selectInfoTab(this)" title="여행 정보">
+      <span class="d-num">ℹ</span>
+      <span class="d-lbl">정보</span>
+    </button>
+    <div class="sidebar-sep"></div>
     <button class="day-btn active" onclick="selectDay('all',this)" title="전체 일정">
       <span class="d-num" style="font-size:13px;font-weight:600;">All</span>
       <span class="d-lbl">전체</span>
     </button>
     <div id="day-buttons-container" style="display:contents"></div>
-    <div class="sidebar-sep"></div>
-    <!-- Info tab button -->
-    <button class="info-day-btn" id="info-day-btn" onclick="selectInfoTab(this)" title="여행 정보">
-      <span class="d-num">ℹ</span>
-      <span class="d-lbl">정보</span>
-    </button>
     <div class="sidebar-sep"></div>
     <div class="sb-icon" title="설정">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -1187,31 +1187,28 @@ let infoTabActive = false;
 
 function selectInfoTab(btn) {
   infoTabActive = true;
-  // Deactivate day buttons
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 
-  // Switch filter bars
   document.getElementById('main-filter-bar').style.display = 'none';
   document.getElementById('info-filter-bar').style.display = '';
-
-  // Show info overlay, hide map controls
-  document.getElementById('info-overlay').classList.add('show');
   document.getElementById('place-info').classList.remove('show');
   document.getElementById('gmaps-btn').classList.remove('show');
 
-  // Hide map toggle on mobile (info replaces map area)
-  const toggleBtn = document.getElementById('map-toggle-btn');
-  if (toggleBtn) toggleBtn.style.display = 'none';
-
-  // Render default info category
-  selectInfoCat('flight', document.querySelector('#info-filter-bar .f-btn'));
-
-  // On mobile: collapse timeline, expand info overlay
   if (isMobile()) {
+    // Fully hide map and toggle, show info as full-screen panel
+    document.getElementById('map-panel-el').style.display = 'none';
+    const toggleBtn = document.getElementById('map-toggle-btn');
+    if (toggleBtn) toggleBtn.style.display = 'none';
+    document.getElementById('timeline-panel').style.display = 'none';
+
     const overlay = document.getElementById('info-overlay');
-    overlay.style.top = '126px';
+    overlay.style.cssText = 'position:fixed;top:126px;left:0;right:0;bottom:0;z-index:360;background:var(--cream);overflow-y:auto;padding:14px 12px 40px;display:block;';
+  } else {
+    document.getElementById('info-overlay').classList.add('show');
   }
+
+  selectInfoCat('flight', document.querySelector('#info-filter-bar .f-btn'));
 }
 
 function selectInfoCat(cat, btn) {
@@ -1225,11 +1222,22 @@ function exitInfoTab() {
   infoTabActive = false;
   document.getElementById('main-filter-bar').style.display = '';
   document.getElementById('info-filter-bar').style.display = 'none';
-  document.getElementById('info-overlay').classList.remove('show');
 
-  // Restore map toggle on mobile
-  const toggleBtn = document.getElementById('map-toggle-btn');
-  if (toggleBtn && isMobile()) toggleBtn.style.display = '';
+  if (isMobile()) {
+    document.getElementById('map-panel-el').style.display = '';
+    const toggleBtn = document.getElementById('map-toggle-btn');
+    if (toggleBtn) toggleBtn.style.display = '';
+    document.getElementById('timeline-panel').style.display = '';
+
+    const overlay = document.getElementById('info-overlay');
+    overlay.style.cssText = '';
+    overlay.classList.remove('show');
+
+    applyTimelineOffset();
+    setTimeout(() => { if (map) map.invalidateSize(); }, 50);
+  } else {
+    document.getElementById('info-overlay').classList.remove('show');
+  }
 }
 
 /* ═══════════════════════════════════════════════════
