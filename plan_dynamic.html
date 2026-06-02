@@ -1033,10 +1033,15 @@ function renderInfoCard(iconEmoji, title, colorClass, rows) {
       <div class="info-card-header ${colorClass}">${iconEmoji} ${title}</div>
       <div class="info-rows">`;
   rows.forEach(r => {
+    const val = r.value || '';
+    const isURL = val.startsWith('http://') || val.startsWith('https://');
+    const valueHtml = isURL
+      ? `<a href="${val}" target="_blank" rel="noopener" style="color:var(--teal);font-weight:600;font-size:11px;word-break:break-all;text-decoration:none;border-bottom:1px solid var(--teal);">🔗 바로가기</a>`
+      : val;
     html += `<div class="info-row">
       <div class="info-row-icon">${r.icon || ''}</div>
       <div class="info-row-label">${r.label || ''}</div>
-      <div class="info-row-value">${r.value || ''}</div>
+      <div class="info-row-value">${valueHtml}</div>
     </div>`;
   });
   html += `</div></div></div>`;
