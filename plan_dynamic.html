@@ -500,6 +500,65 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   cursor: pointer; transition: 0.13s;
 }
 #load-btn:hover { background: var(--teal-mid); }
+
+/* ── INFO PANEL ── */
+.info-panel-wrap { display: none; }
+.info-panel-wrap.visible {
+  display: block;
+  padding: 18px 14px 40px;
+}
+.info-section { margin-bottom: 22px; }
+.info-section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px; color: var(--dark);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 7px;
+}
+.info-section-title span { font-size: 18px; }
+.info-rows { display: flex; flex-direction: column; gap: 6px; }
+.info-row {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 13px;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.info-row-label { font-size: 11.5px; color: var(--mid); font-weight: 500; flex-shrink: 0; }
+.info-row-value { font-size: 12px; color: var(--dark); font-weight: 600; text-align: right; }
+
+/* 예산 섹션 강조 */
+.info-row.budget-total {
+  background: var(--teal-light);
+  border-color: var(--teal);
+}
+.info-row.budget-total .info-row-label { color: var(--teal-mid); }
+.info-row.budget-total .info-row-value { color: var(--teal); font-size: 13px; }
+
+/* 체크리스트 */
+.checklist-rows { display: flex; flex-direction: column; gap: 5px; }
+.checklist-item {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 13px;
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; transition: 0.13s;
+}
+.checklist-item:hover { border-color: var(--teal); }
+.checklist-item.checked { background: var(--teal-light); border-color: var(--teal); }
+.checklist-check {
+  width: 18px; height: 18px; flex-shrink: 0;
+  border-radius: 5px; border: 2px solid var(--border-hover);
+  display: flex; align-items: center; justify-content: center;
+  transition: 0.13s;
+}
+.checklist-item.checked .checklist-check {
+  background: var(--teal); border-color: var(--teal);
+}
+.checklist-check svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; display: none; }
+.checklist-item.checked .checklist-check svg { display: block; }
+.checklist-label { font-size: 12px; font-weight: 500; color: var(--dark); }
+.checklist-item.checked .checklist-label { color: var(--teal-mid); text-decoration: line-through; }
 </style>
 </head>
 <body>
@@ -569,11 +628,16 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         여행 팁
       </button>
+      <button class="f-btn" onclick="selectCat('info',this)">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        여행 정보
+      </button>
     </div>
 
     <div class="content-area">
       <div class="timeline-panel" id="timeline-panel">
         <div id="timeline-content"></div>
+        <div class="info-panel-wrap" id="info-panel"></div>
       </div>
     </div>
   </div>
@@ -603,10 +667,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 /* ═══════════════════════════════════════════════════
    1. 데이터 상태
 ═══════════════════════════════════════════════════ */
-let DATA = { schedule: [], food: [], tips: [], sights: [], map_places: [] };
+let DATA = { schedule: [], food: [], tips: [], sights: [], map_places: [], info: [] };
 
 const SHEET_ID = '1A5YDClkB7E2IlULZU3SMbgy20qIZo21Jphj-fyqAV6o';
-const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'map_places'];
+const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'map_places', 'info'];
 
 /* ═══════════════════════════════════════════════════
    2. Google Sheets CSV 로드
@@ -859,6 +923,74 @@ function renderAll() {
   let html = '';
   days.forEach(d => { html += renderSchedule(d); });
   document.getElementById('timeline-content').innerHTML = html;
+  renderInfo();
+}
+
+/* ═══════════════════════════════════════════════════
+   여행 정보 패널 렌더링
+═══════════════════════════════════════════════════ */
+const categoryMeta = {
+  flight:    { label: '✈️ 항공권 정보', icon: '✈️' },
+  exchange:  { label: '💱 환율 / 환전',  icon: '💱' },
+  hotel:     { label: '🏨 숙소 정보',    icon: '🏨' },
+  transport: { label: '🚌 교통 패스',    icon: '🚌' },
+  budget:    { label: '💰 예산 정리',    icon: '💰' },
+  checklist: { label: '📋 준비물 체크리스트', icon: '📋' },
+};
+
+function renderInfo() {
+  const rows = DATA.info;
+  if (!rows.length) {
+    document.getElementById('info-panel').innerHTML =
+      `<div style="padding:40px 0;text-align:center;color:var(--mid);font-size:13px;">
+        구글 시트 <strong>info</strong> 탭에 데이터를 추가해주세요
+      </div>`;
+    return;
+  }
+
+  // category별 그룹핑
+  const groups = {};
+  rows.forEach(r => {
+    const cat = (r.category || '').trim();
+    if (!cat) return;
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(r);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([cat, items]) => {
+    const meta = categoryMeta[cat] || { label: cat, icon: '📌' };
+    html += `<div class="info-section">`;
+    html += `<div class="info-section-title"><span>${meta.icon}</span>${meta.label.replace(/^.{1,2}\s/,'')}</div>`;
+
+    if (cat === 'checklist') {
+      html += `<div class="checklist-rows">`;
+      items.forEach((item, i) => {
+        html += `<div class="checklist-item" id="chk-${i}" onclick="toggleCheck(this)">
+          <div class="checklist-check"><svg viewBox="0 0 12 12"><polyline points="2 6 5 9 10 3"/></svg></div>
+          <span class="checklist-label">${item.label || ''}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    } else {
+      html += `<div class="info-rows">`;
+      items.forEach(item => {
+        const isBudgetTotal = cat === 'budget' && (item.label || '').includes('합계');
+        html += `<div class="info-row${isBudgetTotal ? ' budget-total' : ''}">
+          <span class="info-row-label">${item.label || ''}</span>
+          <span class="info-row-value">${item.value || ''}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  });
+
+  document.getElementById('info-panel').innerHTML = html;
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
 }
 
 /* ═══════════════════════════════════════════════════
