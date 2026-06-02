@@ -982,7 +982,7 @@ function renderAll() {
    4. INFO 탭 렌더링
 ═══════════════════════════════════════════════════ */
 let currentInfoCat = 'flight';
-let checklistState = {};
+let checklistState = JSON.parse(localStorage.getItem('checklistState') || '{}');
 
 function getInfoBy(cat) {
   return DATA.info.filter(r => r.category === cat);
@@ -1177,6 +1177,7 @@ function renderChecklistCard(rows) {
 function toggleCheck(idx) {
   const key = `chk_${idx}`;
   checklistState[key] = !checklistState[key];
+  localStorage.setItem('checklistState', JSON.stringify(checklistState));
   renderInfoContent(currentInfoCat);
   // Animate bars after re-render
   if (currentInfoCat === 'checklist') {
