@@ -731,9 +731,10 @@ function renderSchedule(day) {
   if (!rows.length) return '';
 
   const dateStr = rows[0].date || '';
+  const dayTitle = rows.find(r => r.title && r.title.trim())?.title?.trim() || `Day ${day}`;
   let html = `<div class="day-section visible" id="day-${day}" data-day="${day}">`;
   html += `<div class="cat-section visible" data-cat="schedule">`;
-  html += `<div class="day-heading"><h2>Day ${day} · ${rows[0].name}</h2><p>${dateStr}</p></div>`;
+  html += `<div class="day-heading"><h2>Day ${day} · ${dayTitle}</h2><p>${dateStr}</p></div>`;
 
   rows.forEach((row, i) => {
     const type = (row.type || 'sight').trim();
