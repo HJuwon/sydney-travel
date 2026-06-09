@@ -93,7 +93,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sb-icon:hover { background: var(--gray-light); color: var(--dark); }
 .sb-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 
-/* Info tab button in sidebar */
 .info-day-btn {
   width: 46px; height: 48px;
   border-radius: 11px;
@@ -176,17 +175,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .day-heading { margin-bottom: 16px; }
 .day-heading h2 { font-family: 'DM Serif Display', serif; font-size: 19px; color: var(--dark); margin-bottom: 1px; }
 .day-heading p { font-size: 11px; color: var(--mid); }
-
-.cat-tabs { display: flex; gap: 5px; margin-bottom: 16px; }
-.cat-tab {
-  flex: 1; padding: 6px 0;
-  border-radius: 8px; border: 1px solid var(--border);
-  background: var(--white);
-  font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500;
-  color: var(--mid); cursor: pointer; transition: 0.13s; text-align: center;
-}
-.cat-tab:hover { border-color: var(--teal); color: var(--teal); }
-.cat-tab.active { background: var(--teal); border-color: var(--teal); color: #fff; }
 
 .day-section { display: none; }
 .day-section.visible { display: block; }
@@ -296,11 +284,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sight-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
 .sight-text { font-size: 11px; color: var(--mid); line-height: 1.5; }
 
-/* ══════════════════════════════
-   INFO PANEL (overlay on map)
-══════════════════════════════ */
-
-
 .info-section { margin-bottom: 20px; }
 .info-section-title {
   font-family: 'DM Serif Display', serif;
@@ -312,7 +295,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 }
 .info-section-title span { font-size: 16px; }
 
-/* Info cards */
 .info-card {
   background: var(--white);
   border: 1px solid var(--border);
@@ -346,14 +328,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .info-row-value.highlight { color: var(--teal); font-weight: 700; font-size: 13px; }
 .info-row-value.coral { color: var(--coral); font-weight: 600; }
 
-/* Budget bar */
-.budget-bar-wrap {
-  padding: 12px 14px 14px;
-}
-.budget-total {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 10px;
-}
+.budget-bar-wrap { padding: 12px 14px 14px; }
+.budget-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .budget-total-label { font-size: 12px; color: var(--mid); font-weight: 500; }
 .budget-total-value { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--dark); }
 .budget-items { display: flex; flex-direction: column; gap: 6px; }
@@ -363,32 +339,22 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .budget-item-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
 .budget-item-val { font-size: 11px; font-weight: 600; color: var(--dark); width: 90px; text-align: right; flex-shrink: 0; }
 
-/* Checklist */
 .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .checklist-item {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 9px 12px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 10px; padding: 9px 12px;
   display: flex; align-items: center; gap: 8px;
-  cursor: pointer; transition: 0.14s;
-  user-select: none;
+  cursor: pointer; transition: 0.14s; user-select: none;
 }
 .checklist-item:hover { border-color: var(--border-hover); }
-.checklist-item.checked {
-  background: var(--teal-light);
-  border-color: var(--teal);
-}
+.checklist-item.checked { background: var(--teal-light); border-color: var(--teal); }
 .checklist-check {
   width: 18px; height: 18px; border-radius: 50%;
   border: 2px solid var(--border-hover);
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: 0.14s;
-  background: var(--white);
+  flex-shrink: 0; transition: 0.14s; background: var(--white);
 }
-.checklist-item.checked .checklist-check {
-  background: var(--teal); border-color: var(--teal);
-}
+.checklist-item.checked .checklist-check { background: var(--teal); border-color: var(--teal); }
 .checklist-check svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; display: none; }
 .checklist-item.checked .checklist-check svg { display: block; }
 .checklist-icon { font-size: 15px; }
@@ -403,31 +369,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .checklist-progress-bar { height: 100%; background: var(--teal); border-radius: 3px; transition: width 0.3s ease; }
 .checklist-progress-label { font-size: 11px; font-weight: 600; color: var(--teal); min-width: 40px; text-align: right; }
 
-/* Exchange rate display */
-.exchange-big {
-  padding: 14px 14px 10px;
-  text-align: center;
-}
-.exchange-rate-display {
-  font-family: 'DM Serif Display', serif;
-  font-size: 28px; color: var(--dark);
-  margin-bottom: 4px;
-}
+.exchange-big { padding: 14px 14px 10px; text-align: center; }
+.exchange-rate-display { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--dark); margin-bottom: 4px; }
 .exchange-rate-sub { font-size: 11px; color: var(--mid); }
 .exchange-calc {
   display: flex; gap: 8px; align-items: center;
-  padding: 10px 14px;
-  background: var(--amber-light);
+  padding: 10px 14px; background: var(--amber-light);
   border-top: 1px solid rgba(186,117,23,0.15);
 }
 .exchange-calc-label { font-size: 11px; color: var(--amber); font-weight: 600; flex: 1; }
 .exchange-calc-val { font-size: 12px; font-weight: 600; color: var(--dark); }
 
-/* Map panel */
 .map-panel { flex: 1; position: relative; overflow: hidden; background: #dce8e4; }
 #leaflet-map { width: 100%; height: 100%; }
 
-/* Desktop: info overlay fills the content-area beside timeline */
 .info-overlay {
   display: none;
   flex: 1;
@@ -480,7 +435,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 
 .map-toggle-btn { display: none; }
 
-/* ── MOBILE ── */
 @media (max-width: 768px) {
   html, body { overflow: hidden; height: 100%; }
   .app { flex-direction: column; height: 100%; }
@@ -560,7 +514,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   .map-gmaps-btn { top: 8px; right: 8px; font-size: 11px; padding: 5px 10px; }
   .map-place-info { bottom: 8px; left: 8px; right: 8px; }
 
-  /* Info overlay on mobile — z-index must beat map(370) + toggle(360) */
   .info-overlay.show {
     display: block !important;
     position: fixed !important;
@@ -573,7 +526,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   }
 }
 
-/* Loading */
 #loading-screen {
   position: fixed; inset: 0; background: var(--cream);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -633,7 +585,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     <div class="sidebar-logo" title="Sydney Travel Plan">
       <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
     </div>
-    <!-- Info tab button — first, before day buttons -->
     <button class="info-day-btn" id="info-day-btn" onclick="selectInfoTab(this)" title="여행 정보">
       <span class="d-num">ℹ</span>
       <span class="d-lbl">정보</span>
@@ -657,9 +608,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         5박 · 6일
       </div>
-      <div class="tb-badge">
-        Sydeny_travel
-      </div>
+      <div class="tb-badge">Sydeny_travel</div>
     </header>
 
     <div class="filter-bar" id="main-filter-bar">
@@ -681,7 +630,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
       </button>
     </div>
 
-    <!-- Info filter bar (hidden by default) -->
     <div class="filter-bar" id="info-filter-bar" style="display:none;">
       <button class="f-btn active" onclick="selectInfoCat('flight',this)">✈️ 항공</button>
       <button class="f-btn" onclick="selectInfoCat('exchange',this)">💱 환율</button>
@@ -695,11 +643,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
       <div class="timeline-panel" id="timeline-panel">
         <div id="timeline-content"></div>
       </div>
-      <!-- Info overlay: sibling of timeline, fills same flex space as map -->
       <div class="info-overlay" id="info-overlay">
         <div id="info-content"></div>
       </div>
-      <!-- Map panel: also a sibling in content-area -->
       <div class="map-panel" id="map-panel-el">
         <div id="leaflet-map"></div>
         <a class="map-gmaps-btn" id="gmaps-btn" href="#" target="_blank" rel="noopener">
@@ -726,11 +672,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 <script>
 /* ═══════════════════════════════════════════════════
    1. 데이터 상태
+   ※ map_places 시트 제거 — schedule/food 시트의 lat/lng 직접 사용
 ═══════════════════════════════════════════════════ */
-let DATA = { schedule: [], food: [], tips: [], sights: [], map_places: [], info: [] };
+let DATA = { schedule: [], food: [], tips: [], sights: [], info: [] };
 
 const SHEET_ID = '1A5YDClkB7E2IlULZU3SMbgy20qIZo21Jphj-fyqAV6o';
-const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'map_places', 'info'];
+const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'info'];
 
 /* ═══════════════════════════════════════════════════
    2. Google Sheets CSV 로드
@@ -788,7 +735,6 @@ window.addEventListener('load', async () => {
       try {
         DATA[name] = await fetchSheet(name);
       } catch(e) {
-        // info sheet might not exist yet — gracefully continue
         console.warn(`시트 "${name}" 로드 건너뜀:`, e.message);
         DATA[name] = [];
       }
@@ -827,7 +773,7 @@ function setLoadingMsg(msg) { document.getElementById('loading-msg').textContent
 function setLoadingBar(pct) { document.getElementById('loading-bar').style.width = pct + '%'; }
 
 /* ═══════════════════════════════════════════════════
-   3. 렌더링 (기존)
+   3. 렌더링
 ═══════════════════════════════════════════════════ */
 function getDays() {
   const days = [...new Set(DATA.schedule.map(r => Number(r.day)))].sort((a,b) => a-b);
@@ -901,21 +847,20 @@ function renderSchedule(day) {
 function renderFoodSection(day) {
   const rows = DATA.food.filter(r => Number(r.day) === day);
   if (!rows.length) return '';
-  const scheduleCoords = {};
-  DATA.schedule.forEach(s => {
-    if (s.lat && s.lng) scheduleCoords[s.name] = { lat: parseFloat(s.lat), lng: parseFloat(s.lng), addr: s.addr || '' };
-  });
   let html = `<div class="cat-section" data-cat="food">`;
   html += `<div class="day-heading"><h2>Day ${day} · 추천 맛집</h2></div>`;
   html += `<div class="food-grid">`;
   rows.forEach(r => {
-    const coords = scheduleCoords[r.name];
-    const pinCall = coords ? `onclick="pinMap('${r.name.replace(/'/g,"\\'")}',{lat:${coords.lat},lng:${coords.lng}},'${coords.addr.replace(/'/g,"\\'")}',this)"` : '';
-    const cursorStyle = coords ? 'cursor:pointer;' : '';
+    const hasCoords = r.lat && r.lng;
+    const lat = parseFloat(r.lat), lng = parseFloat(r.lng);
+    const addr = r.addr || '';
+    const name = r.name || '';
+    const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
+    const cursorStyle = hasCoords ? 'cursor:pointer;' : '';
     html += `<div class="food-card" ${pinCall} style="${cursorStyle}">
       <div class="food-emoji" style="background:#${r.bg_color || 'F5F5F5'}">${r.emoji || '🍽️'}</div>
       <div class="food-body">
-        <div class="food-name">${r.name}${coords ? ' <span style="font-size:9px;color:#D85A30;font-weight:600;">📍</span>' : ''}</div>
+        <div class="food-name">${name}${hasCoords ? ' <span style="font-size:9px;color:#D85A30;font-weight:600;">📍</span>' : ''}</div>
         <div class="food-desc">${r.description || ''}</div>
         <div class="food-price">${r.price_level || ''}</div>
       </div>
@@ -984,27 +929,17 @@ function renderAll() {
 let currentInfoCat = 'flight';
 let checklistState = JSON.parse(localStorage.getItem('checklistState') || '{}');
 
-function getInfoBy(cat) {
-  return DATA.info.filter(r => r.category === cat);
-}
+function getInfoBy(cat) { return DATA.info.filter(r => r.category === cat); }
 
 function renderInfoContent(cat) {
   const rows = getInfoBy(cat);
   let html = '';
-
-  if (cat === 'flight') {
-    html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
-  } else if (cat === 'exchange') {
-    html += renderExchangeCard(rows);
-  } else if (cat === 'hotel') {
-    html += renderInfoCard('🏨', '숙소 정보', 'blue', rows);
-  } else if (cat === 'transport') {
-    html += renderInfoCard('🚌', '교통 정보', 'amber', rows);
-  } else if (cat === 'budget') {
-    html += renderBudgetCard(rows);
-  } else if (cat === 'checklist') {
-    html += renderChecklistCard(rows);
-  }
+  if (cat === 'flight') html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
+  else if (cat === 'exchange') html += renderExchangeCard(rows);
+  else if (cat === 'hotel') html += renderInfoCard('🏨', '숙소 정보', 'blue', rows);
+  else if (cat === 'transport') html += renderInfoCard('🚌', '교통 정보', 'amber', rows);
+  else if (cat === 'budget') html += renderBudgetCard(rows);
+  else if (cat === 'checklist') html += renderChecklistCard(rows);
 
   if (!rows.length && cat !== 'checklist' && cat !== 'budget') {
     html = `<div style="text-align:center;padding:40px 20px;color:var(--mid);">
@@ -1015,8 +950,6 @@ function renderInfoContent(cat) {
   }
 
   document.getElementById('info-content').innerHTML = html;
-
-  // Animate budget bars after render
   if (cat === 'budget') {
     setTimeout(() => {
       document.querySelectorAll('.budget-item-bar[data-pct]').forEach(bar => {
@@ -1028,10 +961,9 @@ function renderInfoContent(cat) {
 
 function renderInfoCard(iconEmoji, title, colorClass, rows) {
   if (!rows.length) return '';
-  let html = `<div class="info-section">
-    <div class="info-card">
-      <div class="info-card-header ${colorClass}">${iconEmoji} ${title}</div>
-      <div class="info-rows">`;
+  let html = `<div class="info-section"><div class="info-card">
+    <div class="info-card-header ${colorClass}">${iconEmoji} ${title}</div>
+    <div class="info-rows">`;
   rows.forEach(r => {
     const val = r.value || '';
     const isURL = val.startsWith('http://') || val.startsWith('https://');
@@ -1050,25 +982,20 @@ function renderInfoCard(iconEmoji, title, colorClass, rows) {
 
 function renderExchangeCard(rows) {
   if (!rows.length) return '';
-  // Look for main rate row
   const rateRow = rows.find(r => r.label && r.label.includes('환율')) || rows[0];
   const calcRow = rows.find(r => r.label && r.label.includes('환전'));
-  let rateDisplay = rateRow ? rateRow.value : '-';
-
-  let html = `<div class="info-section">
-    <div class="info-card">
-      <div class="info-card-header amber">💱 환율 정보</div>
-      <div class="exchange-big">
-        <div class="exchange-rate-display">${rateDisplay}</div>
-        <div class="exchange-rate-sub">현재 AUD → KRW 환율</div>
-      </div>`;
+  let html = `<div class="info-section"><div class="info-card">
+    <div class="info-card-header amber">💱 환율 정보</div>
+    <div class="exchange-big">
+      <div class="exchange-rate-display">${rateRow ? rateRow.value : '-'}</div>
+      <div class="exchange-rate-sub">현재 AUD → KRW 환율</div>
+    </div>`;
   if (calcRow) {
     html += `<div class="exchange-calc">
       <div class="exchange-calc-label">💡 ${calcRow.label}</div>
       <div class="exchange-calc-val">${calcRow.value}</div>
     </div>`;
   }
-  // Other rows
   const others = rows.filter(r => r !== rateRow && r !== calcRow);
   if (others.length) {
     html += `<div class="info-rows">`;
@@ -1087,41 +1014,32 @@ function renderExchangeCard(rows) {
 
 function renderBudgetCard(rows) {
   if (!rows.length) return '';
-  // Parse amounts — strip non-numeric except commas/periods, look for totals
   const totalRow = rows.find(r => r.label && (r.label.includes('합계') || r.label.includes('총')));
   const itemRows = rows.filter(r => r !== totalRow);
-
-  // Try to extract numbers for bar chart
   function parseAmt(val) {
     if (!val) return 0;
     const m = val.replace(/,/g, '').match(/[\d.]+/);
     return m ? parseFloat(m[0]) : 0;
   }
-
   const maxAmt = Math.max(...itemRows.map(r => parseAmt(r.value)), 1);
-
-  let html = `<div class="info-section">
-    <div class="info-card">
-      <div class="info-card-header coral">💰 여행 예산</div>
-      <div class="budget-bar-wrap">`;
-
+  const barColors = ['#1A6B5A','#378ADD','#D85A30','#BA7517','#9B59B6','#5F5E5A'];
+  let html = `<div class="info-section"><div class="info-card">
+    <div class="info-card-header coral">💰 여행 예산</div>
+    <div class="budget-bar-wrap">`;
   if (totalRow) {
     html += `<div class="budget-total">
       <div class="budget-total-label">총 예산</div>
       <div class="budget-total-value">${totalRow.value}</div>
     </div>`;
   }
-
-  const barColors = ['#1A6B5A','#378ADD','#D85A30','#BA7517','#9B59B6','#5F5E5A'];
   html += `<div class="budget-items">`;
   itemRows.forEach((r, i) => {
     const amt = parseAmt(r.value);
     const pct = maxAmt > 0 ? Math.round((amt / maxAmt) * 100) : 0;
-    const color = barColors[i % barColors.length];
     html += `<div class="budget-item">
       <div class="budget-item-label">${r.icon || ''} ${r.label || ''}</div>
       <div class="budget-item-bar-wrap">
-        <div class="budget-item-bar" data-pct="${pct}" style="background:${color};width:0%"></div>
+        <div class="budget-item-bar" data-pct="${pct}" style="background:${barColors[i % barColors.length]};width:0%"></div>
       </div>
       <div class="budget-item-val">${r.value}</div>
     </div>`;
@@ -1131,32 +1049,26 @@ function renderBudgetCard(rows) {
 }
 
 function renderChecklistCard(rows) {
-  // Init state for new items
   rows.forEach((r, i) => {
     const key = `chk_${i}`;
     if (!(key in checklistState)) checklistState[key] = false;
   });
-
   const total = rows.length;
   const done = rows.filter((r, i) => checklistState[`chk_${i}`]).length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-
-  let html = `<div class="info-section">
-    <div class="info-card">
-      <div class="info-card-header gray">📋 준비물 체크리스트</div>
-      <div style="padding:10px 14px 4px;">
-        <div class="checklist-progress">
-          <div class="checklist-progress-bar-wrap">
-            <div class="checklist-progress-bar" style="width:${pct}%"></div>
-          </div>
-          <div class="checklist-progress-label">${done}/${total}</div>
-        </div>`;
-
+  let html = `<div class="info-section"><div class="info-card">
+    <div class="info-card-header gray">📋 준비물 체크리스트</div>
+    <div style="padding:10px 14px 4px;">
+      <div class="checklist-progress">
+        <div class="checklist-progress-bar-wrap">
+          <div class="checklist-progress-bar" style="width:${pct}%"></div>
+        </div>
+        <div class="checklist-progress-label">${done}/${total}</div>
+      </div>`;
   if (rows.length) {
     html += `<div class="checklist-grid">`;
     rows.forEach((r, i) => {
-      const key = `chk_${i}`;
-      const checked = checklistState[key];
+      const checked = checklistState[`chk_${i}`];
       html += `<div class="checklist-item${checked ? ' checked' : ''}" onclick="toggleCheck(${i})">
         <div class="checklist-check">
           <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1167,9 +1079,8 @@ function renderChecklistCard(rows) {
     });
     html += `</div>`;
   } else {
-    html += `<div style="text-align:center;padding:20px;color:var(--mid);font-size:12px;">체크리스트 항목이 없습니다<br><span style="opacity:0.6;font-size:11px;">info 시트에 category: checklist 추가</span></div>`;
+    html += `<div style="text-align:center;padding:20px;color:var(--mid);font-size:12px;">체크리스트 항목이 없습니다</div>`;
   }
-
   html += `</div></div></div>`;
   return html;
 }
@@ -1179,18 +1090,10 @@ function toggleCheck(idx) {
   checklistState[key] = !checklistState[key];
   localStorage.setItem('checklistState', JSON.stringify(checklistState));
   renderInfoContent(currentInfoCat);
-  // Animate bars after re-render
-  if (currentInfoCat === 'checklist') {
-    setTimeout(() => {
-      document.querySelectorAll('.checklist-progress-bar').forEach(bar => {
-        bar.style.transition = 'width 0.3s ease';
-      });
-    }, 10);
-  }
 }
 
 /* ═══════════════════════════════════════════════════
-   5. Info 탭 UI 인터랙션
+   5. Info 탭 UI
 ═══════════════════════════════════════════════════ */
 let infoTabActive = false;
 
@@ -1198,31 +1101,19 @@ function selectInfoTab(btn) {
   infoTabActive = true;
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-
-  // Swap filter bars
   document.getElementById('main-filter-bar').style.display = 'none';
   document.getElementById('info-filter-bar').style.display = '';
-
-  // Hide map popups
   document.getElementById('place-info').classList.remove('show');
   document.getElementById('gmaps-btn').classList.remove('show');
-
-  // Hide timeline on BOTH mobile and desktop
   document.getElementById('timeline-panel').style.display = 'none';
-
   if (isMobile()) {
-    // Fully hide map panel and toggle so info overlay is unobstructed
     document.getElementById('map-panel-el').style.display = 'none';
     const toggleBtn = document.getElementById('map-toggle-btn');
     if (toggleBtn) toggleBtn.style.display = 'none';
   } else {
-    // Desktop: hide map panel entirely so info fills the right column
     document.getElementById('map-panel-el').style.display = 'none';
   }
-
-  // Show info overlay — on mobile CSS handles positioning via .info-overlay.show
   document.getElementById('info-overlay').classList.add('show');
-
   selectInfoCat('flight', document.querySelector('#info-filter-bar .f-btn'));
 }
 
@@ -1238,10 +1129,7 @@ function exitInfoTab() {
   document.getElementById('main-filter-bar').style.display = '';
   document.getElementById('info-filter-bar').style.display = 'none';
   document.getElementById('info-overlay').classList.remove('show');
-
-  // Restore timeline
   document.getElementById('timeline-panel').style.display = '';
-
   if (isMobile()) {
     document.getElementById('map-panel-el').style.display = '';
     const toggleBtn = document.getElementById('map-toggle-btn');
@@ -1256,6 +1144,8 @@ function exitInfoTab() {
 
 /* ═══════════════════════════════════════════════════
    6. 지도 & 마커
+   ※ schedule 탭: schedule 시트의 lat/lng 표시
+   ※ food 탭: food 시트의 lat/lng 표시 (schedule 마커 숨김)
 ═══════════════════════════════════════════════════ */
 const dayColors = { 0:'#E74C3C', 1:'#1A6B5A', 2:'#D85A30', 3:'#378ADD', 4:'#9B59B6', 5:'#BA7517', 6:'#7F8C8D' };
 const dayViews = {
@@ -1269,7 +1159,7 @@ const dayViews = {
   6:    { center:[-33.9399, 151.1753], zoom: 14 }
 };
 
-let map, staticMarkers = [], foodMarkers = [], activeMarker = null;
+let map, scheduleMarkers = [], foodMarkers = [], activeMarker = null;
 let currentDay = 'all', currentCat = 'schedule';
 
 function initMap() {
@@ -1278,12 +1168,12 @@ function initMap() {
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     attribution: '© CartoDB © OSM', maxZoom: 19
   }).addTo(map);
-  renderMarkers('all');
-  updateView();
+  // 초기에는 schedule 마커 표시
+  renderScheduleMarkers('all');
 }
 
 function makeIcon(color, size = 16, day = null) {
-  const label = day ? `<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:${size*0.55}px;line-height:1;color:#fff;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,0.35);pointer-events:none;user-select:none;">${day}</span>` : '';
+  const label = day !== null ? `<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:${size*0.55}px;line-height:1;color:#fff;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,0.35);pointer-events:none;user-select:none;">${day}</span>` : '';
   return L.divIcon({
     className: '',
     html: `<div style="position:relative;width:${size}px;height:${size}px;background:${color};border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.28);display:flex;align-items:center;justify-content:center;">${label}</div>`,
@@ -1307,51 +1197,43 @@ function makeFoodIcon(emoji) {
   });
 }
 
-function renderMarkers(dayFilter) {
-  staticMarkers.forEach(m => map.removeLayer(m));
-  staticMarkers = [];
-  const mapPlacesAdded = new Set();
-  DATA.map_places
-    .filter(p => dayFilter === 'all' || Number(p.day) == dayFilter)
-    .forEach(p => {
-      const color = dayColors[p.day] || '#1A6B5A';
-      const m = L.marker([p.lat, p.lng], { icon: makeIcon(color, 26, p.day) })
-        .addTo(map)
-        .bindTooltip('[Day ' + p.day + '] ' + p.name, { direction:'top', offset:[0,-10] });
-      m.on('click', () => showInfo(p.name, p.addr));
-      staticMarkers.push(m);
-      mapPlacesAdded.add(Number(p.day) + '_' + p.name);
-    });
+/* schedule 시트 lat/lng 기반 마커 */
+function renderScheduleMarkers(dayFilter) {
+  scheduleMarkers.forEach(m => map.removeLayer(m));
+  scheduleMarkers = [];
   DATA.schedule
     .filter(r => r.lat && r.lng && r.type !== 'transit')
     .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
-    .filter(r => !mapPlacesAdded.has(Number(r.day) + '_' + r.name))
     .forEach(r => {
       const color = dayColors[r.day] || '#1A6B5A';
       const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeIcon(color, 26, r.day) })
         .addTo(map)
         .bindTooltip('[Day ' + r.day + '] ' + r.name, { direction:'top', offset:[0,-10] });
       m.on('click', () => showInfo(r.name, r.addr || ''));
-      staticMarkers.push(m);
+      scheduleMarkers.push(m);
     });
 }
 
+/* food 시트 lat/lng 기반 마커 */
 function renderFoodMarkers(dayFilter) {
   foodMarkers.forEach(m => map.removeLayer(m));
   foodMarkers = [];
-  const foodNameToEmoji = {};
-  DATA.food.forEach(f => { foodNameToEmoji[f.name] = f.emoji || '🍽️'; });
-  DATA.schedule
-    .filter(r => r.type === 'food' && r.lat && r.lng)
+  DATA.food
+    .filter(r => r.lat && r.lng)
     .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
     .forEach(r => {
-      const emoji = foodNameToEmoji[r.name] || '🍽️';
+      const emoji = r.emoji || '🍽️';
       const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeFoodIcon(emoji) })
         .addTo(map)
         .bindTooltip('🍴 ' + r.name, { direction:'top', offset:[0,-14] });
       m.on('click', () => showInfo(r.name, r.addr || ''));
       foodMarkers.push(m);
     });
+}
+
+function clearAllMarkers() {
+  scheduleMarkers.forEach(m => map.removeLayer(m)); scheduleMarkers = [];
+  foodMarkers.forEach(m => map.removeLayer(m));     foodMarkers = [];
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1366,28 +1248,34 @@ function selectDay(day, btn) {
   closePlace();
   const v = dayViews[day] || dayViews['all'];
   if (map) map.flyTo(v.center, v.zoom, { duration: 1.0 });
-  renderMarkers(day);
-  if (currentCat === 'food') renderFoodMarkers(day);
+
+  // 현재 탭에 맞게 마커 갱신
+  if (currentCat === 'food') {
+    renderFoodMarkers(day);
+  } else {
+    renderScheduleMarkers(day);
+  }
   updateView();
 }
 
 function selectCat(cat, btn) {
-  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#main-filter-bar .f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   currentCat = cat;
   closePlace();
+
   if (cat === 'food') {
-    staticMarkers.forEach(m => map.removeLayer(m));
-    staticMarkers = [];
+    // 맛집 탭: schedule 마커 완전히 제거, food 마커만 표시
+    clearAllMarkers();
     renderFoodMarkers(currentDay);
     if (foodMarkers.length > 0) {
       const group = L.featureGroup(foodMarkers);
       map.fitBounds(group.getBounds().pad(0.25), { duration: 0.8 });
     }
   } else {
-    foodMarkers.forEach(m => map.removeLayer(m));
-    foodMarkers = [];
-    renderMarkers(currentDay);
+    // 그 외 탭: food 마커 제거, schedule 마커 표시
+    clearAllMarkers();
+    renderScheduleMarkers(currentDay);
   }
   updateView();
 }
@@ -1462,11 +1350,6 @@ const TOP = {
 let mapExpanded = true;
 function isMobile() { return window.innerWidth <= 768; }
 
-function repositionMapPanel() {
-  // map-panel is always inside content-area — just invalidate map size
-  setTimeout(() => { if (map) map.invalidateSize(); }, 50);
-}
-
 function applyTimelineOffset() {
   if (!isMobile()) return;
   const tl  = document.getElementById('timeline-panel');
@@ -1494,6 +1377,10 @@ function toggleMap() {
   }
   updateToggleUI();
   applyTimelineOffset();
+}
+
+function repositionMapPanel() {
+  setTimeout(() => { if (map) map.invalidateSize(); }, 50);
 }
 
 function initMobile() {
