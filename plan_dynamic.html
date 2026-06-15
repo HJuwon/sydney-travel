@@ -940,15 +940,12 @@ function renderInfoContent(cat) {
   let html = '';
   if (cat === 'flight') html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
   else if (cat === 'exchange') html += renderExchangeCard(rows);
-  else if (cat === 'hotel') html += renderHotelCard(rows);
+  else if (cat === 'hotel') html += renderInfoCard('🏨', '숙소 정보', 'blue', rows);
   else if (cat === 'transport') html += renderInfoCard('🚌', '교통 정보', 'amber', rows);
   else if (cat === 'budget') html += renderBudgetCard(rows);
   else if (cat === 'checklist') html += renderChecklistCard(rows);
 
-  if (cat === 'hotel') {
-    // 호텔 탭은 고정 정보 + 시트 추가 정보를 함께 표시하므로
-    // 시트 데이터가 없어도 "데이터 없음" 안내를 띄우지 않음
-  } else if (!rows.length && cat !== 'checklist' && cat !== 'budget') {
+  if (!rows.length && cat !== 'checklist' && cat !== 'budget') {
     html = `<div style="text-align:center;padding:40px 20px;color:var(--mid);">
       <div style="font-size:32px;margin-bottom:10px;">📭</div>
       <div style="font-size:13px;font-weight:500;">데이터가 없습니다</div>
@@ -984,49 +981,6 @@ function renderInfoCard(iconEmoji, title, colorClass, rows) {
     </div>`;
   });
   html += `</div></div></div>`;
-  return html;
-}
-
-/* ─────────────────────────────────────────────
-   숙소(호텔) 카드 — YEHS Hotel Sydney Harbour Suites 예약 확정 고정 정보
-   info 시트의 category=hotel 행이 있으면 추가 정보로 함께 표시됨
-───────────────────────────────────────────── */
-function renderHotelCard(rows) {
-  let html = `<div class="info-section"><div class="info-card">
-    <div class="info-card-header teal">🏨 숙소 정보 <span style="margin-left:auto;font-size:10px;font-weight:700;background:rgba(255,255,255,0.25);padding:3px 8px;border-radius:100px;">예약 확정</span></div>
-    <div class="info-rows">
-      <div class="info-row">
-        <div class="info-row-icon">🏷️</div>
-        <div class="info-row-label">호텔명</div>
-        <div class="info-row-value highlight">YEHS Hotel Sydney Harbour Suites</div>
-      </div>
-      <div class="info-row">
-        <div class="info-row-icon">📍</div>
-        <div class="info-row-label">주소</div>
-        <div class="info-row-value">252 Sussex St, Sydney NSW 2000</div>
-      </div>
-      <div class="info-row">
-        <div class="info-row-icon">📅</div>
-        <div class="info-row-label">투숙 기간</div>
-        <div class="info-row-value">8/17(월) ~ 8/24(월) · 7박</div>
-      </div>
-      <div class="info-row">
-        <div class="info-row-icon">🛏️</div>
-        <div class="info-row-label">예약 상태</div>
-        <div class="info-row-value coral">예약 완료 (고정)</div>
-      </div>
-      <div class="info-row">
-        <div class="info-row-icon">🗺️</div>
-        <div class="info-row-label">지도</div>
-        <div class="info-row-value"><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('YEHS Hotel Sydney Harbour Suites 252 Sussex St Sydney')}" target="_blank" rel="noopener" style="color:var(--teal);font-weight:600;font-size:11px;text-decoration:none;border-bottom:1px solid var(--teal);">🔗 Google Maps에서 보기</a></div>
-      </div>
-    </div>
-  </div></div>`;
-
-  // info 시트에 category=hotel 데이터가 추가로 있으면 별도 카드로 표시
-  if (rows.length) {
-    html += renderInfoCard('📝', '추가 숙소 정보', 'blue', rows);
-  }
   return html;
 }
 
