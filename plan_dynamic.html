@@ -684,35 +684,57 @@ const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'info'];
    2. Google Sheets CSV 로드
 ═══════════════════════════════════════════════════ */
 function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return [];
-  const headers = splitCSVRow(lines[0]);
+  // BOM 제거
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  // CRLF, CR -> LF 통일은 하지 않고, 따옴표 안의 줄바꿈까지 고려해 문자 단위로 파싱
   const rows = [];
-  for (let i = 1; i < lines.length; i++) {
-    if (!lines[i].trim()) continue;
-    const vals = splitCSVRow(lines[i]);
-    const obj = {};
-    headers.forEach((h, idx) => { obj[h.trim()] = (vals[idx] || '').trim(); });
-    rows.push(obj);
-  }
-  return rows;
-}
-
-function splitCSVRow(row) {
-  const result = [];
-  let cur = '', inQ = false;
-  for (let i = 0; i < row.length; i++) {
-    const c = row[i];
-    if (c === '"') {
-      if (inQ && row[i+1] === '"') { cur += '"'; i++; }
-      else inQ = !inQ;
-    } else if (c === ',' && !inQ) {
-      result.push(cur); cur = '';
+  let row = [];
+  let cur = '';
+  let inQ = false;
+  let i = 0;
+  const len = text.length;
+  while (i < len) {
+    const c = text[i];
+    if (inQ) {
+      if (c === '"') {
+        if (text[i+1] === '"') { cur += '"'; i += 2; continue; }
+        inQ = false; i++; continue;
+      }
+      cur += c; i++; continue;
     } else {
-      cur += c;
+      if (c === '"') { inQ = true; i++; continue; }
+      if (c === ',') { row.push(cur); cur = ''; i++; continue; }
+      if (c === '\r') {
+        // \r\n 또는 \r 단독 모두 줄바꿈으로 처리
+        if (text[i+1] === '\n') i++;
+        row.push(cur); cur = '';
+        rows.push(row); row = [];
+        i++; continue;
+      }
+      if (c === '\n') {
+        row.push(cur); cur = '';
+        rows.push(row); row = [];
+        i++; continue;
+      }
+      cur += c; i++; continue;
     }
   }
-  result.push(cur);
+  // 마지막 행 처리
+  if (cur !== '' || row.length) {
+    row.push(cur);
+    rows.push(row);
+  }
+  // 빈 행 제거
+  const filtered = rows.filter(r => !(r.length === 1 && r[0].trim() === ''));
+  if (filtered.length < 2) return [];
+  const headers = filtered[0].map(h => h.trim());
+  const result = [];
+  for (let r = 1; r < filtered.length; r++) {
+    const vals = filtered[r];
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = (vals[idx] || '').trim(); });
+    result.push(obj);
+  }
   return result;
 }
 
@@ -720,7 +742,10 @@ async function fetchSheet(sheetName) {
   const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
   const resp = await fetch(url);
   if (!resp.ok) throw new Error(`시트 "${sheetName}" 로드 실패 (${resp.status})`);
-  const text = await resp.text();
+  // 응답 헤더의 인코딩 정보가 부정확하여 한글이 깨지는 경우를 방지하기 위해
+  // 바이트로 받아서 명시적으로 UTF-8로 디코딩한다
+  const buf = await resp.arrayBuffer();
+  const text = new TextDecoder('utf-8').decode(buf);
   return parseCSV(text);
 }
 
