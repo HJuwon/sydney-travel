@@ -299,35 +299,59 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .info-card {
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
 }
 .info-card-header {
-  background: var(--teal);
-  color: #fff;
-  padding: 10px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  display: flex; align-items: center; gap: 8px;
-}
-.info-card-header.amber { background: var(--amber); }
-.info-card-header.coral { background: var(--coral); }
-.info-card-header.blue  { background: var(--blue);  }
-.info-card-header.gray  { background: var(--gray);  }
-.info-rows { padding: 4px 0; }
-.info-row {
-  display: flex; align-items: center;
-  padding: 8px 14px; gap: 10px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px;
+  font-size: 14px; font-weight: 700;
+  color: var(--dark);
+  background: var(--white);
   border-bottom: 1px solid var(--border);
-  font-size: 12px;
+}
+.ich-badge {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+  background: var(--gray-light);
+}
+.info-card-header.teal  .ich-badge { background: var(--teal-light); }
+.info-card-header.amber .ich-badge { background: var(--amber-light); }
+.info-card-header.coral .ich-badge { background: var(--coral-light); }
+.info-card-header.blue  .ich-badge { background: var(--blue-light); }
+.info-card-header.gray  .ich-badge { background: var(--gray-light); }
+
+.info-rows { padding: 4px 0 6px; }
+.info-row {
+  display: flex; align-items: flex-start;
+  padding: 11px 16px; gap: 12px;
+  border-bottom: 1px solid var(--gray-light);
 }
 .info-row:last-child { border-bottom: none; }
-.info-row-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
-.info-row-label { color: var(--mid); flex-shrink: 0; min-width: 80px; font-size: 11px; }
-.info-row-value { font-weight: 500; color: var(--dark); flex: 1; }
-.info-row-value.highlight { color: var(--teal); font-weight: 700; font-size: 13px; }
+.info-row-icon {
+  font-size: 14px; flex-shrink: 0; width: 30px; height: 30px;
+  border-radius: 9px; background: var(--gray-light);
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.info-row-text { flex: 1; min-width: 0; }
+.info-row-label {
+  color: var(--mid); font-size: 10.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px;
+}
+.info-row-value { font-weight: 500; color: var(--dark); font-size: 13px; line-height: 1.45; word-break: break-word; }
+.info-row-value.highlight { color: var(--teal); font-weight: 700; font-size: 15px; }
 .info-row-value.coral { color: var(--coral); font-weight: 600; }
+.info-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11.5px; font-weight: 600; color: var(--teal-mid);
+  text-decoration: none; padding: 4px 10px;
+  background: var(--teal-light); border-radius: 100px;
+  margin-top: 2px;
+}
 
 .budget-bar-wrap { padding: 12px 14px 14px; }
 .budget-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -991,21 +1015,57 @@ function renderInfoContent(cat) {
 function renderInfoCard(iconEmoji, title, colorClass, rows) {
   if (!rows.length) return '';
   let html = `<div class="info-section"><div class="info-card">
-    <div class="info-card-header ${colorClass}">${iconEmoji} ${title}</div>
+    <div class="info-card-header ${colorClass}"><span class="ich-badge">${iconEmoji}</span>${title}</div>
     <div class="info-rows">`;
   rows.forEach(r => {
     const val = r.value || '';
     const isURL = val.startsWith('http://') || val.startsWith('https://');
     const valueHtml = isURL
-      ? `<a href="${val}" target="_blank" rel="noopener" style="color:var(--teal);font-weight:600;font-size:11px;word-break:break-all;text-decoration:none;border-bottom:1px solid var(--teal);">🔗 바로가기</a>`
+      ? `<a href="${val}" target="_blank" rel="noopener" class="info-link">🔗 바로가기</a>`
       : val;
     html += `<div class="info-row">
       <div class="info-row-icon">${r.icon || ''}</div>
-      <div class="info-row-label">${r.label || ''}</div>
-      <div class="info-row-value">${valueHtml}</div>
+      <div class="info-row-text">
+        <div class="info-row-label">${r.label || ''}</div>
+        <div class="info-row-value">${valueHtml}</div>
+      </div>
     </div>`;
   });
   html += `</div></div></div>`;
+  return html;
+}
+
+function renderExchangeCard(rows) {
+  if (!rows.length) return '';
+  const rateRow = rows.find(r => r.label && r.label.includes('환율')) || rows[0];
+  const calcRow = rows.find(r => r.label && r.label.includes('환전'));
+  let html = `<div class="info-section"><div class="info-card">
+    <div class="info-card-header amber"><span class="ich-badge">💱</span>환율 정보</div>
+    <div class="exchange-big">
+      <div class="exchange-rate-display">${rateRow ? rateRow.value : '-'}</div>
+      <div class="exchange-rate-sub">현재 AUD → KRW 환율</div>
+    </div>`;
+  if (calcRow) {
+    html += `<div class="exchange-calc">
+      <div class="exchange-calc-label">💡 ${calcRow.label}</div>
+      <div class="exchange-calc-val">${calcRow.value}</div>
+    </div>`;
+  }
+  const others = rows.filter(r => r !== rateRow && r !== calcRow);
+  if (others.length) {
+    html += `<div class="info-rows">`;
+    others.forEach(r => {
+      html += `<div class="info-row">
+        <div class="info-row-icon">${r.icon || ''}</div>
+        <div class="info-row-text">
+          <div class="info-row-label">${r.label || ''}</div>
+          <div class="info-row-value">${r.value || ''}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  html += `</div></div>`;
   return html;
 }
 
@@ -1053,11 +1113,11 @@ function renderBudgetCard(rows) {
   const maxAmt = Math.max(...itemRows.map(r => parseAmt(r.value)), 1);
   const barColors = ['#1A6B5A','#378ADD','#D85A30','#BA7517','#9B59B6','#5F5E5A'];
   let html = `<div class="info-section"><div class="info-card">
-    <div class="info-card-header coral">💰 여행 예산</div>
+    <div class="info-card-header coral"><span class="ich-badge">💰</span>여행 예산</div>
     <div class="budget-bar-wrap">`;
   if (totalRow) {
     html += `<div class="budget-total">
-      <div class="budget-total-label">총 예산</div>
+      <div class="info-card-header gray"><span class="ich-badge">📋</span>준비물 체크리스트</div>
       <div class="budget-total-value">${totalRow.value}</div>
     </div>`;
   }
