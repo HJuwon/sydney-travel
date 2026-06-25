@@ -263,13 +263,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .cat-section { display: none; }
 .cat-section.visible { display: block; }
 
-/* ── [FIX] stop-item: transit-row도 함께 숨기기 위해 내부에 포함 ── */
 .stop-item {
   position: relative;
   padding-left: 30px;
   margin-bottom: 0;
 }
-/* 타임라인 세로선: stop-card 아래부터 다음 stop-item까지 */
 .stop-item::before {
   content: '';
   position: absolute;
@@ -278,7 +276,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   background: var(--border);
 }
 .stop-item:last-child::before { display: none; }
-.stop-item.type-hidden { display: none !important; }
+.stop-item.type-hidden { display: none; }
 
 .stop-dot {
   position: absolute;
@@ -365,10 +363,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sc-tag.tip     { background: var(--gray-light);  color: var(--gray); }
 .sc-tag.activity{ background: #F3E8FD; color: #6B3A9A; }
 
-/* ── [FIX] transit-row: stop-item 안에 있어서 필터 적용됨 ── */
 .transit-row {
   display: flex; align-items: center; gap: 7px;
-  padding: 4px 0 8px 0;
+  padding: 4px 0 10px 0;
 }
 .transit-pill {
   display: flex; align-items: center; gap: 4px;
@@ -955,8 +952,8 @@ let DATA = { schedule: [], food: [], tips: [], sights: [], info: [] };
 const SHEET_ID = '1A5YDClkB7E2IlULZU3SMbgy20qIZo21Jphj-fyqAV6o';
 const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'info'];
 
-let favState       = JSON.parse(localStorage.getItem('sydFav')         || '{}');
-let memoState      = JSON.parse(localStorage.getItem('sydMemo')        || '{}');
+let favState       = JSON.parse(localStorage.getItem('sydFav')   || '{}');
+let memoState      = JSON.parse(localStorage.getItem('sydMemo')  || '{}');
 let checklistState = JSON.parse(localStorage.getItem('checklistState') || '{}');
 
 function saveFav()  { localStorage.setItem('sydFav',  JSON.stringify(favState)); }
@@ -1254,18 +1251,22 @@ function saveMemoInput(id, val) {
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   [FIX] renderSchedule: transit-row를 stop-item 안으로 이동
-   → 타입 필터 적용 시 함께 숨겨짐
-═══════════════════════════════════════════════════ */
+/* ─────────────────────────────────────────────────
+   renderSchedule — title1 참조 + 빈 Day 스킵
+───────────────────────────────────────────────── */
 function renderSchedule(day) {
   const rows = DATA.schedule.filter(r => Number(r.day) === day);
+  // 일정이 없으면 렌더링하지 않음
   if (!rows.length) return '';
+
   const dateStr = rows[0].date || '';
-  const dayTitle = rows.find(r => r.title && r.title.trim())?.title?.trim() || `Day ${day}`;
+  // title1이 있으면 사용, 없으면 'Day N'으로 대체
+  const dayTitle = rows.find(r => r.title1 && r.title1.trim())?.title1?.trim() || `Day ${day}`;
+
   let html = `<div class="day-section visible" id="day-${day}" data-day="${day}">`;
   html += `<div class="cat-section visible" data-cat="schedule">`;
   html += `<div class="day-heading"><h2>Day ${day} · ${dayTitle}</h2><p>${dateStr}</p></div>`;
+
   rows.forEach((row) => {
     const type = (row.type || 'sight').trim();
     const icon = typeIcons[type] || typeIcons.sight;
@@ -1277,8 +1278,6 @@ function renderSchedule(day) {
     const name = row.name || '';
     const id = scheduleCardId(row);
     const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
-
-    // [FIX] transit-row를 stop-item 내부에 포함시켜 type-hidden 필터가 함께 적용되도록 함
     html += `<div class="stop-item" data-type="${type}">
       <div class="stop-dot type-${type}">${icon}</div>
       <div class="stop-card" data-card-id="${id}" ${pinCall}>
@@ -1289,11 +1288,13 @@ function renderSchedule(day) {
         ${tagHtml ? `<div class="sc-tags">${tagHtml}</div>` : ''}
         ${memoHtml(id)}
       </div>
-      ${row.transit_next ? `<div class="transit-row">
-        <div class="transit-pill">${typeIcons.transit} ${row.transit_next}</div>
-        <span class="transit-info">${row.transit_info || ''}</span>
-      </div>` : ''}
     </div>`;
+    if (row.transit_next && row.transit_next !== '-') {
+      html += `<div class="transit-row">
+        <div class="transit-pill">${typeIcons.transit} ${row.transit_next}</div>
+        <span class="transit-info">${row.transit_info && row.transit_info !== '-' ? row.transit_info : ''}</span>
+      </div>`;
+    }
   });
   html += `</div>`;
   html += renderFoodSection(day);
@@ -1418,15 +1419,21 @@ function renderFavoritesView() {
   return html;
 }
 
+/* ── 사이드바 Day 버튼 ── */
 function renderDayButtons() {
   const days = getDays();
-  const dayLabels = { 0:'출발', 1:'하버', 2:'본다이', 3:'맨리', 4:'블루산', 5:'왓슨', 6:'달링', 7:'마지막', 8:'귀국' };
+  // title1을 사이드바 라벨로 활용 (짧게 표시)
+  const dayLabelFallback = { 0:'출발', 1:'도착', 2:'본다이', 3:'맨리', 4:'블루산', 5:'왓슨', 6:'달링', 7:'마지막', 8:'귀국' };
   let html = '';
   days.forEach(d => {
-    const label = dayLabels[d] || `D${d}`;
-    html += `<button class="day-btn" onclick="selectDay(${d},this)" title="Day ${d}">
+    // 해당 day에 데이터가 있는 행에서 title1 가져오기
+    const rows = DATA.schedule.filter(r => Number(r.day) === d);
+    const title1 = rows.find(r => r.title1 && r.title1.trim())?.title1?.trim() || '';
+    // 사이드바 라벨: title1의 첫 두 글자 (한글 압축) 또는 fallback
+    const shortLabel = title1 ? title1.slice(0, 3) : (dayLabelFallback[d] || `D${d}`);
+    html += `<button class="day-btn" onclick="selectDay(${d},this)" title="Day ${d} · ${title1 || ''}">
       <span class="d-num">${d}</span>
-      <span class="d-lbl">${label}</span>
+      <span class="d-lbl">${shortLabel}</span>
     </button>`;
   });
   document.getElementById('day-buttons-container').innerHTML = html;
@@ -1492,16 +1499,13 @@ function doSearch(q) {
 
   const results = { schedule: [], food: [], tips: [] };
   DATA.schedule.forEach(r => {
-    const text = [r.name, r.description, r.tags].join(' ');
-    if (text.toLowerCase().includes(q.toLowerCase())) results.schedule.push(r);
+    if ([r.name, r.description, r.tags].join(' ').toLowerCase().includes(q.toLowerCase())) results.schedule.push(r);
   });
   DATA.food.forEach(r => {
-    const text = [r.name, r.description].join(' ');
-    if (text.toLowerCase().includes(q.toLowerCase())) results.food.push(r);
+    if ([r.name, r.description].join(' ').toLowerCase().includes(q.toLowerCase())) results.food.push(r);
   });
   DATA.tips.forEach(r => {
-    const text = [r.title, r.content].join(' ');
-    if (text.toLowerCase().includes(q.toLowerCase())) results.tips.push(r);
+    if ([r.title, r.content].join(' ').toLowerCase().includes(q.toLowerCase())) results.tips.push(r);
   });
 
   const total = results.schedule.length + results.food.length + results.tips.length;
@@ -1513,10 +1517,9 @@ function doSearch(q) {
     results.schedule.forEach(r => {
       const type = r.type || 'sight';
       const colors = {food:'#FAECE7',coffee:'#FAEEDA',sight:'#E6F1FB',shop:'#E1F5EE',activity:'#F3E8FD',hotel:'#E1F5EE',transit:'#F1EFE8'};
-      const bg = colors[type] || '#F1EFE8';
       const id = scheduleCardId(r);
       html += `<div class="search-result-item" onclick="jumpToCard('${id}','schedule')">
-        <div class="sri-icon" style="background:${bg}">${r.emoji||typeIconEmoji(type)}</div>
+        <div class="sri-icon" style="background:${colors[type]||'#F1EFE8'}">${typeIconEmoji(type)}</div>
         <div style="flex:1;min-width:0">
           <div class="sri-day">Day ${r.day} · ${r.time||''}</div>
           <div class="sri-name">${highlight(r.name||'', q)}</div>
@@ -1598,7 +1601,7 @@ function getInfoBy(cat) { return DATA.info.filter(r => r.category === cat); }
 function renderInfoContent(cat) {
   const rows = getInfoBy(cat);
   let html = '';
-  if (cat === 'flight')         html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
+  if (cat === 'flight')     html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
   else if (cat === 'exchange')  html += renderExchangeCard(rows);
   else if (cat === 'hotel')     html += renderInfoCard('🏨', '숙소 정보', 'blue', rows);
   else if (cat === 'transport') html += renderInfoCard('🚌', '교통 정보', 'amber', rows);
@@ -1612,7 +1615,6 @@ function renderInfoContent(cat) {
       <div style="font-size:11px;margin-top:5px;opacity:0.7;">Google Sheets의 info 시트에 category: <strong>${cat}</strong> 데이터를 추가하세요</div>
     </div>`;
   }
-
   document.getElementById('info-content').innerHTML = html;
   if (cat === 'budget') {
     setTimeout(() => {
@@ -1937,23 +1939,12 @@ function selectDay(day, btn) {
   updateView();
 }
 
-/* ═══════════════════════════════════════════════════
-   [FIX] selectCat: 찜 목록에서 다른 탭 복귀 시 renderAll() 호출
-═══════════════════════════════════════════════════ */
 function selectCat(cat, btn) {
   document.querySelectorAll('#main-filter-bar .f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-
-  const prevCat = currentCat;
   currentCat = cat;
   closePlace();
 
-  // 찜 목록에서 다른 탭으로 복귀하면 일정 DOM을 새로 그려야 함
-  if (prevCat === 'favorites' && cat !== 'favorites') {
-    renderAll();
-  }
-
-  // 타입 필터바: schedule 탭에서만 표시
   const typeBar = document.getElementById('type-filter-bar');
   if (cat === 'schedule') typeBar.classList.remove('hidden');
   else typeBar.classList.add('hidden');
@@ -1978,7 +1969,6 @@ function selectCat(cat, btn) {
   updateView();
 }
 
-/* ── 타입 필터 ── */
 function selectTypeFilter(type, btn) {
   document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
