@@ -30,7 +30,6 @@
   --shadow-md: 0 3px 14px rgba(0,0,0,0.09);
 }
 
-/* ── 다크모드 ── */
 [data-theme="dark"] {
   --teal: #3DD6A3;
   --teal-light: #0A2E24;
@@ -152,7 +151,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 }
 .tb-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ── 현지 시간 배지 ── */
 .tb-time {
   font-size: 11px; font-weight: 600;
   padding: 4px 10px; border-radius: 100px;
@@ -162,7 +160,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 }
 .tb-time svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-/* ── 날씨 배지 ── */
 .tb-weather {
   font-size: 11px; font-weight: 500;
   padding: 4px 10px; border-radius: 100px;
@@ -218,7 +215,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .f-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
 .f-btn.fav-active { background: var(--coral); border-color: var(--coral); color: #fff; }
 
-/* ── 타입 필터 칩 ── */
 .type-filter-bar {
   height: 38px;
   background: var(--cream);
@@ -267,11 +263,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .cat-section { display: none; }
 .cat-section.visible { display: block; }
 
+/* ── [FIX] stop-item: transit-row도 함께 숨기기 위해 내부에 포함 ── */
 .stop-item {
   position: relative;
   padding-left: 30px;
   margin-bottom: 0;
 }
+/* 타임라인 세로선: stop-card 아래부터 다음 stop-item까지 */
 .stop-item::before {
   content: '';
   position: absolute;
@@ -280,7 +278,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   background: var(--border);
 }
 .stop-item:last-child::before { display: none; }
-.stop-item.type-hidden { display: none; }
+.stop-item.type-hidden { display: none !important; }
 
 .stop-dot {
   position: absolute;
@@ -313,7 +311,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .stop-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
 .stop-card.selected { border-color: var(--teal); box-shadow: 0 0 0 2px rgba(26,107,90,0.15); }
 
-/* ── 찜 버튼 ── */
 .fav-btn {
   position: absolute; top: 8px; right: 8px;
   width: 26px; height: 26px; border-radius: 50%;
@@ -327,7 +324,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .fav-btn.active { animation: favPop 0.25s ease; }
 @keyframes favPop { 0%{transform:scale(1)} 50%{transform:scale(1.35)} 100%{transform:scale(1)} }
 
-/* ── 메모 ── */
 .memo-area {
   margin-top: 7px;
   border-top: 1px dashed var(--border);
@@ -369,9 +365,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sc-tag.tip     { background: var(--gray-light);  color: var(--gray); }
 .sc-tag.activity{ background: #F3E8FD; color: #6B3A9A; }
 
+/* ── [FIX] transit-row: stop-item 안에 있어서 필터 적용됨 ── */
 .transit-row {
   display: flex; align-items: center; gap: 7px;
-  padding: 4px 0 10px 0;
+  padding: 4px 0 8px 0;
 }
 .transit-pill {
   display: flex; align-items: center; gap: 4px;
@@ -416,14 +413,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sight-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
 .sight-text { font-size: 11px; color: var(--mid); line-height: 1.5; }
 
-/* ── 찜 목록 전용 뷰 ── */
 .fav-empty {
   text-align: center; padding: 40px 20px;
   color: var(--mid); font-size: 12px; line-height: 1.8;
 }
 .fav-empty .fe-icon { font-size: 36px; margin-bottom: 10px; }
 
-/* ── 검색 모달 ── */
 .search-backdrop {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.45); z-index: 8000;
@@ -481,7 +476,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   background: var(--gray-light);
 }
 
-/* ── info 탭 ── */
 .info-section { margin-bottom: 20px; }
 .info-section-title {
   font-family: 'DM Serif Display', serif;
@@ -607,7 +601,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   border-radius: 100px; margin-left: 8px;
 }
 
-/* ── 지도 & 맵 ── */
 .map-panel { flex: 1; position: relative; overflow: hidden; background: #dce8e4; }
 #leaflet-map { width: 100%; height: 100%; }
 
@@ -664,7 +657,6 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 
 .map-toggle-btn { display: none; }
 
-/* ── 모바일 ── */
 @media (max-width: 768px) {
   html, body { overflow: hidden; height: 100%; }
   .app { flex-direction: column; height: 100%; }
@@ -848,11 +840,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     </button>
     <div id="day-buttons-container" style="display:contents"></div>
     <div class="sidebar-sep"></div>
-    <!-- 검색 버튼 -->
     <button class="sb-icon" title="검색 (⌘K)" onclick="openSearch()">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
-    <!-- 다크모드 토글 -->
     <button class="sb-icon" id="dark-toggle-btn" title="다크모드 토글" onclick="toggleDarkMode()">
       <svg id="dark-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
@@ -864,13 +854,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
   <div class="main-col">
     <header class="topbar">
       <div class="topbar-title" id="topbar-title">Sydney <em>Travel Plan</em></div>
-      <!-- 현지 시간 -->
       <div class="tb-time" id="sydney-clock">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span id="sydney-time-text">--:--</span>
         <span style="opacity:0.7">SYD</span>
       </div>
-      <!-- 날씨 위젯 -->
       <div class="tb-weather" id="weather-badge" onclick="toggleWeatherPopup(event)">
         <span id="weather-icon-now">🌤</span>
         <span id="weather-temp-now">--°C</span>
@@ -904,13 +892,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         여행 팁
       </button>
-      <!-- 찜 목록 필터 -->
       <button class="f-btn" id="fav-filter-btn" onclick="selectCat('favorites',this)">
         ❤️ 찜 목록
       </button>
     </div>
 
-    <!-- 타입별 필터 칩 (schedule 탭에서만 표시) -->
     <div class="type-filter-bar" id="type-filter-bar">
       <button class="type-chip active" onclick="selectTypeFilter('all',this)">전체</button>
       <button class="type-chip" onclick="selectTypeFilter('sight',this)">🔵 관광</button>
@@ -969,9 +955,8 @@ let DATA = { schedule: [], food: [], tips: [], sights: [], info: [] };
 const SHEET_ID = '1A5YDClkB7E2IlULZU3SMbgy20qIZo21Jphj-fyqAV6o';
 const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'info'];
 
-/* ─── localStorage 상태 ─── */
-let favState     = JSON.parse(localStorage.getItem('sydFav')   || '{}');
-let memoState    = JSON.parse(localStorage.getItem('sydMemo')  || '{}');
+let favState       = JSON.parse(localStorage.getItem('sydFav')         || '{}');
+let memoState      = JSON.parse(localStorage.getItem('sydMemo')        || '{}');
 let checklistState = JSON.parse(localStorage.getItem('checklistState') || '{}');
 
 function saveFav()  { localStorage.setItem('sydFav',  JSON.stringify(favState)); }
@@ -1122,7 +1107,7 @@ function startSydneyClock() {
 }
 
 /* ═══════════════════════════════════════════════════
-   5. 날씨 (Open-Meteo, 무료 · API 키 없음)
+   5. 날씨
 ═══════════════════════════════════════════════════ */
 const WMO_ICON = {
   0:'☀️', 1:'🌤', 2:'⛅', 3:'☁️',
@@ -1175,7 +1160,7 @@ document.addEventListener('click', () => {
 });
 
 /* ═══════════════════════════════════════════════════
-   6. 실시간 환율 (exchangerate.host)
+   6. 실시간 환율
 ═══════════════════════════════════════════════════ */
 let liveRate = null;
 async function fetchLiveRate() {
@@ -1185,7 +1170,6 @@ async function fetchLiveRate() {
     liveRate = d.rates && d.rates.KRW ? d.rates.KRW : null;
   } catch(e) {
     try {
-      // 백업 API
       const res2 = await fetch('https://open.er-api.com/v6/latest/AUD');
       const d2 = await res2.json();
       liveRate = d2.rates && d2.rates.KRW ? d2.rates.KRW : null;
@@ -1225,7 +1209,6 @@ const tagClassMap = {
 };
 function tagClass(tag) { return tagClassMap[tag] || 'tip'; }
 
-/* ── 카드 ID 생성 ── */
 function scheduleCardId(row) {
   return `sch_${row.day}_${(row.name||'').replace(/\s+/g,'_')}`;
 }
@@ -1233,14 +1216,12 @@ function foodCardId(row) {
   return `food_${row.day}_${(row.name||'').replace(/\s+/g,'_')}`;
 }
 
-/* ── 찜 버튼 HTML ── */
 function favBtnHtml(id) {
   const active = favState[id] ? ' active' : '';
   const emoji  = favState[id] ? '❤️' : '🤍';
   return `<button class="fav-btn${active}" onclick="toggleFav('${id}',event)" title="찜하기">${emoji}</button>`;
 }
 
-/* ── 메모 HTML ── */
 function memoHtml(id) {
   const val = memoState[id] || '';
   const hasMemo = val.trim().length > 0;
@@ -1264,20 +1245,19 @@ function toggleMemoArea(id, e) {
 function saveMemoInput(id, val) {
   memoState[id] = val;
   saveMemo();
-  // 메모 도트 갱신
   const card = document.querySelector(`[data-card-id="${id}"]`);
   if (card) {
-    const dot = card.querySelector('.memo-dot');
-    if (dot) dot.classList.toggle('show', val.trim().length > 0);
     const toggle = card.querySelector('.memo-toggle');
     if (toggle) {
-      const dotHtml = dot ? dot.outerHTML : '';
-      // 버튼 텍스트만 갱신
       toggle.innerHTML = `<span class="memo-dot${val.trim().length>0?' show':''}"></span> ${val.trim().length>0?'📝 메모 보기':'+ 메모 추가'}`;
     }
   }
 }
 
+/* ═══════════════════════════════════════════════════
+   [FIX] renderSchedule: transit-row를 stop-item 안으로 이동
+   → 타입 필터 적용 시 함께 숨겨짐
+═══════════════════════════════════════════════════ */
 function renderSchedule(day) {
   const rows = DATA.schedule.filter(r => Number(r.day) === day);
   if (!rows.length) return '';
@@ -1297,6 +1277,8 @@ function renderSchedule(day) {
     const name = row.name || '';
     const id = scheduleCardId(row);
     const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
+
+    // [FIX] transit-row를 stop-item 내부에 포함시켜 type-hidden 필터가 함께 적용되도록 함
     html += `<div class="stop-item" data-type="${type}">
       <div class="stop-dot type-${type}">${icon}</div>
       <div class="stop-card" data-card-id="${id}" ${pinCall}>
@@ -1307,13 +1289,11 @@ function renderSchedule(day) {
         ${tagHtml ? `<div class="sc-tags">${tagHtml}</div>` : ''}
         ${memoHtml(id)}
       </div>
-    </div>`;
-    if (row.transit_next) {
-      html += `<div class="transit-row">
+      ${row.transit_next ? `<div class="transit-row">
         <div class="transit-pill">${typeIcons.transit} ${row.transit_next}</div>
         <span class="transit-info">${row.transit_info || ''}</span>
-      </div>`;
-    }
+      </div>` : ''}
+    </div>`;
   });
   html += `</div>`;
   html += renderFoodSection(day);
@@ -1390,13 +1370,11 @@ function renderFavoritesView() {
     return `<div class="fav-empty"><div class="fe-icon">🤍</div><div style="font-weight:600;margin-bottom:4px;">찜한 장소가 없어요</div><div style="font-size:11px;color:var(--mid)">카드의 🤍 버튼을 눌러 찜해보세요</div></div>`;
   }
   let html = `<div class="day-heading"><h2>찜 목록 <span style="font-size:14px;color:var(--coral)">❤️ ${favIds.length}</span></h2></div>`;
-  // schedule 찜
   const schedFavs = DATA.schedule.filter(r => favState[scheduleCardId(r)]);
   if (schedFavs.length) {
     html += `<div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px">일정</div>`;
     schedFavs.forEach(row => {
       const id = scheduleCardId(row);
-      const type = (row.type || 'sight').trim();
       const hasCoords = row.lat && row.lng;
       const lat = parseFloat(row.lat), lng = parseFloat(row.lng);
       const addr = row.addr || '';
@@ -1413,7 +1391,6 @@ function renderFavoritesView() {
       </div>`;
     });
   }
-  // food 찜
   const foodFavs = DATA.food.filter(r => favState[foodCardId(r)]);
   if (foodFavs.length) {
     html += `<div style="font-size:11px;font-weight:600;color:var(--mid);margin:12px 0 8px;text-transform:uppercase;letter-spacing:0.4px">맛집</div>`;
@@ -1470,7 +1447,6 @@ function toggleFav(id, e) {
   e && e.stopPropagation();
   favState[id] = !favState[id];
   saveFav();
-  // 모든 찜 버튼 갱신
   document.querySelectorAll(`.fav-btn`).forEach(btn => {
     const cardId = btn.closest('[data-card-id]')?.getAttribute('data-card-id');
     if (cardId === id) {
@@ -1478,7 +1454,6 @@ function toggleFav(id, e) {
       btn.classList.toggle('active', favState[id]);
     }
   });
-  // 찜 목록 탭이 열려있으면 재렌더
   if (currentCat === 'favorites') {
     document.getElementById('timeline-content').innerHTML = renderFavoritesView();
   }
@@ -1516,7 +1491,6 @@ function doSearch(q) {
   if (!q) { el.innerHTML = '<div class="search-empty">검색어를 입력하세요</div>'; return; }
 
   const results = { schedule: [], food: [], tips: [] };
-
   DATA.schedule.forEach(r => {
     const text = [r.name, r.description, r.tags].join(' ');
     if (text.toLowerCase().includes(q.toLowerCase())) results.schedule.push(r);
@@ -1534,7 +1508,6 @@ function doSearch(q) {
   if (!total) { el.innerHTML = `<div class="search-empty">검색 결과가 없습니다 — <strong>${q}</strong></div>`; return; }
 
   let html = '';
-
   if (results.schedule.length) {
     html += `<div class="search-section-header">📅 일정 (${results.schedule.length})</div>`;
     results.schedule.forEach(r => {
@@ -1552,7 +1525,6 @@ function doSearch(q) {
       </div>`;
     });
   }
-
   if (results.food.length) {
     html += `<div class="search-section-header">🍽️ 맛집 (${results.food.length})</div>`;
     results.food.forEach(r => {
@@ -1567,7 +1539,6 @@ function doSearch(q) {
       </div>`;
     });
   }
-
   if (results.tips.length) {
     html += `<div class="search-section-header">💡 여행 팁 (${results.tips.length})</div>`;
     results.tips.forEach(r => {
@@ -1581,7 +1552,6 @@ function doSearch(q) {
       </div>`;
     });
   }
-
   el.innerHTML = html;
 }
 
@@ -1591,14 +1561,12 @@ function typeIconEmoji(type) {
 
 function jumpToCard(id, cat) {
   document.getElementById('search-backdrop').classList.remove('show');
-  // 적절한 카테고리로 전환
   const catBtn = [...document.querySelectorAll('#main-filter-bar .f-btn')].find(b => {
     if (cat === 'schedule') return b.textContent.trim().startsWith('전체');
     if (cat === 'food') return b.textContent.trim().startsWith('맛');
     return false;
   });
   if (catBtn) selectCat(cat, catBtn);
-  // 해당 일 찾기
   const row = cat === 'food'
     ? DATA.food.find(r => foodCardId(r) === id)
     : DATA.schedule.find(r => scheduleCardId(r) === id);
@@ -1630,11 +1598,11 @@ function getInfoBy(cat) { return DATA.info.filter(r => r.category === cat); }
 function renderInfoContent(cat) {
   const rows = getInfoBy(cat);
   let html = '';
-  if (cat === 'flight')    html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
-  else if (cat === 'exchange') html += renderExchangeCard(rows);
-  else if (cat === 'hotel')    html += renderInfoCard('🏨', '숙소 정보', 'blue', rows);
+  if (cat === 'flight')         html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
+  else if (cat === 'exchange')  html += renderExchangeCard(rows);
+  else if (cat === 'hotel')     html += renderInfoCard('🏨', '숙소 정보', 'blue', rows);
   else if (cat === 'transport') html += renderInfoCard('🚌', '교통 정보', 'amber', rows);
-  else if (cat === 'budget')   html += renderBudgetCard(rows);
+  else if (cat === 'budget')    html += renderBudgetCard(rows);
   else if (cat === 'checklist') html += renderChecklistCard(rows);
 
   if (!rows.length && cat !== 'checklist' && cat !== 'budget') {
@@ -1969,13 +1937,23 @@ function selectDay(day, btn) {
   updateView();
 }
 
+/* ═══════════════════════════════════════════════════
+   [FIX] selectCat: 찜 목록에서 다른 탭 복귀 시 renderAll() 호출
+═══════════════════════════════════════════════════ */
 function selectCat(cat, btn) {
   document.querySelectorAll('#main-filter-bar .f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+
+  const prevCat = currentCat;
   currentCat = cat;
   closePlace();
 
-  // 타입 필터바: schedule만 표시
+  // 찜 목록에서 다른 탭으로 복귀하면 일정 DOM을 새로 그려야 함
+  if (prevCat === 'favorites' && cat !== 'favorites') {
+    renderAll();
+  }
+
+  // 타입 필터바: schedule 탭에서만 표시
   const typeBar = document.getElementById('type-filter-bar');
   if (cat === 'schedule') typeBar.classList.remove('hidden');
   else typeBar.classList.add('hidden');
@@ -1988,7 +1966,6 @@ function selectCat(cat, btn) {
     }
   } else if (cat === 'favorites') {
     clearAllMarkers();
-    // 찜된 장소 마커 표시
     const favIds = Object.keys(favState).filter(k => favState[k]);
     DATA.schedule.filter(r => favIds.includes(scheduleCardId(r)) && r.lat && r.lng).forEach(r => {
       const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeIcon('#D85A30', 26, r.day) }).addTo(map);
