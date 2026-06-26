@@ -2131,40 +2131,8 @@ function renderScheduleMarkers(dayFilter) {
     m.on('click', () => showInfo(r.name, r.addr || ''));
     scheduleMarkers.push(m);
   });
-
-  // 경로선 그리기
-  if (dayFilter === 'all') {
-    // 전체 보기: 날짜별로 선 그리기
-    const days = [...new Set(rows.map(r => Number(r.day)))].sort((a,b) => a-b);
-    days.forEach(day => {
-      const dayRows = rows.filter(r => Number(r.day) === day).sort((a,b) => Number(a.order||0) - Number(b.order||0));
-      if (dayRows.length < 2) return;
-      const coords = dayRows.map(r => [parseFloat(r.lat), parseFloat(r.lng)]);
-      const color = dayColors[day] || '#1A6B5A';
-      const line = L.polyline(coords, {
-        color: color,
-        weight: 2.5,
-        opacity: 0.5,
-        dashArray: '6, 6'
-      }).addTo(map);
-      routeLines.push(line);
-    });
-  } else {
-    // 특정 날짜: 선 진하게
-    const dayRows = rows.sort((a,b) => Number(a.order||0) - Number(b.order||0));
-    if (dayRows.length >= 2) {
-      const coords = dayRows.map(r => [parseFloat(r.lat), parseFloat(r.lng)]);
-      const color = dayColors[dayFilter] || '#1A6B5A';
-      const line = L.polyline(coords, {
-        color: color,
-        weight: 3.5,
-        opacity: 0.75,
-        dashArray: '8, 5'
-      }).addTo(map);
-      routeLines.push(line);
-    }
-  }
 }
+  
 function renderFoodMarkers(dayFilter) {
   foodMarkers.forEach(m => map.removeLayer(m)); foodMarkers = [];
   DATA.food
