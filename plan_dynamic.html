@@ -945,6 +945,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
       <button class="type-chip" onclick="selectTypeFilter('activity',this)">🟣 액티비티</button>
       <button class="type-chip" onclick="selectTypeFilter('shop',this)">🟢 쇼핑</button>
       <button class="type-chip" onclick="selectTypeFilter('hotel',this)">🏨 숙소</button>
+      <button class="f-btn" id="route-toggle-btn" onclick="toggleRoute(this)">🗺 이동 경로선</button>
     </div>
 
     <div class="filter-bar" id="info-filter-bar" style="display:none;">
@@ -2066,6 +2067,52 @@ function makeFoodIcon(emoji) {
 }
 
 let routeLines = [];
+let showRoute = false;
+
+function toggleRoute(btn) {
+  showRoute = !showRoute;
+  btn.classList.toggle('active', showRoute);
+  if (showRoute) {
+    drawRouteLines(currentDay);
+  } else {
+    routeLines.forEach(l => map.removeLayer(l));
+    routeLines = [];
+  }
+}
+
+function drawRouteLines(dayFilter) {
+  routeLines.forEach(l => map.removeLayer(l));
+  routeLines = [];
+
+  const rows = DATA.schedule
+    .filter(r => r.lat && r.lng && r.type !== 'transit')
+    .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter);
+
+  if (dayFilter === 'all') {
+    const days = [...new Set(rows.map(r => Number(r.day)))].sort((a,b) => a-b);
+    days.forEach(day => {
+      const dayRows = rows
+        .filter(r => Number(r.day) === day)
+        .sort((a,b) => Number(a.order||0) - Number(b.order||0));
+      if (dayRows.length < 2) return;
+      const coords = dayRows.map(r => [parseFloat(r.lat), parseFloat(r.lng)]);
+      const color = dayColors[day] || '#1A6B5A';
+      const line = L.polyline(coords, {
+        color, weight: 2.5, opacity: 0.5, dashArray: '6, 6'
+      }).addTo(map);
+      routeLines.push(line);
+    });
+  } else {
+    const dayRows = rows.sort((a,b) => Number(a.order||0) - Number(b.order||0));
+    if (dayRows.length < 2) return;
+    const coords = dayRows.map(r => [parseFloat(r.lat), parseFloat(r.lng)]);
+    const color = dayColors[dayFilter] || '#1A6B5A';
+    const line = L.polyline(coords, {
+      color, weight: 3.5, opacity: 0.75, dashArray: '8, 5'
+    }).addTo(map);
+    routeLines.push(line);
+  }
+}
 
 function renderScheduleMarkers(dayFilter) {
   scheduleMarkers.forEach(m => map.removeLayer(m)); scheduleMarkers = [];
@@ -2148,6 +2195,7 @@ function selectDay(day, btn) {
   btn.classList.add('active');
   currentDay = day;
   closePlace();
+  if (showRoute) drawRouteLines(day);
   const v = dayViews[day] || dayViews['all'];
   if (map) map.flyTo(v.center, v.zoom, { duration: 1.0 });
   if (currentCat === 'food') renderFoodMarkers(day);
