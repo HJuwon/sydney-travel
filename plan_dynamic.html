@@ -2065,21 +2065,59 @@ function makeFoodIcon(emoji) {
   });
 }
 
+let routeLines = [];
+
 function renderScheduleMarkers(dayFilter) {
   scheduleMarkers.forEach(m => map.removeLayer(m)); scheduleMarkers = [];
-  DATA.schedule
-    .filter(r => r.lat && r.lng && r.type !== 'transit')
-    .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
-    .forEach(r => {
-      const color = dayColors[r.day] || '#1A6B5A';
-      const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeIcon(color, 26, r.day) })
-        .addTo(map)
-        .bindTooltip('[Day ' + r.day + '] ' + r.name, { direction:'top', offset:[0,-10] });
-      m.on('click', () => showInfo(r.name, r.addr || ''));
-      scheduleMarkers.push(m);
-    });
-}
+  routeLines.forEach(l => map.removeLayer(l)); routeLines = [];
 
+  const rows = DATA.schedule
+    .filter(r => r.lat && r.lng && r.type !== 'transit')
+    .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter);
+
+  // 마커 그리기
+  rows.forEach(r => {
+    const color = dayColors[r.day] || '#1A6B5A';
+    const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeIcon(color, 26, r.day) })
+      .addTo(map)
+      .bindTooltip('[Day ' + r.day + '] ' + r.name, { direction:'top', offset:[0,-10] });
+    m.on('click', () => showInfo(r.name, r.addr || ''));
+    scheduleMarkers.push(m);
+  });
+
+  // 경로선 그리기
+  if (dayFilter === 'all') {
+    // 전체 보기: 날짜별로 선 그리기
+    const days = [...new Set(rows.map(r => Number(r.day)))].sort((a,b) => a-b);
+    days.forEach(day => {
+      const dayRows = rows.filter(r => Number(r.day) === day).sort((a,b) => Number(a.order||0) - Number(b.order||0));
+      if (dayRows.length < 2) return;
+      const coords = dayRows.map(r => [parseFloat(r.lat), parseFloat(r.lng)]);
+      const color = dayColors[day] || '#1A6B5A';
+      const line = L.polyline(coords, {
+        color: color,
+        weight: 2.5,
+        opacity: 0.5,
+        dashArray: '6, 6'
+      }).addTo(map);
+      routeLines.push(line);
+    });
+  } else {
+    // 특정 날짜: 선 진하게
+    const dayRows = rows.sort((a,b) => Number(a.order||0) - Number(b.order||0));
+    if (dayRows.length >= 2) {
+      const coords = dayRows.map(r => [parseFloat(r.lat), parseFloat(r.lng)]);
+      const color = dayColors[dayFilter] || '#1A6B5A';
+      const line = L.polyline(coords, {
+        color: color,
+        weight: 3.5,
+        opacity: 0.75,
+        dashArray: '8, 5'
+      }).addTo(map);
+      routeLines.push(line);
+    }
+  }
+}
 function renderFoodMarkers(dayFilter) {
   foodMarkers.forEach(m => map.removeLayer(m)); foodMarkers = [];
   DATA.food
@@ -2096,7 +2134,8 @@ function renderFoodMarkers(dayFilter) {
 
 function clearAllMarkers() {
   scheduleMarkers.forEach(m => map.removeLayer(m)); scheduleMarkers = [];
-  foodMarkers.forEach(m => map.removeLayer(m));     foodMarkers = [];
+  foodMarkers.forEach(m => map.removeLayer(m)); foodMarkers = [];
+  routeLines.forEach(l => map.removeLayer(l)); routeLines = [];
 }
 
 /* ═══════════════════════════════════════════════════
