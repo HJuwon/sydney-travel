@@ -29,801 +29,713 @@
   --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
   --shadow-md: 0 3px 14px rgba(0,0,0,0.09);
 }
-
 [data-theme="dark"] {
-  --teal: #3DD6A3;
-  --teal-light: #0A2E24;
-  --teal-mid: #3DD6A3;
-  --coral: #F07550;
-  --coral-light: #2E1810;
-  --amber: #E8A030;
-  --amber-light: #2A1E08;
-  --blue: #5FA8F0;
-  --blue-light: #0D1E34;
-  --gray: #A0A09A;
-  --gray-light: #2A2A28;
-  --cream: #141412;
-  --white: #1E1E1C;
-  --dark: #F0F0EC;
-  --mid: #9A9A96;
-  --border: rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.16);
-  --shadow-sm: 0 1px 4px rgba(0,0,0,0.3);
-  --shadow-md: 0 3px 14px rgba(0,0,0,0.4);
+  --teal: #3DD6A3; --teal-light: #0A2E24; --teal-mid: #3DD6A3;
+  --coral: #F07550; --coral-light: #2E1810;
+  --amber: #E8A030; --amber-light: #2A1E08;
+  --blue: #5FA8F0; --blue-light: #0D1E34;
+  --gray: #A0A09A; --gray-light: #2A2A28;
+  --cream: #141412; --white: #1E1E1C; --dark: #F0F0EC; --mid: #9A9A96;
+  --border: rgba(255,255,255,0.08); --border-hover: rgba(255,255,255,0.16);
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.3); --shadow-md: 0 3px 14px rgba(0,0,0,0.4);
 }
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; overflow:hidden; }
+body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--dark); transition:background .2s,color .2s; }
+.app { display:flex; height:100vh; overflow:hidden; }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; overflow: hidden; }
-body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); transition: background 0.2s, color 0.2s; }
-
-.app { display: flex; height: 100vh; overflow: hidden; }
-
+/* ── sidebar ── */
 .sidebar {
-  width: 64px;
-  background: var(--white);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px 0 16px;
-  gap: 2px;
-  flex-shrink: 0;
-  z-index: 100;
+  width:64px; background:var(--white); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; align-items:center;
+  padding:14px 0 16px; gap:2px; flex-shrink:0; z-index:100;
 }
-
 .sidebar-logo {
-  width: 38px; height: 38px;
-  background: var(--teal);
-  border-radius: 11px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 14px; cursor: pointer;
+  width:38px; height:38px; background:var(--teal); border-radius:11px;
+  display:flex; align-items:center; justify-content:center; margin-bottom:14px; cursor:pointer;
 }
-.sidebar-logo svg { width: 19px; height: 19px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
+.sidebar-logo svg { width:19px; height:19px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .day-btn {
-  width: 46px; height: 48px;
-  border-radius: 11px;
-  border: 1px solid transparent;
-  background: transparent;
-  cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px;
-  transition: all 0.15s ease;
-  color: var(--mid);
-  font-family: 'DM Sans', sans-serif;
-  position: relative;
+  width:46px; height:48px; border-radius:11px; border:1px solid transparent;
+  background:transparent; cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:2px; transition:all .15s;
+  color:var(--mid); font-family:'DM Sans',sans-serif; position:relative;
 }
-.day-btn:hover { background: var(--gray-light); }
-.day-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
-.day-btn .d-num { font-size: 16px; font-weight: 700; line-height: 1; }
-.day-btn .d-lbl { font-size: 8.5px; font-weight: 500; line-height: 1; opacity: 0.72; letter-spacing: 0.3px; }
-.day-btn.active .d-lbl { opacity: 0.85; }
-
-.sidebar-sep { width: 28px; height: 1px; background: var(--border); margin: 6px 0; }
-
+.day-btn:hover { background:var(--gray-light); }
+.day-btn.active { background:var(--teal); border-color:var(--teal); color:#fff; }
+.day-btn .d-num { font-size:16px; font-weight:700; line-height:1; }
+.day-btn .d-lbl { font-size:8.5px; font-weight:500; line-height:1; opacity:.72; letter-spacing:.3px; }
+.day-btn.active .d-lbl { opacity:.85; }
+.sidebar-sep { width:28px; height:1px; background:var(--border); margin:6px 0; }
 .sb-icon {
-  width: 38px; height: 38px;
-  border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--mid);
-  transition: 0.13s;
-  border: none; background: transparent;
+  width:38px; height:38px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--mid); transition:.13s; border:none; background:transparent;
 }
-.sb-icon:hover { background: var(--gray-light); color: var(--dark); }
-.sb-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
-.sb-icon.active { color: var(--amber); }
-
+.sb-icon:hover { background:var(--gray-light); color:var(--dark); }
+.sb-icon svg { width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; }
 .info-day-btn {
-  width: 46px; height: 48px;
-  border-radius: 11px;
-  border: 1px solid transparent;
-  background: transparent;
-  cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px;
-  transition: all 0.15s ease;
-  color: var(--mid);
-  font-family: 'DM Sans', sans-serif;
+  width:46px; height:48px; border-radius:11px; border:1px solid transparent;
+  background:transparent; cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:2px; transition:all .15s;
+  color:var(--mid); font-family:'DM Sans',sans-serif;
 }
-.info-day-btn:hover { background: var(--gray-light); }
-.info-day-btn.active { background: var(--amber); border-color: var(--amber); color: #fff; }
-.info-day-btn .d-num { font-size: 13px; font-weight: 700; line-height: 1; }
-.info-day-btn .d-lbl { font-size: 8.5px; font-weight: 500; line-height: 1; opacity: 0.72; letter-spacing: 0.3px; }
-.info-day-btn.active .d-lbl { opacity: 0.85; }
+.info-day-btn:hover { background:var(--gray-light); }
+.info-day-btn.active { background:var(--amber); border-color:var(--amber); color:#fff; }
+.info-day-btn .d-num { font-size:13px; font-weight:700; line-height:1; }
+.info-day-btn .d-lbl { font-size:8.5px; font-weight:500; line-height:1; opacity:.72; letter-spacing:.3px; }
 
-.main-col { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
-
+/* ── main ── */
+.main-col { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
 .topbar {
-  height: 50px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 18px; gap: 10px;
-  flex-shrink: 0;
+  height:50px; background:var(--white); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 18px; gap:10px; flex-shrink:0;
 }
-.topbar-title { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--dark); flex: 1; letter-spacing: -0.2px; }
-.topbar-title em { color: var(--teal); font-style: italic; }
+.topbar-title { font-family:'DM Serif Display',serif; font-size:17px; color:var(--dark); flex:1; letter-spacing:-.2px; }
+.topbar-title em { color:var(--teal); font-style:italic; }
 .tb-badge {
-  font-size: 11px; font-weight: 500;
-  padding: 4px 10px; border-radius: 100px;
-  background: var(--teal-light); color: var(--teal-mid);
-  display: flex; align-items: center; gap: 5px; white-space: nowrap;
+  font-size:11px; font-weight:500; padding:4px 10px; border-radius:100px;
+  background:var(--teal-light); color:var(--teal-mid);
+  display:flex; align-items:center; gap:5px; white-space:nowrap;
 }
-.tb-badge svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
+.tb-badge svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .tb-time {
-  font-size: 11px; font-weight: 600;
-  padding: 4px 10px; border-radius: 100px;
-  background: var(--blue-light); color: var(--blue);
-  white-space: nowrap; font-variant-numeric: tabular-nums;
-  display: flex; align-items: center; gap: 5px;
+  font-size:11px; font-weight:600; padding:4px 10px; border-radius:100px;
+  background:var(--blue-light); color:var(--blue); white-space:nowrap;
+  font-variant-numeric:tabular-nums; display:flex; align-items:center; gap:5px;
 }
-.tb-time svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
 .tb-weather {
-  font-size: 11px; font-weight: 500;
-  padding: 4px 10px; border-radius: 100px;
-  background: var(--amber-light); color: var(--amber);
-  white-space: nowrap; display: flex; align-items: center; gap: 5px;
-  cursor: pointer; position: relative;
+  font-size:11px; font-weight:500; padding:4px 10px; border-radius:100px;
+  background:var(--amber-light); color:var(--amber); white-space:nowrap;
+  display:flex; align-items:center; gap:5px; cursor:pointer; position:relative;
 }
 .weather-popup {
-  display: none;
-  position: absolute; top: calc(100% + 8px); right: 0;
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 14px; padding: 14px 16px;
-  box-shadow: var(--shadow-md); z-index: 9000;
-  min-width: 280px;
+  display:none; position:absolute; top:calc(100% + 8px); right:0;
+  background:var(--white); border:1px solid var(--border); border-radius:14px;
+  padding:14px 16px; box-shadow:var(--shadow-md); z-index:9000; min-width:280px;
 }
-.weather-popup.show { display: block; }
-.weather-title { font-size: 12px; font-weight: 600; color: var(--dark); margin-bottom: 10px; }
-.weather-days { display: flex; gap: 8px; }
+.weather-popup.show { display:block; }
+.weather-days { display:flex; gap:8px; }
 .weather-day-card {
-  flex: 1; background: var(--gray-light);
-  border-radius: 10px; padding: 8px 6px;
-  text-align: center; font-size: 10px; color: var(--mid);
+  flex:1; background:var(--gray-light); border-radius:10px; padding:8px 6px;
+  text-align:center; font-size:10px; color:var(--mid);
 }
-.weather-day-card .wd-icon { font-size: 20px; margin: 4px 0; }
-.weather-day-card .wd-temp { font-size: 12px; font-weight: 600; color: var(--dark); }
-.weather-day-card .wd-date { font-size: 9px; margin-top: 2px; }
+.weather-day-card .wd-icon { font-size:20px; margin:4px 0; }
+.weather-day-card .wd-temp { font-size:12px; font-weight:600; color:var(--dark); }
 
+/* ── sync status badge ── */
+.sync-badge {
+  font-size:10px; font-weight:600; padding:3px 9px; border-radius:100px;
+  display:flex; align-items:center; gap:4px; white-space:nowrap;
+  transition:all .3s;
+}
+.sync-badge.ok   { background:var(--teal-light); color:var(--teal-mid); }
+.sync-badge.saving { background:var(--amber-light); color:var(--amber); }
+.sync-badge.error  { background:var(--coral-light); color:var(--coral); }
+.sync-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+/* ── filter bars ── */
 .filter-bar {
-  height: 42px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 18px; gap: 6px;
-  flex-shrink: 0; overflow-x: auto;
-  scrollbar-width: none;
+  height:42px; background:var(--white); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 18px; gap:6px;
+  flex-shrink:0; overflow-x:auto; scrollbar-width:none;
 }
-.filter-bar::-webkit-scrollbar { display: none; }
-
+.filter-bar::-webkit-scrollbar { display:none; }
 .f-btn {
-  flex-shrink: 0;
-  height: 28px; padding: 0 12px;
-  border-radius: 100px;
-  border: 1px solid var(--border);
-  background: transparent;
-  font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 500;
-  color: var(--mid); cursor: pointer;
-  display: flex; align-items: center; gap: 5px;
-  transition: all 0.13s;
-  white-space: nowrap;
+  flex-shrink:0; height:28px; padding:0 12px; border-radius:100px;
+  border:1px solid var(--border); background:transparent;
+  font-family:'DM Sans',sans-serif; font-size:11.5px; font-weight:500;
+  color:var(--mid); cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .13s;
 }
-.f-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.f-btn:hover { border-color: var(--teal); color: var(--teal); }
-.f-btn.active { background: var(--teal); border-color: var(--teal); color: #fff; }
-.f-btn.fav-active { background: var(--coral); border-color: var(--coral); color: #fff; }
-
+.f-btn:hover { border-color:var(--teal); color:var(--teal); }
+.f-btn.active { background:var(--teal); border-color:var(--teal); color:#fff; }
 .type-filter-bar {
-  height: 38px;
-  background: var(--cream);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 18px; gap: 5px;
-  flex-shrink: 0; overflow-x: auto;
-  scrollbar-width: none;
+  height:38px; background:var(--cream); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 18px; gap:5px;
+  flex-shrink:0; overflow-x:auto; scrollbar-width:none;
 }
-.type-filter-bar::-webkit-scrollbar { display: none; }
-.type-filter-bar.hidden { display: none; }
-
+.type-filter-bar.hidden { display:none; }
 .type-chip {
-  flex-shrink: 0;
-  height: 24px; padding: 0 10px;
-  border-radius: 100px;
-  border: 1px solid var(--border);
-  background: var(--white);
-  font-family: 'DM Sans', sans-serif; font-size: 10.5px; font-weight: 500;
-  color: var(--mid); cursor: pointer;
-  transition: all 0.13s; white-space: nowrap;
+  flex-shrink:0; height:24px; padding:0 10px; border-radius:100px;
+  border:1px solid var(--border); background:var(--white);
+  font-family:'DM Sans',sans-serif; font-size:10.5px; font-weight:500;
+  color:var(--mid); cursor:pointer; transition:all .13s;
 }
-.type-chip:hover { border-color: var(--teal); color: var(--teal); }
-.type-chip.active { background: var(--dark); border-color: var(--dark); color: var(--white); }
+.type-chip:hover { border-color:var(--teal); color:var(--teal); }
+.type-chip.active { background:var(--dark); border-color:var(--dark); color:var(--white); }
 
-.content-area { flex: 1; display: flex; overflow: hidden; }
-
+/* ── content ── */
+.content-area { flex:1; display:flex; overflow:hidden; }
 .timeline-panel {
-  width: 320px; flex-shrink: 0;
-  background: var(--cream);
-  overflow-y: auto; overflow-x: hidden;
-  padding: 18px 14px 40px;
-  border-right: 1px solid var(--border);
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  width:320px; flex-shrink:0; background:var(--cream);
+  overflow-y:auto; overflow-x:hidden; padding:18px 14px 40px;
+  border-right:1px solid var(--border);
+  scrollbar-width:thin; scrollbar-color:var(--border) transparent;
 }
-.timeline-panel::-webkit-scrollbar { width: 4px; }
-.timeline-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.timeline-panel::-webkit-scrollbar { width:4px; }
+.timeline-panel::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+.day-heading { margin-bottom:16px; }
+.day-heading h2 { font-family:'DM Serif Display',serif; font-size:19px; color:var(--dark); margin-bottom:1px; }
+.day-heading p { font-size:11px; color:var(--mid); }
+.day-section { display:none; }
+.day-section.visible { display:block; }
+.cat-section { display:none; }
+.cat-section.visible { display:block; }
 
-.day-heading { margin-bottom: 16px; }
-.day-heading h2 { font-family: 'DM Serif Display', serif; font-size: 19px; color: var(--dark); margin-bottom: 1px; }
-.day-heading p { font-size: 11px; color: var(--mid); }
-
-.day-section { display: none; }
-.day-section.visible { display: block; }
-.cat-section { display: none; }
-.cat-section.visible { display: block; }
-
-/* ── [FIX] stop-item: transit-row도 함께 숨기기 위해 내부에 포함 ── */
+/* ── stop items ── */
 .stop-item {
-  position: relative;
-  padding-left: 30px;
-  margin-bottom: 0;
+  position:relative; padding-left:30px; margin-bottom:0;
 }
-/* 타임라인 세로선: stop-card 아래부터 다음 stop-item까지 */
 .stop-item::before {
-  content: '';
-  position: absolute;
-  left: 13px; top: 34px;
-  width: 1px; bottom: 0;
-  background: var(--border);
+  content:''; position:absolute; left:13px; top:34px;
+  width:1px; bottom:0; background:var(--border);
 }
-.stop-item:last-child::before { display: none; }
-.stop-item.type-hidden { display: none !important; }
-
+.stop-item:last-child::before { display:none; }
+.stop-item.type-hidden { display:none !important; }
 .stop-dot {
-  position: absolute;
-  left: 4px; top: 10px;
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  border: 2px solid var(--white);
-  box-shadow: 0 0 0 1.5px var(--border-hover);
-  display: flex; align-items: center; justify-content: center;
+  position:absolute; left:4px; top:10px; width:18px; height:18px;
+  border-radius:50%; border:2px solid var(--white);
+  box-shadow:0 0 0 1.5px var(--border-hover);
+  display:flex; align-items:center; justify-content:center;
 }
-.stop-dot.type-food   { background: var(--coral); box-shadow: 0 0 0 1.5px var(--coral); }
-.stop-dot.type-coffee { background: var(--amber); box-shadow: 0 0 0 1.5px var(--amber); }
-.stop-dot.type-sight  { background: var(--blue);  box-shadow: 0 0 0 1.5px var(--blue); }
-.stop-dot.type-shop   { background: var(--teal);  box-shadow: 0 0 0 1.5px var(--teal); }
-.stop-dot.type-transit{ background: var(--gray);  box-shadow: 0 0 0 1.5px var(--gray); }
-.stop-dot.type-activity{ background: #9B59B6; box-shadow: 0 0 0 1.5px #9B59B6; }
-.stop-dot.type-hotel{ background: #16A085; box-shadow: 0 0 0 1.5px #16A085; }
-.stop-dot svg { width: 9px; height: 9px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-
+.stop-dot.type-food   { background:var(--coral); box-shadow:0 0 0 1.5px var(--coral); }
+.stop-dot.type-coffee { background:var(--amber); box-shadow:0 0 0 1.5px var(--amber); }
+.stop-dot.type-sight  { background:var(--blue);  box-shadow:0 0 0 1.5px var(--blue); }
+.stop-dot.type-shop   { background:var(--teal);  box-shadow:0 0 0 1.5px var(--teal); }
+.stop-dot.type-transit{ background:var(--gray);  box-shadow:0 0 0 1.5px var(--gray); }
+.stop-dot.type-activity{ background:#9B59B6; box-shadow:0 0 0 1.5px #9B59B6; }
+.stop-dot.type-hotel  { background:#16A085; box-shadow:0 0 0 1.5px #16A085; }
+.stop-dot svg { width:9px; height:9px; stroke:#fff; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
 .stop-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 10px 12px;
-  margin-bottom: 6px;
-  cursor: pointer;
-  transition: all 0.14s;
-  position: relative;
+  background:var(--white); border:1px solid var(--border); border-radius:12px;
+  padding:10px 12px; margin-bottom:6px; cursor:pointer; transition:all .14s; position:relative;
 }
-.stop-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
-.stop-card.selected { border-color: var(--teal); box-shadow: 0 0 0 2px rgba(26,107,90,0.15); }
-
+.stop-card:hover { border-color:var(--border-hover); box-shadow:var(--shadow-sm); transform:translateY(-1px); }
+.stop-card.selected { border-color:var(--teal); box-shadow:0 0 0 2px rgba(26,107,90,0.15); }
+.sc-actions {
+  position:absolute; top:6px; right:6px;
+  display:flex; gap:2px; align-items:center;
+}
 .fav-btn {
-  position: absolute; top: 8px; right: 8px;
-  width: 26px; height: 26px; border-radius: 50%;
-  border: none; background: transparent;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 14px; line-height: 1;
-  transition: transform 0.15s;
-  z-index: 2;
+  width:26px; height:26px; border-radius:50%; border:none; background:transparent;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:14px; line-height:1; transition:transform .15s; z-index:2;
 }
-.fav-btn:hover { transform: scale(1.2); }
-.fav-btn.active { animation: favPop 0.25s ease; }
+.fav-btn:hover { transform:scale(1.2); }
+.fav-btn.active { animation:favPop .25s ease; }
 @keyframes favPop { 0%{transform:scale(1)} 50%{transform:scale(1.35)} 100%{transform:scale(1)} }
-
-.memo-area {
-  margin-top: 7px;
-  border-top: 1px dashed var(--border);
-  padding-top: 7px;
-  display: none;
+.edit-btn, .del-btn {
+  width:22px; height:22px; border-radius:6px; border:none; background:transparent;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:11px; color:var(--mid); transition:.13s; z-index:2;
 }
-.memo-area.show { display: block; }
+.edit-btn:hover { background:var(--teal-light); color:var(--teal); }
+.del-btn:hover  { background:var(--coral-light); color:var(--coral); }
+
+.memo-area { margin-top:7px; border-top:1px dashed var(--border); padding-top:7px; display:none; }
+.memo-area.show { display:block; }
 .memo-input {
-  width: 100%; font-size: 11px; color: var(--dark);
-  background: var(--gray-light); border: none; border-radius: 7px;
-  padding: 6px 8px; resize: none;
-  font-family: 'DM Sans', sans-serif; line-height: 1.5;
-  outline: none;
+  width:100%; font-size:11px; color:var(--dark); background:var(--gray-light);
+  border:none; border-radius:7px; padding:6px 8px; resize:none;
+  font-family:'DM Sans',sans-serif; line-height:1.5; outline:none;
 }
-.memo-input:focus { outline: 1.5px solid var(--teal); }
-.memo-input::placeholder { color: var(--mid); }
+.memo-input:focus { outline:1.5px solid var(--teal); }
 .memo-toggle {
-  font-size: 10px; color: var(--mid); cursor: pointer;
-  display: inline-flex; align-items: center; gap: 3px;
-  margin-top: 5px; background: none; border: none;
-  font-family: 'DM Sans', sans-serif;
+  font-size:10px; color:var(--mid); cursor:pointer;
+  display:inline-flex; align-items:center; gap:3px;
+  margin-top:5px; background:none; border:none; font-family:'DM Sans',sans-serif;
 }
-.memo-toggle:hover { color: var(--teal); }
-.memo-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--amber); display: none; flex-shrink: 0;
-}
-.memo-dot.show { display: inline-block; }
+.memo-toggle:hover { color:var(--teal); }
+.memo-dot { width:6px; height:6px; border-radius:50%; background:var(--amber); display:none; flex-shrink:0; }
+.memo-dot.show { display:inline-block; }
 
-.sc-time { font-size: 10px; font-weight: 600; color: var(--mid); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
-.sc-name { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 3px; line-height: 1.35; padding-right: 20px; }
-.sc-desc { font-size: 11.5px; color: var(--mid); line-height: 1.5; }
-.sc-tags { display: flex; gap: 4px; margin-top: 7px; flex-wrap: wrap; }
-.sc-tag { font-size: 10px; padding: 2px 8px; border-radius: 100px; font-weight: 500; }
-.sc-tag.food    { background: var(--coral-light); color: #8B3820; }
-.sc-tag.coffee  { background: var(--amber-light); color: #7A4D0B; }
-.sc-tag.sight   { background: var(--blue-light);  color: #1A4D8A; }
-.sc-tag.shop    { background: var(--teal-light);  color: var(--teal-mid); }
-.sc-tag.tip     { background: var(--gray-light);  color: var(--gray); }
-.sc-tag.activity{ background: #F3E8FD; color: #6B3A9A; }
+.sc-time { font-size:10px; font-weight:600; color:var(--mid); letter-spacing:.5px; text-transform:uppercase; margin-bottom:2px; }
+.sc-name { font-size:13px; font-weight:600; color:var(--dark); margin-bottom:3px; line-height:1.35; padding-right:60px; }
+.sc-desc { font-size:11.5px; color:var(--mid); line-height:1.5; }
+.sc-tags { display:flex; gap:4px; margin-top:7px; flex-wrap:wrap; }
+.sc-tag { font-size:10px; padding:2px 8px; border-radius:100px; font-weight:500; }
+.sc-tag.food    { background:var(--coral-light); color:#8B3820; }
+.sc-tag.coffee  { background:var(--amber-light); color:#7A4D0B; }
+.sc-tag.sight   { background:var(--blue-light);  color:#1A4D8A; }
+.sc-tag.shop    { background:var(--teal-light);  color:var(--teal-mid); }
+.sc-tag.tip     { background:var(--gray-light);  color:var(--gray); }
+.sc-tag.activity{ background:#F3E8FD; color:#6B3A9A; }
 
-/* ── [FIX] transit-row: stop-item 안에 있어서 필터 적용됨 ── */
 .transit-row {
-  display: flex; align-items: center; gap: 7px;
-  padding: 4px 0 8px 0;
+  display:flex; align-items:center; gap:7px; padding:4px 0 8px;
 }
 .transit-pill {
-  display: flex; align-items: center; gap: 4px;
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 100px; padding: 3px 9px;
-  font-size: 10.5px; font-weight: 500; color: var(--mid);
+  display:flex; align-items:center; gap:4px; background:var(--white);
+  border:1px solid var(--border); border-radius:100px; padding:3px 9px;
+  font-size:10.5px; font-weight:500; color:var(--mid);
 }
-.transit-pill svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.transit-info { font-size: 10px; color: var(--mid); opacity: 0.8; }
+.transit-pill svg { width:11px; height:11px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.transit-info { font-size:10px; color:var(--mid); opacity:.8; }
 
-.food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+/* ── food grid ── */
+.food-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
 .food-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 12px; overflow: hidden; cursor: default;
-  transition: 0.14s; position: relative;
+  background:var(--white); border:1px solid var(--border);
+  border-radius:12px; overflow:hidden; cursor:default; transition:.14s; position:relative;
 }
-.food-card:hover { box-shadow: var(--shadow-sm); transform: translateY(-1px); }
-.food-card.selected { outline: 2px solid var(--coral); outline-offset: -1px; box-shadow: 0 0 0 3px rgba(216,90,48,0.15); }
-.food-emoji { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 26px; }
-.food-body { padding: 8px 10px 10px; }
-.food-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
-.food-desc { font-size: 10.5px; color: var(--mid); line-height: 1.4; }
-.food-price { font-size: 10px; color: var(--coral); font-weight: 600; margin-top: 4px; }
+.food-card:hover { box-shadow:var(--shadow-sm); transform:translateY(-1px); }
+.food-card.selected { outline:2px solid var(--coral); outline-offset:-1px; }
+.food-emoji { height:60px; display:flex; align-items:center; justify-content:center; font-size:26px; }
+.food-body { padding:8px 10px 10px; }
+.food-name { font-size:12px; font-weight:600; margin-bottom:2px; padding-right:24px; }
+.food-desc { font-size:10.5px; color:var(--mid); line-height:1.4; }
+.food-price { font-size:10px; color:var(--coral); font-weight:600; margin-top:4px; }
 
-.tips-list { display: flex; flex-direction: column; gap: 8px; }
-.tip-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 12px; padding: 11px 13px;
-  display: flex; gap: 10px; align-items: flex-start;
+/* ── tips / sights ── */
+.tips-list { display:flex; flex-direction:column; gap:8px; }
+.tip-card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:11px 13px; display:flex; gap:10px; align-items:flex-start; }
+.tip-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+.tip-title { font-size:12px; font-weight:600; margin-bottom:2px; }
+.tip-text { font-size:11px; color:var(--mid); line-height:1.5; }
+.sight-card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:11px 13px; display:flex; gap:10px; align-items:flex-start; margin-bottom:8px; }
+.sight-icon { font-size:20px; flex-shrink:0; }
+.sight-title { font-size:12px; font-weight:600; margin-bottom:2px; }
+.sight-text { font-size:11px; color:var(--mid); line-height:1.5; }
+
+/* ── favorites empty ── */
+.fav-empty { text-align:center; padding:40px 20px; color:var(--mid); font-size:12px; line-height:1.8; }
+.fav-empty .fe-icon { font-size:36px; margin-bottom:10px; }
+
+/* ── expenses tab ── */
+.expense-summary {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;
 }
-.tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.tip-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
-.tip-text { font-size: 11px; color: var(--mid); line-height: 1.5; }
-
-.sight-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 12px; padding: 11px 13px;
-  display: flex; gap: 10px; align-items: flex-start;
-  margin-bottom: 8px;
+.exp-sum-card {
+  background:var(--white); border:1px solid var(--border); border-radius:12px;
+  padding:12px 14px;
 }
-.sight-icon { font-size: 20px; flex-shrink: 0; }
-.sight-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
-.sight-text { font-size: 11px; color: var(--mid); line-height: 1.5; }
+.exp-sum-label { font-size:10px; color:var(--mid); margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px; }
+.exp-sum-value { font-family:'DM Serif Display',serif; font-size:18px; color:var(--dark); }
+.exp-sum-sub { font-size:10px; color:var(--mid); margin-top:2px; }
 
-.fav-empty {
-  text-align: center; padding: 40px 20px;
-  color: var(--mid); font-size: 12px; line-height: 1.8;
+.exp-add-btn {
+  width:100%; height:38px; background:var(--teal); border:none; border-radius:10px;
+  color:#fff; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;
+  margin-bottom:12px; transition:.13s;
 }
-.fav-empty .fe-icon { font-size: 36px; margin-bottom: 10px; }
+.exp-add-btn:hover { background:var(--teal-mid); }
+.exp-add-btn svg { width:14px; height:14px; stroke:#fff; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
 
+.expense-list { display:flex; flex-direction:column; gap:6px; }
+.expense-item {
+  background:var(--white); border:1px solid var(--border); border-radius:11px;
+  padding:10px 12px; display:flex; align-items:center; gap:10px; position:relative;
+}
+.exp-cat-badge {
+  width:32px; height:32px; border-radius:9px; background:var(--gray-light);
+  display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;
+}
+.exp-info { flex:1; min-width:0; }
+.exp-item-name { font-size:12px; font-weight:600; color:var(--dark); }
+.exp-item-meta { font-size:10px; color:var(--mid); margin-top:1px; }
+.exp-amount { font-size:13px; font-weight:700; color:var(--teal-mid); flex-shrink:0; }
+.exp-del-btn {
+  width:22px; height:22px; border-radius:6px; border:none; background:transparent;
+  cursor:pointer; color:var(--mid); font-size:13px; line-height:1;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.exp-del-btn:hover { background:var(--coral-light); color:var(--coral); }
+
+.exp-by-day {
+  font-size:10px; font-weight:600; color:var(--mid); text-transform:uppercase;
+  letter-spacing:.4px; margin:10px 0 5px; padding-left:2px;
+}
+
+/* ── modals ── */
+.modal-backdrop {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+  z-index:8500; align-items:center; justify-content:center; padding:20px;
+}
+.modal-backdrop.show { display:flex; }
+.modal {
+  background:var(--white); border-radius:18px; width:min(440px,100%);
+  box-shadow:0 20px 60px rgba(0,0,0,0.25); overflow:hidden;
+  max-height:90vh; display:flex; flex-direction:column;
+}
+.modal-header {
+  padding:16px 18px 12px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:10px; flex-shrink:0;
+}
+.modal-title { font-family:'DM Serif Display',serif; font-size:17px; color:var(--dark); flex:1; }
+.modal-close {
+  width:28px; height:28px; border-radius:8px; border:none; background:var(--gray-light);
+  cursor:pointer; font-size:14px; color:var(--mid); display:flex; align-items:center; justify-content:center;
+}
+.modal-close:hover { background:var(--border-hover); }
+.modal-body { padding:16px 18px; overflow-y:auto; flex:1; }
+.modal-footer { padding:12px 18px; border-top:1px solid var(--border); display:flex; gap:8px; flex-shrink:0; }
+.form-group { margin-bottom:12px; }
+.form-label { font-size:11px; font-weight:600; color:var(--mid); text-transform:uppercase; letter-spacing:.4px; margin-bottom:5px; display:block; }
+.form-input, .form-select, .form-textarea {
+  width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:9px;
+  font-family:'DM Sans',sans-serif; font-size:13px; color:var(--dark);
+  background:var(--white); outline:none; transition:.13s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color:var(--teal); }
+.form-textarea { resize:vertical; min-height:70px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.btn-primary {
+  flex:1; height:38px; background:var(--teal); color:#fff; border:none; border-radius:10px;
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:.13s;
+}
+.btn-primary:hover { background:var(--teal-mid); }
+.btn-secondary {
+  height:38px; padding:0 18px; background:var(--gray-light); color:var(--mid);
+  border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer;
+}
+.btn-secondary:hover { background:var(--border-hover); }
+.btn-danger {
+  height:38px; padding:0 18px; background:var(--coral-light); color:var(--coral);
+  border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer;
+}
+.btn-danger:hover { background:var(--coral); color:#fff; }
+
+/* ── search modal ── */
 .search-backdrop {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45); z-index: 8000;
-  align-items: flex-start; justify-content: center;
-  padding-top: 80px;
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45);
+  z-index:8000; align-items:flex-start; justify-content:center; padding-top:80px;
 }
-.search-backdrop.show { display: flex; }
-.search-modal {
-  background: var(--white); border-radius: 16px;
-  width: min(560px, calc(100vw - 32px));
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-  overflow: hidden;
-}
-.search-input-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 14px 16px; border-bottom: 1px solid var(--border);
-}
-.search-input-row svg { width: 17px; height: 17px; stroke: var(--mid); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-.search-input {
-  flex: 1; font-size: 15px; border: none; background: transparent;
-  color: var(--dark); outline: none; font-family: 'DM Sans', sans-serif;
-}
-.search-input::placeholder { color: var(--mid); }
-.search-close-btn {
-  background: var(--gray-light); border: none; border-radius: 6px;
-  padding: 3px 8px; font-size: 11px; color: var(--mid);
-  cursor: pointer; font-family: 'DM Sans', sans-serif;
-}
-.search-results {
-  max-height: 400px; overflow-y: auto;
-  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-}
-.search-results::-webkit-scrollbar { width: 4px; }
-.search-results::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-.search-empty { padding: 32px; text-align: center; color: var(--mid); font-size: 13px; }
-.search-result-item {
-  display: flex; align-items: flex-start; gap: 11px;
-  padding: 11px 16px; cursor: pointer; border-bottom: 1px solid var(--border);
-  transition: background 0.1s;
-}
-.search-result-item:last-child { border-bottom: none; }
-.search-result-item:hover { background: var(--gray-light); }
-.sri-icon {
-  width: 32px; height: 32px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; flex-shrink: 0;
-}
-.sri-day { font-size: 9px; font-weight: 600; color: var(--mid); margin-bottom: 1px; letter-spacing: 0.3px; text-transform: uppercase; }
-.sri-name { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
-.sri-desc { font-size: 11px; color: var(--mid); line-height: 1.4; }
-.sri-mark { background: var(--amber-light); color: var(--amber); border-radius: 3px; padding: 0 2px; }
-.search-section-header {
-  padding: 8px 16px 4px; font-size: 10px; font-weight: 600;
-  color: var(--mid); letter-spacing: 0.5px; text-transform: uppercase;
-  background: var(--gray-light);
-}
+.search-backdrop.show { display:flex; }
+.search-modal { background:var(--white); border-radius:16px; width:min(560px,calc(100vw - 32px)); box-shadow:0 20px 60px rgba(0,0,0,0.25); overflow:hidden; }
+.search-input-row { display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid var(--border); }
+.search-input-row svg { width:17px; height:17px; stroke:var(--mid); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.search-input { flex:1; font-size:15px; border:none; background:transparent; color:var(--dark); outline:none; font-family:'DM Sans',sans-serif; }
+.search-close-btn { background:var(--gray-light); border:none; border-radius:6px; padding:3px 8px; font-size:11px; color:var(--mid); cursor:pointer; font-family:'DM Sans',sans-serif; }
+.search-results { max-height:400px; overflow-y:auto; }
+.search-empty { padding:32px; text-align:center; color:var(--mid); font-size:13px; }
+.search-result-item { display:flex; align-items:flex-start; gap:11px; padding:11px 16px; cursor:pointer; border-bottom:1px solid var(--border); transition:background .1s; }
+.search-result-item:hover { background:var(--gray-light); }
+.sri-icon { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.sri-day { font-size:9px; font-weight:600; color:var(--mid); margin-bottom:1px; letter-spacing:.3px; text-transform:uppercase; }
+.sri-name { font-size:13px; font-weight:600; color:var(--dark); margin-bottom:2px; }
+.sri-desc { font-size:11px; color:var(--mid); line-height:1.4; }
+.sri-mark { background:var(--amber-light); color:var(--amber); border-radius:3px; padding:0 2px; }
+.search-section-header { padding:8px 16px 4px; font-size:10px; font-weight:600; color:var(--mid); letter-spacing:.5px; text-transform:uppercase; background:var(--gray-light); }
 
-.info-section { margin-bottom: 20px; }
-.info-section-title {
-  font-family: 'DM Serif Display', serif;
-  font-size: 15px; color: var(--dark);
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 8px;
-}
-.info-section-title span { font-size: 16px; }
+/* ── info overlay ── */
+.info-overlay { display:none; flex:1; overflow-y:auto; background:var(--cream); padding:20px 18px 40px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+.info-overlay::-webkit-scrollbar { width:4px; }
+.info-overlay::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+.info-overlay.show { display:block; }
+.info-section { margin-bottom:20px; }
+.info-card { background:var(--white); border:1px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:10px; box-shadow:var(--shadow-sm); }
+.info-card-header { display:flex; align-items:center; gap:10px; padding:13px 16px; font-size:14px; font-weight:700; color:var(--dark); background:var(--white); border-bottom:1px solid var(--border); }
+.ich-badge { width:32px; height:32px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; background:var(--gray-light); }
+.info-card-header.teal  .ich-badge { background:var(--teal-light); }
+.info-card-header.amber .ich-badge { background:var(--amber-light); }
+.info-card-header.coral .ich-badge { background:var(--coral-light); }
+.info-card-header.blue  .ich-badge { background:var(--blue-light); }
+.info-rows { padding:4px 0 6px; }
+.info-row { display:flex; align-items:flex-start; padding:11px 16px; gap:12px; border-bottom:1px solid var(--gray-light); }
+.info-row:last-child { border-bottom:none; }
+.info-row-icon { font-size:14px; flex-shrink:0; width:30px; height:30px; border-radius:9px; background:var(--gray-light); display:flex; align-items:center; justify-content:center; margin-top:1px; }
+.info-row-label { color:var(--mid); font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.4px; margin-bottom:2px; }
+.info-row-value { font-weight:500; color:var(--dark); font-size:13px; line-height:1.45; }
+.info-link { display:inline-flex; align-items:center; gap:4px; font-size:11.5px; font-weight:600; color:var(--teal-mid); text-decoration:none; padding:4px 10px; background:var(--teal-light); border-radius:100px; margin-top:2px; }
 
-.info-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  margin-bottom: 10px;
-  box-shadow: var(--shadow-sm);
-}
-.info-card-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 13px 16px;
-  font-size: 14px; font-weight: 700;
-  color: var(--dark);
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-}
-.ich-badge {
-  width: 32px; height: 32px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; flex-shrink: 0;
-  background: var(--gray-light);
-}
-.info-card-header.teal  .ich-badge { background: var(--teal-light); }
-.info-card-header.amber .ich-badge { background: var(--amber-light); }
-.info-card-header.coral .ich-badge { background: var(--coral-light); }
-.info-card-header.blue  .ich-badge { background: var(--blue-light); }
-.info-card-header.gray  .ich-badge { background: var(--gray-light); }
+.budget-bar-wrap { padding:12px 14px 14px; }
+.budget-total { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.budget-total-label { font-size:12px; color:var(--mid); font-weight:500; }
+.budget-total-value { font-family:'DM Serif Display',serif; font-size:20px; color:var(--dark); }
+.budget-items { display:flex; flex-direction:column; gap:6px; }
+.budget-item { display:flex; align-items:center; gap:10px; }
+.budget-item-label { font-size:11px; color:var(--mid); width:70px; flex-shrink:0; }
+.budget-item-bar-wrap { flex:1; height:8px; background:var(--gray-light); border-radius:4px; overflow:hidden; }
+.budget-item-bar { height:100%; border-radius:4px; transition:width .6s ease; }
+.budget-item-val { font-size:11px; font-weight:600; color:var(--dark); width:90px; text-align:right; flex-shrink:0; }
 
-.info-rows { padding: 4px 0 6px; }
-.info-row {
-  display: flex; align-items: flex-start;
-  padding: 11px 16px; gap: 12px;
-  border-bottom: 1px solid var(--gray-light);
-}
-.info-row:last-child { border-bottom: none; }
-.info-row-icon {
-  font-size: 14px; flex-shrink: 0; width: 30px; height: 30px;
-  border-radius: 9px; background: var(--gray-light);
-  display: flex; align-items: center; justify-content: center;
-  margin-top: 1px;
-}
-.info-row-text { flex: 1; min-width: 0; }
-.info-row-label {
-  color: var(--mid); font-size: 10.5px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px;
-}
-.info-row-value { font-weight: 500; color: var(--dark); font-size: 13px; line-height: 1.45; word-break: break-word; }
-.info-row-value.highlight { color: var(--teal); font-weight: 700; font-size: 15px; }
-.info-row-value.coral { color: var(--coral); font-weight: 600; }
-.info-link {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 11.5px; font-weight: 600; color: var(--teal-mid);
-  text-decoration: none; padding: 4px 10px;
-  background: var(--teal-light); border-radius: 100px;
-  margin-top: 2px;
-}
+.checklist-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.checklist-item { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:9px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; transition:.14s; user-select:none; }
+.checklist-item:hover { border-color:var(--border-hover); }
+.checklist-item.checked { background:var(--teal-light); border-color:var(--teal); }
+.checklist-check { width:18px; height:18px; border-radius:50%; border:2px solid var(--border-hover); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:.14s; background:var(--white); }
+.checklist-item.checked .checklist-check { background:var(--teal); border-color:var(--teal); }
+.checklist-check svg { width:10px; height:10px; stroke:#fff; fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; display:none; }
+.checklist-item.checked .checklist-check svg { display:block; }
+.checklist-icon { font-size:15px; }
+.checklist-label { font-size:12px; font-weight:500; color:var(--dark); }
+.checklist-item.checked .checklist-label { color:var(--teal-mid); text-decoration:line-through; opacity:.7; }
+.checklist-progress { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding:10px 14px; background:var(--white); border:1px solid var(--border); border-radius:12px; }
+.checklist-progress-bar-wrap { flex:1; height:6px; background:var(--gray-light); border-radius:3px; overflow:hidden; }
+.checklist-progress-bar { height:100%; background:var(--teal); border-radius:3px; transition:width .3s ease; }
+.checklist-progress-label { font-size:11px; font-weight:600; color:var(--teal); min-width:40px; text-align:right; }
 
-.budget-bar-wrap { padding: 12px 14px 14px; }
-.budget-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.budget-total-label { font-size: 12px; color: var(--mid); font-weight: 500; }
-.budget-total-value { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--dark); }
-.budget-items { display: flex; flex-direction: column; gap: 6px; }
-.budget-item { display: flex; align-items: center; gap: 10px; }
-.budget-item-label { font-size: 11px; color: var(--mid); width: 70px; flex-shrink: 0; }
-.budget-item-bar-wrap { flex: 1; height: 8px; background: var(--gray-light); border-radius: 4px; overflow: hidden; }
-.budget-item-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
-.budget-item-val { font-size: 11px; font-weight: 600; color: var(--dark); width: 90px; text-align: right; flex-shrink: 0; }
+.exchange-big { padding:14px 14px 10px; text-align:center; }
+.exchange-rate-display { font-family:'DM Serif Display',serif; font-size:28px; color:var(--dark); margin-bottom:4px; }
+.exchange-rate-sub { font-size:11px; color:var(--mid); }
+.exchange-calc { display:flex; gap:8px; align-items:center; padding:10px 14px; background:var(--amber-light); border-top:1px solid rgba(186,117,23,0.15); }
+.exchange-calc-label { font-size:11px; color:var(--amber); font-weight:600; flex:1; }
+.exchange-calc-val { font-size:12px; font-weight:600; color:var(--dark); }
+.exchange-live-badge { font-size:9px; font-weight:600; padding:2px 7px; background:var(--teal-light); color:var(--teal); border-radius:100px; margin-left:8px; }
 
-.checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.checklist-item {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 10px; padding: 9px 12px;
-  display: flex; align-items: center; gap: 8px;
-  cursor: pointer; transition: 0.14s; user-select: none;
-}
-.checklist-item:hover { border-color: var(--border-hover); }
-.checklist-item.checked { background: var(--teal-light); border-color: var(--teal); }
-.checklist-check {
-  width: 18px; height: 18px; border-radius: 50%;
-  border: 2px solid var(--border-hover);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; transition: 0.14s; background: var(--white);
-}
-.checklist-item.checked .checklist-check { background: var(--teal); border-color: var(--teal); }
-.checklist-check svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; display: none; }
-.checklist-item.checked .checklist-check svg { display: block; }
-.checklist-icon { font-size: 15px; }
-.checklist-label { font-size: 12px; font-weight: 500; color: var(--dark); }
-.checklist-item.checked .checklist-label { color: var(--teal-mid); text-decoration: line-through; opacity: 0.7; }
-.checklist-progress {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 10px; padding: 10px 14px;
-  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
-}
-.checklist-progress-bar-wrap { flex: 1; height: 6px; background: var(--gray-light); border-radius: 3px; overflow: hidden; }
-.checklist-progress-bar { height: 100%; background: var(--teal); border-radius: 3px; transition: width 0.3s ease; }
-.checklist-progress-label { font-size: 11px; font-weight: 600; color: var(--teal); min-width: 40px; text-align: right; }
-
-.exchange-big { padding: 14px 14px 10px; text-align: center; }
-.exchange-rate-display { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--dark); margin-bottom: 4px; }
-.exchange-rate-sub { font-size: 11px; color: var(--mid); }
-.exchange-calc {
-  display: flex; gap: 8px; align-items: center;
-  padding: 10px 14px; background: var(--amber-light);
-  border-top: 1px solid rgba(186,117,23,0.15);
-}
-.exchange-calc-label { font-size: 11px; color: var(--amber); font-weight: 600; flex: 1; }
-.exchange-calc-val { font-size: 12px; font-weight: 600; color: var(--dark); }
-.exchange-live-badge {
-  font-size: 9px; font-weight: 600; padding: 2px 7px;
-  background: var(--teal-light); color: var(--teal);
-  border-radius: 100px; margin-left: 8px;
-}
-
-.map-panel { flex: 1; position: relative; overflow: hidden; background: #dce8e4; }
-#leaflet-map { width: 100%; height: 100%; }
-
-.info-overlay {
-  display: none;
-  flex: 1;
-  overflow-y: auto;
-  background: var(--cream);
-  padding: 20px 18px 40px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-.info-overlay::-webkit-scrollbar { width: 4px; }
-.info-overlay::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-.info-overlay.show { display: block; }
-
+/* ── map ── */
+.map-panel { flex:1; position:relative; overflow:hidden; background:#dce8e4; }
+#leaflet-map { width:100%; height:100%; }
 .map-place-info {
-  position: absolute; bottom: 14px; left: 12px; right: 12px;
-  background: rgba(255,255,255,0.97);
-  backdrop-filter: blur(10px);
-  border-radius: 14px; padding: 12px 15px;
-  box-shadow: var(--shadow-md);
-  z-index: 1000; display: none;
-  animation: slideUp 0.2s ease;
+  position:absolute; bottom:14px; left:12px; right:12px;
+  background:rgba(255,255,255,0.97); backdrop-filter:blur(10px);
+  border-radius:14px; padding:12px 15px; box-shadow:var(--shadow-md);
+  z-index:1000; display:none; animation:slideUp .2s ease;
 }
-[data-theme="dark"] .map-place-info { background: rgba(30,30,28,0.97); }
+[data-theme="dark"] .map-place-info { background:rgba(30,30,28,0.97); }
 @keyframes slideUp { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:translateY(0)} }
-.map-place-info.show { display: block; }
-.mpi-name { font-size: 13.5px; font-weight: 600; color: var(--dark); margin-bottom: 2px; }
-.mpi-addr { font-size: 11px; color: var(--mid); }
-.mpi-close {
-  position: absolute; top: 9px; right: 10px;
-  background: none; border: none; cursor: pointer;
-  font-size: 15px; color: var(--mid); line-height: 1;
-  width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-  border-radius: 50%;
-}
-.mpi-close:hover { background: var(--gray-light); }
-
+.map-place-info.show { display:block; }
+.mpi-name { font-size:13.5px; font-weight:600; color:var(--dark); margin-bottom:2px; }
+.mpi-addr { font-size:11px; color:var(--mid); }
+.mpi-close { position:absolute; top:9px; right:10px; background:none; border:none; cursor:pointer; font-size:15px; color:var(--mid); width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+.mpi-close:hover { background:var(--gray-light); }
 .map-gmaps-btn {
-  position: absolute; top: 12px; right: 12px;
-  z-index: 1000;
-  background: var(--white); border: none;
-  border-radius: 9px; padding: 7px 13px;
-  font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 600;
-  color: var(--teal); cursor: pointer;
-  box-shadow: var(--shadow-md);
-  display: none; align-items: center; gap: 6px;
-  text-decoration: none; transition: all 0.15s;
+  position:absolute; top:12px; right:12px; z-index:1000;
+  background:var(--white); border:none; border-radius:9px; padding:7px 13px;
+  font-size:12px; font-family:'DM Sans',sans-serif; font-weight:600;
+  color:var(--teal); cursor:pointer; box-shadow:var(--shadow-md);
+  display:none; align-items:center; gap:6px; text-decoration:none; transition:all .15s;
 }
-.map-gmaps-btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.map-gmaps-btn.show { display: flex; }
-.map-gmaps-btn:hover { background: var(--teal); color: #fff; }
+.map-gmaps-btn.show { display:flex; }
+.map-gmaps-btn:hover { background:var(--teal); color:#fff; }
+.map-toggle-btn { display:none; }
 
-.map-toggle-btn { display: none; }
-
-@media (max-width: 768px) {
-  html, body { overflow: hidden; height: 100%; }
-  .app { flex-direction: column; height: 100%; }
-  .sidebar {
-    position: fixed; top: 0; left: 0; right: 0; width: 100%;
-    height: 44px; display: flex; flex-direction: row; flex-wrap: nowrap;
-    align-items: center; padding: 0 8px; gap: 4px;
-    overflow-x: scroll; overflow-y: hidden;
-    border-right: none; border-bottom: 1px solid var(--border);
-    z-index: 400; background: var(--white);
-    -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  }
-  .sidebar::-webkit-scrollbar { display: none; }
-  .sidebar-logo { margin-bottom: 0; flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px; }
-  .sidebar-logo svg { width: 14px; height: 14px; }
-  .sidebar-sep { width: 1px; height: 20px; flex-shrink: 0; background: var(--border); }
-  .day-btn { width: 40px; height: 34px; flex-shrink: 0; border-radius: 9px; }
-  .day-btn .d-num { font-size: 13px; }
-  .day-btn .d-lbl { font-size: 7.5px; }
-  .info-day-btn { width: 40px; height: 34px; flex-shrink: 0; border-radius: 9px; }
-  .info-day-btn .d-num { font-size: 11px; }
-  .info-day-btn .d-lbl { font-size: 7.5px; }
-  .sb-icon { display: none; }
-  .main-col { display: contents; }
-  .topbar {
-    position: fixed; top: 44px; left: 0; right: 0; height: 44px;
-    padding: 0 12px; z-index: 390; background: var(--white);
-    border-bottom: 1px solid var(--border); flex-shrink: 0;
-  }
-  .topbar-title { font-size: 15px; }
-  .tb-badge { font-size: 10px; padding: 3px 8px; }
-  .tb-time { display: none; }
-  .tb-weather { font-size: 10px; padding: 3px 8px; }
-  .filter-bar {
-    position: fixed; top: 88px; left: 0; right: 0; height: 38px;
-    padding: 0 10px; z-index: 380; background: var(--white);
-    border-bottom: 1px solid var(--border); flex-shrink: 0;
-  }
-  .type-filter-bar {
-    position: fixed; top: 126px; left: 0; right: 0; height: 34px;
-    padding: 0 10px; z-index: 375; background: var(--cream);
-    border-bottom: 1px solid var(--border); flex-shrink: 0;
-  }
-  .content-area { display: contents; }
-  .map-panel {
-    position: fixed; top: 160px; left: 0; right: 0; width: 100%; height: 200px;
-    z-index: 370; transition: height 0.28s ease, opacity 0.28s ease;
-    overflow: hidden; background: #dce8e4;
-  }
-  .map-panel.map-collapsed { height: 0 !important; opacity: 0; pointer-events: none; }
-  .map-toggle-btn {
-    display: flex !important; position: fixed; left: 0; right: 0; top: 392px;
-    height: 32px; z-index: 360; background: var(--white); border: none;
-    border-top: 2px solid var(--teal); border-bottom: 1px solid var(--border);
-    padding: 0 14px; font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 600; color: var(--teal);
-    cursor: pointer; align-items: center; gap: 6px; transition: top 0.28s ease;
-  }
-  .map-toggle-btn.collapsed { top: 160px; border-top-color: var(--border); border-top-width: 1px; }
-  .map-toggle-btn:active { background: var(--teal-light); }
-  .map-toggle-btn svg.chevron {
-    width: 14px; height: 14px; stroke: currentColor; fill: none;
-    stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
-    transition: transform 0.28s; margin-left: auto; flex-shrink: 0;
-  }
-  .map-toggle-btn.collapsed svg.chevron { transform: rotate(180deg); }
-  .map-toggle-label { flex: 1; text-align: left; }
-  .map-toggle-pill {
-    font-size: 10px; font-weight: 500;
-    background: var(--teal-light); color: var(--teal-mid);
-    padding: 2px 8px; border-radius: 100px;
-  }
-  .map-toggle-icon {
-    width: 13px; height: 13px; stroke: var(--teal); fill: none;
-    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
-  }
-  .timeline-panel {
-    position: fixed; top: 424px; left: 0; right: 0; bottom: 0;
-    width: 100%; height: auto !important; overflow-y: auto; overflow-x: hidden;
-    -webkit-overflow-scrolling: touch; border-right: none;
-    padding: 14px 12px 40px; background: var(--cream);
-    z-index: 350; transition: top 0.28s ease;
-  }
-  .map-gmaps-btn { top: 8px; right: 8px; font-size: 11px; padding: 5px 10px; }
-  .map-place-info { bottom: 8px; left: 8px; right: 8px; }
-  .info-overlay.show {
-    display: block !important;
-    position: fixed !important;
-    top: 160px !important;
-    left: 0 !important; right: 0 !important; bottom: 0 !important;
-    z-index: 500 !important;
-    background: var(--cream) !important;
-    overflow-y: auto !important;
-    padding: 14px 12px 40px !important;
-  }
-  .weather-popup { right: auto; left: 0; }
-  .search-backdrop { padding-top: 40px; }
+/* ── toast ── */
+.toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:var(--dark); color:var(--white); border-radius:100px;
+  padding:9px 18px; font-size:12px; font-weight:500;
+  z-index:9999; opacity:0; pointer-events:none;
+  transition:opacity .25s, transform .25s;
 }
+.toast.show { opacity:1; }
 
+/* ── loading ── */
 #loading-screen {
-  position: fixed; inset: 0; background: var(--cream);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 9999; gap: 16px; transition: opacity 0.4s ease;
+  position:fixed; inset:0; background:var(--cream);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  z-index:9999; gap:16px; transition:opacity .4s;
 }
-#loading-screen.hidden { opacity: 0; pointer-events: none; }
-.loading-logo {
-  width: 52px; height: 52px; background: var(--teal); border-radius: 16px;
-  display: flex; align-items: center; justify-content: center;
-}
-.loading-logo svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.loading-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--dark); }
-.loading-sub { font-size: 12px; color: var(--mid); }
-.loading-bar-wrap { width: 180px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
-.loading-bar { height: 100%; background: var(--teal); border-radius: 4px; width: 0; transition: width 0.4s ease; }
+#loading-screen.hidden { opacity:0; pointer-events:none; }
+.loading-logo { width:52px; height:52px; background:var(--teal); border-radius:16px; display:flex; align-items:center; justify-content:center; }
+.loading-logo svg { width:26px; height:26px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.loading-title { font-family:'DM Serif Display',serif; font-size:22px; color:var(--dark); }
+.loading-sub { font-size:12px; color:var(--mid); }
+.loading-bar-wrap { width:180px; height:4px; background:var(--border); border-radius:4px; overflow:hidden; }
+.loading-bar { height:100%; background:var(--teal); border-radius:4px; width:0; transition:width .4s; }
 
-#file-zone {
-  position: fixed; inset: 0; background: var(--cream); display: none;
-  flex-direction: column; align-items: center; justify-content: center;
-  z-index: 9998; gap: 20px; text-align: center; padding: 24px;
+/* ── mobile ── */
+@media (max-width:768px) {
+  html,body { overflow:hidden; height:100%; }
+  .app { flex-direction:column; height:100%; }
+  .sidebar { position:fixed; top:0; left:0; right:0; width:100%; height:44px; flex-direction:row; flex-wrap:nowrap; align-items:center; padding:0 8px; gap:4px; overflow-x:scroll; overflow-y:hidden; border-right:none; border-bottom:1px solid var(--border); z-index:400; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .sidebar::-webkit-scrollbar { display:none; }
+  .sidebar-logo { margin-bottom:0; flex-shrink:0; width:28px; height:28px; border-radius:8px; }
+  .sidebar-logo svg { width:14px; height:14px; }
+  .sidebar-sep { width:1px; height:20px; flex-shrink:0; }
+  .day-btn { width:40px; height:34px; flex-shrink:0; border-radius:9px; }
+  .day-btn .d-num { font-size:13px; }
+  .day-btn .d-lbl { font-size:7.5px; }
+  .info-day-btn { width:40px; height:34px; flex-shrink:0; border-radius:9px; }
+  .info-day-btn .d-num { font-size:11px; }
+  .info-day-btn .d-lbl { font-size:7.5px; }
+  .sb-icon { display:none; }
+  .main-col { display:contents; }
+  .topbar { position:fixed; top:44px; left:0; right:0; height:44px; padding:0 12px; z-index:390; }
+  .topbar-title { font-size:15px; }
+  .tb-badge,.tb-time { font-size:10px; padding:3px 8px; }
+  .filter-bar { position:fixed; top:88px; left:0; right:0; height:38px; padding:0 10px; z-index:380; }
+  .type-filter-bar { position:fixed; top:126px; left:0; right:0; height:34px; padding:0 10px; z-index:375; }
+  .content-area { display:contents; }
+  .map-panel { position:fixed; top:160px; left:0; right:0; width:100%; height:200px; z-index:370; transition:height .28s,opacity .28s; }
+  .map-panel.map-collapsed { height:0!important; opacity:0; pointer-events:none; }
+  .map-toggle-btn { display:flex!important; position:fixed; left:0; right:0; top:392px; height:32px; z-index:360; background:var(--white); border:none; border-top:2px solid var(--teal); border-bottom:1px solid var(--border); padding:0 14px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:var(--teal); cursor:pointer; align-items:center; gap:6px; transition:top .28s; }
+  .map-toggle-btn.collapsed { top:160px; border-top-color:var(--border); border-top-width:1px; }
+  .map-toggle-btn svg.chevron { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; transition:transform .28s; margin-left:auto; flex-shrink:0; }
+  .map-toggle-btn.collapsed svg.chevron { transform:rotate(180deg); }
+  .map-toggle-label { flex:1; text-align:left; }
+  .map-toggle-pill { font-size:10px; font-weight:500; background:var(--teal-light); color:var(--teal-mid); padding:2px 8px; border-radius:100px; }
+  .map-toggle-icon { width:13px; height:13px; stroke:var(--teal); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+  .timeline-panel { position:fixed; top:424px; left:0; right:0; bottom:0; width:100%; height:auto!important; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; border-right:none; padding:14px 12px 40px; z-index:350; transition:top .28s; }
+  .info-overlay.show { display:block!important; position:fixed!important; top:160px!important; left:0!important; right:0!important; bottom:0!important; z-index:500!important; overflow-y:auto!important; padding:14px 12px 40px!important; }
+  .search-backdrop { padding-top:40px; }
+  .modal-backdrop { padding:12px; }
 }
-#file-zone.show { display: flex; }
-.fz-title { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--dark); }
-.fz-sub { font-size: 13px; color: var(--mid); line-height: 1.6; max-width: 320px; }
-#load-btn {
-  height: 40px; padding: 0 28px; background: var(--teal); color: #fff;
-  border: none; border-radius: 10px;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: 0.13s;
-}
-#load-btn:hover { background: var(--teal-mid); }
 </style>
 </head>
 <body>
 
+<!-- loading -->
 <div id="loading-screen">
   <div class="loading-logo">
     <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
   </div>
   <div class="loading-title">Sydney Travel Plan</div>
-  <div class="loading-sub" id="loading-msg">데이터 파일을 불러오는 중...</div>
+  <div class="loading-sub" id="loading-msg">데이터 불러오는 중...</div>
   <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
 </div>
 
-<div id="file-zone">
-  <div class="loading-logo" style="background:var(--teal)">
-    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-  </div>
-  <div class="fz-title">Sydney Travel Plan</div>
-  <div class="fz-sub" id="fz-error-msg">Google Sheets 데이터를 불러오지 못했습니다</div>
-  <button id="load-btn" class="show" onclick="location.reload()" style="display:block;margin-top:8px;">다시 시도</button>
-  <div style="font-size:11px;color:var(--mid);margin-top:12px;">💡 Google Sheets 공유 설정이 <strong>링크가 있는 모든 사용자 (뷰어)</strong>인지 확인해 주세요</div>
-</div>
+<!-- toast -->
+<div class="toast" id="toast"></div>
 
-<!-- 검색 모달 -->
+<!-- search modal -->
 <div class="search-backdrop" id="search-backdrop" onclick="closeSearch(event)">
-  <div class="search-modal" role="dialog" aria-label="전체 검색">
+  <div class="search-modal">
     <div class="search-input-row">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input class="search-input" id="search-input" placeholder="일정, 맛집, 팁 검색..." autocomplete="off" oninput="doSearch(this.value)">
       <button class="search-close-btn" onclick="closeSearch()">ESC</button>
     </div>
-    <div class="search-results" id="search-results">
-      <div class="search-empty">검색어를 입력하세요</div>
+    <div class="search-results" id="search-results"><div class="search-empty">검색어를 입력하세요</div></div>
+  </div>
+</div>
+
+<!-- schedule edit/add modal -->
+<div class="modal-backdrop" id="sch-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="sch-modal-title">일정 추가</div>
+      <button class="modal-close" onclick="closeSchModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="sch-edit-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Day</label>
+          <input class="form-input" type="number" id="sch-day" placeholder="1" min="0" max="10">
+        </div>
+        <div class="form-group">
+          <label class="form-label">시간</label>
+          <input class="form-input" type="text" id="sch-time" placeholder="09:00">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">장소명</label>
+        <input class="form-input" type="text" id="sch-name" placeholder="오페라하우스">
+      </div>
+      <div class="form-group">
+        <label class="form-label">설명</label>
+        <textarea class="form-textarea" id="sch-desc" placeholder="간단한 설명"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">유형</label>
+          <select class="form-select" id="sch-type">
+            <option value="sight">관광</option>
+            <option value="food">음식</option>
+            <option value="coffee">카페</option>
+            <option value="activity">액티비티</option>
+            <option value="shop">쇼핑</option>
+            <option value="hotel">숙소</option>
+            <option value="transit">이동</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">태그 (쉼표 구분)</label>
+          <input class="form-input" type="text" id="sch-tags" placeholder="랜드마크, 무료">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">위도 (lat)</label>
+          <input class="form-input" type="text" id="sch-lat" placeholder="-33.8568">
+        </div>
+        <div class="form-group">
+          <label class="form-label">경도 (lng)</label>
+          <input class="form-input" type="text" id="sch-lng" placeholder="151.2153">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">주소</label>
+        <input class="form-input" type="text" id="sch-addr" placeholder="Bennelong Point, Sydney NSW 2000">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">다음 이동수단</label>
+          <input class="form-input" type="text" id="sch-transit" placeholder="도보 10분">
+        </div>
+        <div class="form-group">
+          <label class="form-label">날짜</label>
+          <input class="form-input" type="text" id="sch-date" placeholder="2025-08-16">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="sch-delete-btn" onclick="deleteScheduleItem()" style="display:none">삭제</button>
+      <button class="btn-secondary" onclick="closeSchModal()">취소</button>
+      <button class="btn-primary" onclick="saveScheduleItem()">저장</button>
     </div>
   </div>
 </div>
 
+<!-- expense add modal -->
+<div class="modal-backdrop" id="exp-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">경비 추가</div>
+      <button class="modal-close" onclick="closeExpModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Day</label>
+          <input class="form-input" type="number" id="exp-day" placeholder="1" min="0" max="10">
+        </div>
+        <div class="form-group">
+          <label class="form-label">날짜</label>
+          <input class="form-input" type="text" id="exp-date" placeholder="2025-08-16">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">카테고리</label>
+          <select class="form-select" id="exp-cat">
+            <option value="🍽️">🍽️ 식비</option>
+            <option value="🚌">🚌 교통</option>
+            <option value="🎟️">🎟️ 입장료</option>
+            <option value="🛍️">🛍️ 쇼핑</option>
+            <option value="🏨">🏨 숙박</option>
+            <option value="☕">☕ 카페</option>
+            <option value="🎭">🎭 액티비티</option>
+            <option value="💊">💊 기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">결제자</label>
+          <input class="form-input" type="text" id="exp-paidby" placeholder="나">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">항목명</label>
+        <input class="form-input" type="text" id="exp-item" placeholder="점심 식사">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">금액</label>
+          <input class="form-input" type="number" id="exp-amount" placeholder="45.00" step="0.01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">통화</label>
+          <select class="form-select" id="exp-currency">
+            <option value="AUD">AUD</option>
+            <option value="KRW">KRW</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">메모</label>
+        <input class="form-input" type="text" id="exp-note" placeholder="팁 포함">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeExpModal()">취소</button>
+      <button class="btn-primary" onclick="saveExpense()">추가</button>
+    </div>
+  </div>
+</div>
+
+<!-- app -->
 <div class="app" id="app" style="display:none">
   <nav class="sidebar">
     <div class="sidebar-logo" title="Sydney Travel Plan">
@@ -835,7 +747,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     </button>
     <div class="sidebar-sep"></div>
     <button class="day-btn active" onclick="selectDay('all',this)" title="전체 일정">
-      <span class="d-num" style="font-size:13px;font-weight:600;">All</span>
+      <span class="d-num" style="font-size:13px;font-weight:600">All</span>
       <span class="d-lbl">전체</span>
     </button>
     <div id="day-buttons-container" style="display:contents"></div>
@@ -843,12 +755,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
     <button class="sb-icon" title="검색 (⌘K)" onclick="openSearch()">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
-    <button class="sb-icon" id="dark-toggle-btn" title="다크모드 토글" onclick="toggleDarkMode()">
-      <svg id="dark-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <button class="sb-icon" id="dark-toggle-btn" title="다크모드" onclick="toggleDarkMode()">
+      <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
-    <div class="sb-icon" title="설정">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </div>
   </nav>
 
   <div class="main-col">
@@ -857,44 +766,38 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
       <div class="tb-time" id="sydney-clock">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span id="sydney-time-text">--:--</span>
-        <span style="opacity:0.7">SYD</span>
+        <span style="opacity:.7">SYD</span>
       </div>
       <div class="tb-weather" id="weather-badge" onclick="toggleWeatherPopup(event)">
         <span id="weather-icon-now">🌤</span>
         <span id="weather-temp-now">--°C</span>
         <div class="weather-popup" id="weather-popup">
-          <div class="weather-title">Sydney 주간 날씨</div>
+          <div style="font-size:12px;font-weight:600;color:var(--dark);margin-bottom:10px">Sydney 주간 날씨</div>
           <div class="weather-days" id="weather-days-row">
-            <div class="weather-day-card"><div style="font-size:10px;color:var(--mid)">불러오는 중...</div></div>
+            <div class="weather-day-card"><div style="font-size:10px">불러오는 중...</div></div>
           </div>
         </div>
       </div>
-      <div class="tb-badge" id="topbar-badge-days">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <div class="sync-badge ok" id="sync-badge">
+        <div class="sync-dot"></div>
+        <span id="sync-text">동기화됨</span>
+      </div>
+      <div class="tb-badge">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         7박 · 8일
       </div>
     </header>
 
     <div class="filter-bar" id="main-filter-bar">
       <button class="f-btn active" onclick="selectCat('schedule',this)">
-        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         전체 일정
       </button>
-      <button class="f-btn" onclick="selectCat('food',this)">
-        <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-        맛집
-      </button>
-      <button class="f-btn" onclick="selectCat('sights',this)">
-        <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-        관광지
-      </button>
-      <button class="f-btn" onclick="selectCat('tips',this)">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        여행 팁
-      </button>
-      <button class="f-btn" id="fav-filter-btn" onclick="selectCat('favorites',this)">
-        ❤️ 찜 목록
-      </button>
+      <button class="f-btn" onclick="selectCat('food',this)">🍽 맛집</button>
+      <button class="f-btn" onclick="selectCat('sights',this)">📍 관광지</button>
+      <button class="f-btn" onclick="selectCat('tips',this)">💡 여행 팁</button>
+      <button class="f-btn" onclick="selectCat('favorites',this)">❤️ 찜 목록</button>
+      <button class="f-btn" onclick="selectCat('expenses',this)">💰 경비</button>
     </div>
 
     <div class="type-filter-bar" id="type-filter-bar">
@@ -905,9 +808,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
       <button class="type-chip" onclick="selectTypeFilter('activity',this)">🟣 액티비티</button>
       <button class="type-chip" onclick="selectTypeFilter('shop',this)">🟢 쇼핑</button>
       <button class="type-chip" onclick="selectTypeFilter('hotel',this)">🏨 숙소</button>
+      <button class="type-chip add-sch-chip" onclick="openSchModal(null)" style="margin-left:auto;background:var(--teal);border-color:var(--teal);color:#fff">+ 일정 추가</button>
     </div>
 
-    <div class="filter-bar" id="info-filter-bar" style="display:none;">
+    <div class="filter-bar" id="info-filter-bar" style="display:none">
       <button class="f-btn active" onclick="selectInfoCat('flight',this)">✈️ 항공</button>
       <button class="f-btn" onclick="selectInfoCat('exchange',this)">💱 환율</button>
       <button class="f-btn" onclick="selectInfoCat('hotel',this)">🏨 숙소</button>
@@ -947,352 +851,349 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 </button>
 
 <script>
-/* ═══════════════════════════════════════════════════
-   1. 데이터 상태
-═══════════════════════════════════════════════════ */
-let DATA = { schedule: [], food: [], tips: [], sights: [], info: [] };
+/* ═══════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════ */
+const API_URL   = 'https://script.google.com/macros/s/AKfycbzrSbELPPKlAlCDJxny-XrSh8UV-r6k-BuF09dLtrPyBsQfXfMiTBAsK81ApVTmv6Qo/exec';
+const SHEET_ID  = '1A5YDClkB7E2IlULZU3SMbgy20qIZo21Jphj-fyqAV6o';
+const SHEET_NAMES = ['schedule','food','tips','sights','info'];
 
-const SHEET_ID = '1A5YDClkB7E2IlULZU3SMbgy20qIZo21Jphj-fyqAV6o';
-const SHEET_NAMES = ['schedule', 'food', 'tips', 'sights', 'info'];
-
-let favState       = JSON.parse(localStorage.getItem('sydFav')         || '{}');
-let memoState      = JSON.parse(localStorage.getItem('sydMemo')        || '{}');
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let DATA = { schedule:[], food:[], tips:[], sights:[], info:[], favorites:[], memos:[], expenses:[] };
+let favState   = {};   // { cardId: true/false }
+let memoState  = {};   // { cardId: 'text' }
 let checklistState = JSON.parse(localStorage.getItem('checklistState') || '{}');
 
-function saveFav()  { localStorage.setItem('sydFav',  JSON.stringify(favState)); }
-function saveMemo() { localStorage.setItem('sydMemo', JSON.stringify(memoState)); }
+/* ═══════════════════════════════════════════════
+   API HELPERS
+═══════════════════════════════════════════════ */
+function setSyncBadge(state, text) {
+  const b = document.getElementById('sync-badge');
+  const t = document.getElementById('sync-text');
+  if (!b) return;
+  b.className = 'sync-badge ' + state;
+  if (t) t.textContent = text;
+}
 
-/* ═══════════════════════════════════════════════════
-   2. CSV 로드
-═══════════════════════════════════════════════════ */
+async function apiGet(sheet) {
+  const url = `${API_URL}?action=read&sheet=${encodeURIComponent(sheet)}`;
+  const res = await fetch(url);
+  return res.json();
+}
+
+async function apiPost(body) {
+  setSyncBadge('saving','저장 중...');
+  try {
+    const res = await fetch(API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    const d = await res.json();
+    if (d.ok) {
+      setSyncBadge('ok','동기화됨');
+      showToast('✅ 저장됐어요');
+    } else {
+      setSyncBadge('error','오류');
+      showToast('⚠️ 저장 실패: ' + (d.error||''));
+    }
+    return d;
+  } catch(e) {
+    setSyncBadge('error','오류');
+    showToast('⚠️ 네트워크 오류');
+    return { ok:false };
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   CSV READ (읽기 전용 시트들 - 기존 방식 유지)
+═══════════════════════════════════════════════ */
 function parseCSV(text) {
   if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
   const rows = [];
-  let row = [], cur = '', inQ = false, i = 0;
+  let row=[], cur='', inQ=false, i=0;
   const len = text.length;
   while (i < len) {
     const c = text[i];
     if (inQ) {
-      if (c === '"') { if (text[i+1] === '"') { cur += '"'; i += 2; continue; } inQ = false; i++; continue; }
-      cur += c; i++; continue;
+      if (c==='"') { if (text[i+1]==='"') { cur+='"'; i+=2; continue; } inQ=false; i++; continue; }
+      cur+=c; i++; continue;
     } else {
-      if (c === '"') { inQ = true; i++; continue; }
-      if (c === ',') { row.push(cur); cur = ''; i++; continue; }
-      if (c === '\r') {
-        if (text[i+1] === '\n') i++;
-        row.push(cur); cur = ''; rows.push(row); row = []; i++; continue;
+      if (c==='"') { inQ=true; i++; continue; }
+      if (c===',') { row.push(cur); cur=''; i++; continue; }
+      if (c==='\r') {
+        if (text[i+1]==='\n') i++;
+        row.push(cur); cur=''; rows.push(row); row=[]; i++; continue;
       }
-      if (c === '\n') { row.push(cur); cur = ''; rows.push(row); row = []; i++; continue; }
-      cur += c; i++; continue;
+      if (c==='\n') { row.push(cur); cur=''; rows.push(row); row=[]; i++; continue; }
+      cur+=c; i++; continue;
     }
   }
-  if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
-  const filtered = rows.filter(r => !(r.length === 1 && r[0].trim() === ''));
+  if (cur!==''||row.length) { row.push(cur); rows.push(row); }
+  const filtered = rows.filter(r => !(r.length===1 && r[0].trim()===''));
   if (filtered.length < 2) return [];
   const headers = filtered[0].map(h => h.trim());
-  const result = [];
-  for (let r = 1; r < filtered.length; r++) {
-    const vals = filtered[r];
-    const obj = {};
-    headers.forEach((h, idx) => { obj[h] = (vals[idx] || '').trim(); });
-    result.push(obj);
-  }
-  return result;
+  return filtered.slice(1).map(r => {
+    const obj={};
+    headers.forEach((h,i) => obj[h]=(r[i]||'').trim());
+    return obj;
+  });
 }
 
-async function fetchSheet(sheetName) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error(`시트 "${sheetName}" 로드 실패 (${resp.status})`);
-  const buf = await resp.arrayBuffer();
-  const text = new TextDecoder('utf-8').decode(buf);
-  return parseCSV(text);
+async function fetchSheetCSV(name) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`시트 "${name}" 로드 실패`);
+  const buf  = await res.arrayBuffer();
+  return parseCSV(new TextDecoder('utf-8').decode(buf));
 }
 
+/* ═══════════════════════════════════════════════
+   LOAD ALL DATA
+═══════════════════════════════════════════════ */
 window.addEventListener('load', async () => {
-  setLoadingBar(10);
-  setLoadingMsg('Google Sheets에서 데이터 불러오는 중...');
+  bar(10); msg('시트 데이터 불러오는 중...');
   try {
-    const total = SHEET_NAMES.length;
-    for (let i = 0; i < total; i++) {
-      const name = SHEET_NAMES[i];
-      setLoadingMsg(`시트 로딩 중: ${name} (${i+1}/${total})`);
-      setLoadingBar(10 + Math.round((i / total) * 65));
-      try { DATA[name] = await fetchSheet(name); }
-      catch(e) { console.warn(`시트 "${name}" 로드 건너뜀:`, e.message); DATA[name] = []; }
+    // 1. 읽기 전용 시트 (CSV)
+    for (let i=0; i < SHEET_NAMES.length; i++) {
+      const n = SHEET_NAMES[i];
+      msg(`${n} 로딩 중... (${i+1}/${SHEET_NAMES.length})`);
+      bar(10 + Math.round((i/SHEET_NAMES.length)*40));
+      try { DATA[n] = await fetchSheetCSV(n); } catch(e) { DATA[n]=[]; }
     }
-    setLoadingBar(80);
-    setLoadingMsg('화면 구성 중...');
+    // 2. 읽기/쓰기 시트 (Apps Script)
+    bar(55); msg('공유 데이터 불러오는 중...');
+    try {
+      const [favs, mems, exps] = await Promise.all([
+        apiGet('favorites'), apiGet('memos'), apiGet('expenses')
+      ]);
+      DATA.favorites = Array.isArray(favs) ? favs : [];
+      DATA.memos     = Array.isArray(mems) ? mems : [];
+      DATA.expenses  = Array.isArray(exps) ? exps : [];
+    } catch(e) { console.warn('공유 데이터 로드 실패:', e); }
+
+    // 3. 상태 구성
+    favState  = {};
+    memoState = {};
+    DATA.favorites.forEach(r => { if (r.id) favState[r.id] = r.favored === 'TRUE' || r.favored === true; });
+    DATA.memos.forEach(r => { if (r.id) memoState[r.id] = r.memo || ''; });
+
+    bar(80); msg('화면 구성 중...');
     setTimeout(() => {
       renderAll();
       initMap();
-      setLoadingBar(100);
-      setLoadingMsg('완료!');
+      bar(100); msg('완료!');
       setTimeout(() => {
         document.getElementById('loading-screen').classList.add('hidden');
-        document.getElementById('app').style.display = '';
+        document.getElementById('app').style.display='';
         setTimeout(() => {
-          document.getElementById('loading-screen').style.display = 'none';
-          initMobile();
-          initDarkMode();
-          startSydneyClock();
-          fetchWeather();
-          fetchLiveRate();
+          document.getElementById('loading-screen').style.display='none';
+          initMobile(); initDarkMode(); startSydneyClock(); fetchWeather(); fetchLiveRate();
+          setSyncBadge('ok','동기화됨');
         }, 400);
       }, 300);
     }, 50);
   } catch(err) {
-    setLoadingMsg('❌ 로드 오류: ' + err.message);
-    console.error(err);
-    setTimeout(() => {
-      document.getElementById('loading-screen').classList.add('hidden');
-      setTimeout(() => {
-        document.getElementById('loading-screen').style.display = 'none';
-        document.getElementById('fz-error-msg').textContent = '오류: ' + err.message;
-        document.getElementById('file-zone').classList.add('show');
-      }, 400);
-    }, 1500);
+    msg('❌ 오류: ' + err.message);
+    setTimeout(() => { document.getElementById('loading-screen').classList.add('hidden'); }, 2000);
   }
 });
+function bar(p){ document.getElementById('loading-bar').style.width=p+'%'; }
+function msg(t){ document.getElementById('loading-msg').textContent=t; }
 
-function setLoadingMsg(msg) { document.getElementById('loading-msg').textContent = msg; }
-function setLoadingBar(pct) { document.getElementById('loading-bar').style.width = pct + '%'; }
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+let toastTimer;
+function showToast(text, dur=2200) {
+  const el = document.getElementById('toast');
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), dur);
+}
 
-/* ═══════════════════════════════════════════════════
-   3. 다크모드
-═══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   DARK MODE / CLOCK / WEATHER (기존과 동일)
+═══════════════════════════════════════════════ */
 function initDarkMode() {
-  const saved = localStorage.getItem('sydTheme');
-  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.setAttribute('data-theme', 'dark');
+  const s = localStorage.getItem('sydTheme');
+  if (s==='dark' || (!s && window.matchMedia('(prefers-color-scheme:dark)').matches)) {
+    document.documentElement.setAttribute('data-theme','dark');
     updateDarkIcon(true);
   }
 }
 function toggleDarkMode() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  if (isDark) {
-    document.documentElement.removeAttribute('data-theme');
-    localStorage.setItem('sydTheme', 'light');
-    updateDarkIcon(false);
-  } else {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    localStorage.setItem('sydTheme', 'dark');
-    updateDarkIcon(true);
-  }
+  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement[isDark?'removeAttribute':'setAttribute']('data-theme','dark');
+  localStorage.setItem('sydTheme', isDark?'light':'dark');
+  updateDarkIcon(!isDark);
 }
 function updateDarkIcon(isDark) {
-  const btn = document.getElementById('dark-toggle-btn');
-  if (!btn) return;
-  btn.innerHTML = isDark
+  const b = document.getElementById('dark-toggle-btn'); if(!b)return;
+  b.innerHTML = isDark
     ? `<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`
     : `<svg viewBox="0 0 24 24" style="width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
 }
-
-/* ═══════════════════════════════════════════════════
-   4. 시드니 현지 시간
-═══════════════════════════════════════════════════ */
 function startSydneyClock() {
   function tick() {
-    const now = new Date();
-    const syd = new Intl.DateTimeFormat('ko-KR', {
-      timeZone: 'Australia/Sydney',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hour12: false
-    }).format(now);
-    const el = document.getElementById('sydney-time-text');
-    if (el) el.textContent = syd;
-  }
-  tick();
-  setInterval(tick, 1000);
+    const s = new Intl.DateTimeFormat('ko-KR',{timeZone:'Australia/Sydney',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+    const el = document.getElementById('sydney-time-text'); if(el) el.textContent=s;
+  } tick(); setInterval(tick,1000);
 }
-
-/* ═══════════════════════════════════════════════════
-   5. 날씨
-═══════════════════════════════════════════════════ */
-const WMO_ICON = {
-  0:'☀️', 1:'🌤', 2:'⛅', 3:'☁️',
-  45:'🌫', 48:'🌫',
-  51:'🌦', 53:'🌧', 55:'🌧',
-  61:'🌧', 63:'🌧', 65:'🌧',
-  71:'❄️', 73:'❄️', 75:'❄️',
-  80:'🌦', 81:'🌧', 82:'⛈',
-  95:'⛈', 96:'⛈', 99:'⛈'
-};
-function wmoIcon(code) { return WMO_ICON[code] || '🌤'; }
-const DAYS_KO = ['일','월','화','수','목','금','토'];
-
+const WMO={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌧',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'❄️',73:'❄️',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
+const DAYS_KO=['일','월','화','수','목','금','토'];
 async function fetchWeather() {
   try {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=-33.8688&longitude=151.2093&current=temperature_2m,weathercode&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Australia%2FSydney&forecast_days=7';
-    const res = await fetch(url);
-    const d = await res.json();
-    const cur = d.current;
-    document.getElementById('weather-icon-now').textContent = wmoIcon(cur.weathercode);
-    document.getElementById('weather-temp-now').textContent = Math.round(cur.temperature_2m) + '°C';
-    const daily = d.daily;
-    let html = '';
-    for (let i = 0; i < 7; i++) {
-      const dt = new Date(daily.time[i]);
-      const dow = DAYS_KO[dt.getDay()];
-      const icon = wmoIcon(daily.weathercode[i]);
-      const hi = Math.round(daily.temperature_2m_max[i]);
-      const lo = Math.round(daily.temperature_2m_min[i]);
-      html += `<div class="weather-day-card">
-        <div style="font-size:10px;color:var(--mid)">${dow}</div>
-        <div class="wd-icon">${icon}</div>
-        <div class="wd-temp">${hi}°</div>
-        <div class="wd-date" style="color:var(--mid)">${lo}°</div>
-      </div>`;
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-33.8688&longitude=151.2093&current=temperature_2m,weathercode&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Australia%2FSydney&forecast_days=7');
+    const d = await r.json();
+    document.getElementById('weather-icon-now').textContent = WMO[d.current.weathercode]||'🌤';
+    document.getElementById('weather-temp-now').textContent = Math.round(d.current.temperature_2m)+'°C';
+    let html='';
+    for(let i=0;i<7;i++){
+      const dt=new Date(d.daily.time[i]);
+      html+=`<div class="weather-day-card"><div style="font-size:10px;color:var(--mid)">${DAYS_KO[dt.getDay()]}</div><div class="wd-icon">${WMO[d.daily.weathercode[i]]||'🌤'}</div><div class="wd-temp">${Math.round(d.daily.temperature_2m_max[i])}°</div><div style="font-size:9px;color:var(--mid)">${Math.round(d.daily.temperature_2m_min[i])}°</div></div>`;
     }
-    document.getElementById('weather-days-row').innerHTML = html;
-  } catch(e) {
-    document.getElementById('weather-icon-now').textContent = '🌤';
-    document.getElementById('weather-temp-now').textContent = '--°C';
-  }
+    document.getElementById('weather-days-row').innerHTML=html;
+  } catch(e) {}
 }
+function toggleWeatherPopup(e){ e.stopPropagation(); document.getElementById('weather-popup').classList.toggle('show'); }
+document.addEventListener('click',()=>{ document.getElementById('weather-popup')?.classList.remove('show'); });
 
-function toggleWeatherPopup(e) {
-  e.stopPropagation();
-  document.getElementById('weather-popup').classList.toggle('show');
-}
-document.addEventListener('click', () => {
-  document.getElementById('weather-popup')?.classList.remove('show');
-});
-
-/* ═══════════════════════════════════════════════════
-   6. 실시간 환율
-═══════════════════════════════════════════════════ */
-let liveRate = null;
+let liveRate=null;
 async function fetchLiveRate() {
   try {
-    const res = await fetch('https://api.exchangerate-api.com/v4/latest/AUD');
-    const d = await res.json();
-    liveRate = d.rates && d.rates.KRW ? d.rates.KRW : null;
-  } catch(e) {
-    try {
-      const res2 = await fetch('https://open.er-api.com/v6/latest/AUD');
-      const d2 = await res2.json();
-      liveRate = d2.rates && d2.rates.KRW ? d2.rates.KRW : null;
-    } catch(e2) { liveRate = null; }
+    const r=await fetch('https://api.exchangerate-api.com/v4/latest/AUD');
+    const d=await r.json();
+    liveRate=d.rates?.KRW||null;
+  } catch(e){}
+}
+
+/* ═══════════════════════════════════════════════
+   FAV & MEMO — Apps Script 동기화
+═══════════════════════════════════════════════ */
+async function toggleFav(id, e) {
+  e && e.stopPropagation();
+  const newVal = !favState[id];
+  favState[id] = newVal;
+
+  // UI 즉시 반영
+  document.querySelectorAll(`[data-card-id="${id}"] .fav-btn`).forEach(btn => {
+    btn.textContent = newVal ? '❤️' : '🤍';
+    btn.classList.toggle('active', newVal);
+  });
+  if (currentCat === 'favorites') {
+    document.getElementById('timeline-content').innerHTML = renderFavoritesView();
   }
+
+  // Apps Script 저장
+  await apiPost({
+    action:'upsert', sheet:'favorites', id,
+    data:{ id, favored: newVal ? 'TRUE' : 'FALSE', updated_at: new Date().toISOString(), updated_by: '가족' }
+  });
 }
 
-/* ═══════════════════════════════════════════════════
-   7. 렌더링
-═══════════════════════════════════════════════════ */
-function getDays() {
-  return [...new Set(DATA.schedule.map(r => Number(r.day)))].sort((a,b) => a-b);
+async function saveMemoInput(id, val) {
+  memoState[id] = val;
+  // 메모 도트 업데이트
+  const card = document.querySelector(`[data-card-id="${id}"]`);
+  if (card) {
+    const dot = card.querySelector('.memo-dot');
+    if (dot) dot.classList.toggle('show', val.trim().length>0);
+    const toggle = card.querySelector('.memo-toggle');
+    if (toggle) toggle.innerHTML = `<span class="memo-dot${val.trim().length>0?' show':''}"></span> ${val.trim().length>0?'📝 메모 보기':'+ 메모 추가'}`;
+  }
+  // debounce 저장 (타이핑 중 연속 저장 방지)
+  clearTimeout(window._memoTimer);
+  window._memoTimer = setTimeout(async () => {
+    await apiPost({
+      action:'upsert', sheet:'memos', id,
+      data:{ id, memo:val, updated_at: new Date().toISOString(), updated_by: '가족' }
+    });
+  }, 1200);
 }
 
+/* ═══════════════════════════════════════════════
+   RENDER HELPERS
+═══════════════════════════════════════════════ */
 const typeIcons = {
-  food:     `<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
-  coffee:   `<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
-  sight:    `<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
-  shop:     `<svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
-  transit:  `<svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
-  activity: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
-  hotel:    `<svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg>`,
+  food:`<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
+  coffee:`<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>`,
+  sight:`<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  shop:`<svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>`,
+  transit:`<svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+  activity:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  hotel:`<svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>`,
 };
-
 const tagClassMap = {
-  '랜드마크':'sight','투어':'activity','점심':'food','하버뷰':'sight','공원':'sight',
-  '무료':'tip','역사지구':'sight','맛집거리':'food','버킷리스트':'activity','저녁':'food',
-  '맥주':'coffee','브런치':'food','해변':'activity','수영':'activity','트레킹':'activity',
-  '트레일 종착':'tip','해변뷰':'sight','교통':'tip','동물원':'activity','선셋뷰':'sight',
-  '쇼핑':'shop','카페':'coffee','야경':'sight','산책':'activity','건축':'sight',
-  '쇼핑몰':'shop','투어버스':'activity','사전예약':'tip','전망대':'sight',
-  '별보기':'activity','겨울 추천':'tip','그래피티':'sight','빈티지':'shop','미술관':'sight',
-  '절경':'sight','포토스팟':'sight','씨푸드':'food','출국 준비':'tip','공항':'transit',
-  '면세쇼핑':'shop','귀국':'tip','역사건물':'sight','케이블카':'activity',
-  '숙소':'tip','펍':'food','해변산책':'activity','문화':'sight','교육':'sight','예술':'shop',
-  '정원':'sight','해산물':'food','출국':'tip','비행':'activity',
+  '랜드마크':'sight','투어':'activity','점심':'food','하버뷰':'sight','공원':'sight','무료':'tip','역사지구':'sight','맛집거리':'food','버킷리스트':'activity','저녁':'food','맥주':'coffee','브런치':'food','해변':'activity','수영':'activity','트레킹':'activity','해변뷰':'sight','교통':'tip','동물원':'activity','선셋뷰':'sight','쇼핑':'shop','카페':'coffee','야경':'sight','산책':'activity','건축':'sight','쇼핑몰':'shop','투어버스':'activity','사전예약':'tip','전망대':'sight','별보기':'activity','겨울 추천':'tip','그래피티':'sight','빈티지':'shop','미술관':'sight','절경':'sight','포토스팟':'sight','씨푸드':'food','출국 준비':'tip','공항':'transit','면세쇼핑':'shop','귀국':'tip','역사건물':'sight','케이블카':'activity','숙소':'tip','펍':'food','해변산책':'activity','문화':'sight','교육':'sight','예술':'shop','정원':'sight','해산물':'food','출국':'tip','비행':'activity',
 };
-function tagClass(tag) { return tagClassMap[tag] || 'tip'; }
-
-function scheduleCardId(row) {
-  return `sch_${row.day}_${(row.name||'').replace(/\s+/g,'_')}`;
-}
-function foodCardId(row) {
-  return `food_${row.day}_${(row.name||'').replace(/\s+/g,'_')}`;
-}
+function tagClass(t){ return tagClassMap[t]||'tip'; }
+function scheduleCardId(r){ return `sch_${r.day}_${(r.name||'').replace(/\s+/g,'_')}`; }
+function foodCardId(r){ return `food_${r.day}_${(r.name||'').replace(/\s+/g,'_')}`; }
 
 function favBtnHtml(id) {
-  const active = favState[id] ? ' active' : '';
-  const emoji  = favState[id] ? '❤️' : '🤍';
+  const active = favState[id] ? ' active':'';
+  const emoji  = favState[id] ? '❤️':'🤍';
   return `<button class="fav-btn${active}" onclick="toggleFav('${id}',event)" title="찜하기">${emoji}</button>`;
 }
-
 function memoHtml(id) {
-  const val = memoState[id] || '';
-  const hasMemo = val.trim().length > 0;
+  const val = memoState[id]||'';
+  const has = val.trim().length>0;
   return `
     <button class="memo-toggle" onclick="toggleMemoArea('${id}',event)">
-      <span class="memo-dot${hasMemo?' show':''}"></span>
-      ${hasMemo ? '📝 메모 보기' : '+ 메모 추가'}
+      <span class="memo-dot${has?' show':''}"></span>
+      ${has?'📝 메모 보기':'+ 메모 추가'}
     </button>
-    <div class="memo-area${hasMemo?' show':''}" id="memo-area-${id}">
+    <div class="memo-area${has?' show':''}" id="memo-area-${id}">
       <textarea class="memo-input" rows="2" placeholder="이 장소에 대한 메모를 남기세요..."
         oninput="saveMemoInput('${id}',this.value)">${val}</textarea>
     </div>`;
 }
+function toggleMemoArea(id,e){ e&&e.stopPropagation(); document.getElementById(`memo-area-${id}`)?.classList.toggle('show'); }
 
-function toggleMemoArea(id, e) {
-  e && e.stopPropagation();
-  const area = document.getElementById(`memo-area-${id}`);
-  if (area) area.classList.toggle('show');
-}
+/* ── schedule render ── */
+function getDays(){ return [...new Set(DATA.schedule.map(r=>Number(r.day)))].sort((a,b)=>a-b); }
 
-function saveMemoInput(id, val) {
-  memoState[id] = val;
-  saveMemo();
-  const card = document.querySelector(`[data-card-id="${id}"]`);
-  if (card) {
-    const toggle = card.querySelector('.memo-toggle');
-    if (toggle) {
-      toggle.innerHTML = `<span class="memo-dot${val.trim().length>0?' show':''}"></span> ${val.trim().length>0?'📝 메모 보기':'+ 메모 추가'}`;
-    }
-  }
-}
-
-/* ═══════════════════════════════════════════════════
-   [FIX] renderSchedule: transit-row를 stop-item 안으로 이동
-   → 타입 필터 적용 시 함께 숨겨짐
-═══════════════════════════════════════════════════ */
 function renderSchedule(day) {
-  const rows = DATA.schedule.filter(r => Number(r.day) === day);
+  const rows = DATA.schedule.filter(r=>Number(r.day)===day);
   if (!rows.length) return '';
-  const dateStr = rows[0].date || '';
-  const dayTitle = rows.find(r => r.title1 && r.title1.trim())?.title1?.trim() || `Day ${day}`;
+  const dateStr  = rows[0].date||'';
+  const dayTitle = rows.find(r=>r.title1?.trim())?.title1?.trim()||`Day ${day}`;
   let html = `<div class="day-section visible" id="day-${day}" data-day="${day}">`;
   html += `<div class="cat-section visible" data-cat="schedule">`;
   html += `<div class="day-heading"><h2>Day ${day} · ${dayTitle}</h2><p>${dateStr}</p></div>`;
-  rows.forEach((row) => {
-    const type = (row.type || 'sight').trim();
-    const icon = typeIcons[type] || typeIcons.sight;
-    const tags = (row.tags || '').split(',').map(t => t.trim()).filter(Boolean);
-    const tagHtml = tags.map(t => `<span class="sc-tag ${tagClass(t)}">${t}</span>`).join('');
-    const hasCoords = row.lat && row.lng;
-    const lat = parseFloat(row.lat), lng = parseFloat(row.lng);
-    const addr = row.addr || '';
-    const name = row.name || '';
-    const id = scheduleCardId(row);
+  rows.forEach(row => {
+    const type = (row.type||'sight').trim();
+    const icon = typeIcons[type]||typeIcons.sight;
+    const tags = (row.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+    const tagHtml = tags.map(t=>`<span class="sc-tag ${tagClass(t)}">${t}</span>`).join('');
+    const hasCoords = row.lat&&row.lng;
+    const lat=parseFloat(row.lat), lng=parseFloat(row.lng);
+    const addr=row.addr||'', name=row.name||'';
+    const id=scheduleCardId(row);
+    const rowId = row.id||id;
     const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
-
-    // [FIX] transit-row를 stop-item 내부에 포함시켜 type-hidden 필터가 함께 적용되도록 함
     html += `<div class="stop-item" data-type="${type}">
       <div class="stop-dot type-${type}">${icon}</div>
       <div class="stop-card" data-card-id="${id}" ${pinCall}>
-        ${favBtnHtml(id)}
-        <div class="sc-time">${row.time || ''}</div>
+        <div class="sc-actions">
+          ${favBtnHtml(id)}
+          <button class="edit-btn" onclick="openSchModal(${JSON.stringify({...row, _cardId:id}).replace(/"/g,'&quot;')},event)" title="수정">✏️</button>
+          <button class="del-btn" onclick="confirmDeleteSchedule('${rowId}','${id}',event)" title="삭제">🗑</button>
+        </div>
+        <div class="sc-time">${row.time||''}</div>
         <div class="sc-name">${name}</div>
-        <div class="sc-desc">${row.description || ''}</div>
-        ${tagHtml ? `<div class="sc-tags">${tagHtml}</div>` : ''}
+        <div class="sc-desc">${row.description||''}</div>
+        ${tagHtml?`<div class="sc-tags">${tagHtml}</div>`:''}
         ${memoHtml(id)}
       </div>
-      ${row.transit_next ? `<div class="transit-row">
+      ${row.transit_next?`<div class="transit-row">
         <div class="transit-pill">${typeIcons.transit} ${row.transit_next}</div>
-        <span class="transit-info">${row.transit_info || ''}</span>
-      </div>` : ''}
+        <span class="transit-info">${row.transit_info||''}</span>
+      </div>`:''}
     </div>`;
   });
   html += `</div>`;
@@ -1304,817 +1205,540 @@ function renderSchedule(day) {
 }
 
 function renderFoodSection(day) {
-  const rows = DATA.food.filter(r => Number(r.day) === day);
+  const rows = DATA.food.filter(r=>Number(r.day)===day);
   if (!rows.length) return '';
   let html = `<div class="cat-section" data-cat="food">`;
   html += `<div class="day-heading"><h2>Day ${day} · 추천 맛집</h2></div>`;
   html += `<div class="food-grid">`;
-  rows.forEach(r => {
-    const hasCoords = r.lat && r.lng;
-    const lat = parseFloat(r.lat), lng = parseFloat(r.lng);
-    const addr = r.addr || '';
-    const name = r.name || '';
-    const id = foodCardId(r);
-    const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
-    const cursorStyle = hasCoords ? 'cursor:pointer;' : '';
-    html += `<div class="food-card" data-card-id="${id}" ${pinCall} style="${cursorStyle}">
+  rows.forEach(r=>{
+    const hasCoords=r.lat&&r.lng;
+    const lat=parseFloat(r.lat),lng=parseFloat(r.lng);
+    const addr=r.addr||'',name=r.name||'';
+    const id=foodCardId(r);
+    const pinCall=hasCoords?`onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"`:'';
+    html+=`<div class="food-card" data-card-id="${id}" ${pinCall} style="${hasCoords?'cursor:pointer':''}">
       ${favBtnHtml(id)}
-      <div class="food-emoji" style="background:#${r.bg_color || 'F5F5F5'}">${r.emoji || '🍽️'}</div>
+      <div class="food-emoji" style="background:#${r.bg_color||'F5F5F5'}">${r.emoji||'🍽️'}</div>
       <div class="food-body">
-        <div class="food-name">${name}${hasCoords?'<span style="font-size:9px;color:#D85A30;font-weight:600;margin-left:3px;">📍</span>':''}</div>
-        <div class="food-desc">${r.description || ''}</div>
-        <div class="food-price">${r.price_level || ''}</div>
+        <div class="food-name">${name}${hasCoords?'<span style="font-size:9px;color:#D85A30;margin-left:3px">📍</span>':''}</div>
+        <div class="food-desc">${r.description||''}</div>
+        <div class="food-price">${r.price_level||''}</div>
         ${memoHtml(id)}
       </div>
     </div>`;
   });
-  html += `</div></div>`;
+  html+=`</div></div>`;
   return html;
 }
 
 function renderSightSection(day) {
-  const rows = DATA.sights.filter(r => Number(r.day) === day);
-  if (!rows.length) return '';
-  let html = `<div class="cat-section" data-cat="sights">`;
-  html += `<div class="day-heading"><h2>Day ${day} · 주요 관광지</h2></div>`;
-  rows.forEach(r => {
-    html += `<div class="sight-card">
-      <div class="sight-icon">${r.icon || '📍'}</div>
-      <div><div class="sight-title">${r.title}</div><div class="sight-text">${r.description || ''}</div></div>
-    </div>`;
-  });
+  const rows=DATA.sights.filter(r=>Number(r.day)===day);
+  if(!rows.length) return '';
+  let html=`<div class="cat-section" data-cat="sights"><div class="day-heading"><h2>Day ${day} · 주요 관광지</h2></div>`;
+  rows.forEach(r=>{ html+=`<div class="sight-card"><div class="sight-icon">${r.icon||'📍'}</div><div><div class="sight-title">${r.title}</div><div class="sight-text">${r.description||''}</div></div></div>`; });
+  return html+'</div>';
+}
+function renderTipsSection(day) {
+  const rows=DATA.tips.filter(r=>Number(r.day)===day);
+  if(!rows.length) return '';
+  let html=`<div class="cat-section" data-cat="tips"><div class="day-heading"><h2>Day ${day} · 여행 팁</h2></div><div class="tips-list">`;
+  rows.forEach(r=>{ html+=`<div class="tip-card"><div class="tip-icon">${r.icon||'💡'}</div><div><div class="tip-title">${r.title}</div><div class="tip-text">${r.content||''}</div></div></div>`; });
+  return html+'</div></div>';
+}
+
+/* ── favorites view ── */
+function renderFavoritesView() {
+  const favIds = Object.keys(favState).filter(k=>favState[k]);
+  if (!favIds.length) return `<div class="fav-empty"><div class="fe-icon">🤍</div><div style="font-weight:600;margin-bottom:4px">찜한 장소가 없어요</div><div style="font-size:11px">카드의 🤍 버튼을 눌러 찜해보세요</div></div>`;
+  let html=`<div class="day-heading"><h2>찜 목록 <span style="font-size:14px;color:var(--coral)">❤️ ${favIds.length}</span></h2></div>`;
+  const sf=DATA.schedule.filter(r=>favState[scheduleCardId(r)]);
+  if(sf.length){
+    html+=`<div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">일정</div>`;
+    sf.forEach(row=>{
+      const id=scheduleCardId(row);
+      const hasCoords=row.lat&&row.lng;
+      const pinCall=hasCoords?`onclick="pinMap('${(row.name||'').replace(/'/g,"\\'")}',{lat:${parseFloat(row.lat)},lng:${parseFloat(row.lng)}},'${(row.addr||'').replace(/'/g,"\\'")}',this)"`:'';
+      html+=`<div class="stop-item" style="padding-left:14px"><div class="stop-card" data-card-id="${id}" ${pinCall}>${favBtnHtml(id)}<div class="sc-time">Day ${row.day} · ${row.time||''}</div><div class="sc-name">${row.name||''}</div><div class="sc-desc">${row.description||''}</div>${memoHtml(id)}</div></div>`;
+    });
+  }
+  const ff=DATA.food.filter(r=>favState[foodCardId(r)]);
+  if(ff.length){
+    html+=`<div style="font-size:11px;font-weight:600;color:var(--mid);margin:12px 0 8px;text-transform:uppercase;letter-spacing:.4px">맛집</div><div class="food-grid">`;
+    ff.forEach(r=>{
+      const id=foodCardId(r);
+      const hasCoords=r.lat&&r.lng;
+      const pinCall=hasCoords?`onclick="pinMap('${(r.name||'').replace(/'/g,"\\'")}',{lat:${parseFloat(r.lat)},lng:${parseFloat(r.lng)}},'${(r.addr||'').replace(/'/g,"\\'")}',this)"`:'';
+      html+=`<div class="food-card" data-card-id="${id}" ${pinCall} style="cursor:pointer">${favBtnHtml(id)}<div class="food-emoji" style="background:#${r.bg_color||'F5F5F5'}">${r.emoji||'🍽️'}</div><div class="food-body"><div class="food-name">Day ${r.day} · ${r.name||''}</div><div class="food-desc">${r.description||''}</div><div class="food-price">${r.price_level||''}</div>${memoHtml(id)}</div></div>`;
+    });
+    html+='</div>';
+  }
+  return html;
+}
+
+/* ── expenses view ── */
+function renderExpensesView() {
+  const exps = DATA.expenses;
+  const audTotal = exps.filter(r=>r.currency==='AUD').reduce((s,r)=>s+parseFloat(r.amount||0),0);
+  const krwTotal = exps.filter(r=>r.currency==='KRW').reduce((s,r)=>s+parseFloat(r.amount||0),0);
+  let html = `<div class="cat-section visible" data-cat="expenses">`;
+  html += `<div class="day-heading"><h2>💰 여행 경비</h2></div>`;
+  html += `<div class="expense-summary">
+    <div class="exp-sum-card">
+      <div class="exp-sum-label">AUD 합계</div>
+      <div class="exp-sum-value">A$ ${audTotal.toFixed(2)}</div>
+      ${liveRate?`<div class="exp-sum-sub">≈ ₩${Math.round(audTotal*liveRate).toLocaleString()}</div>`:''}
+    </div>
+    <div class="exp-sum-card">
+      <div class="exp-sum-label">KRW 합계</div>
+      <div class="exp-sum-value">₩${krwTotal.toLocaleString()}</div>
+      <div class="exp-sum-sub">${exps.length}건</div>
+    </div>
+  </div>`;
+  html += `<button class="exp-add-btn" onclick="openExpModal()">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    경비 추가하기
+  </button>`;
+  if (!exps.length) {
+    html += `<div class="fav-empty"><div class="fe-icon">💸</div><div style="font-weight:600">아직 경비 내역이 없어요</div></div>`;
+  } else {
+    // 날짜별 그룹
+    const byDay = {};
+    exps.forEach(r => {
+      const k = r.day || r.date || '기타';
+      if (!byDay[k]) byDay[k] = [];
+      byDay[k].push(r);
+    });
+    Object.keys(byDay).sort().forEach(dk => {
+      const dayTotal = byDay[dk].filter(r=>r.currency==='AUD').reduce((s,r)=>s+parseFloat(r.amount||0),0);
+      html += `<div class="exp-by-day">Day ${dk} · A$ ${dayTotal.toFixed(2)}</div>`;
+      html += `<div class="expense-list">`;
+      byDay[dk].forEach(r => {
+        const id = r.id||'';
+        html += `<div class="expense-item">
+          <div class="exp-cat-badge">${r.category||'💊'}</div>
+          <div class="exp-info">
+            <div class="exp-item-name">${r.item||'기타'}</div>
+            <div class="exp-item-meta">${r.paid_by||''} ${r.note?'· '+r.note:''}</div>
+          </div>
+          <div class="exp-amount">${r.currency||'AUD'} ${parseFloat(r.amount||0).toFixed(2)}</div>
+          <button class="exp-del-btn" onclick="deleteExpense('${id}',event)" title="삭제">🗑</button>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+  }
   html += `</div>`;
   return html;
 }
 
-function renderTipsSection(day) {
-  const rows = DATA.tips.filter(r => Number(r.day) === day);
-  if (!rows.length) return '';
-  let html = `<div class="cat-section" data-cat="tips">`;
-  html += `<div class="day-heading"><h2>Day ${day} · 여행 팁</h2></div>`;
-  html += `<div class="tips-list">`;
-  rows.forEach(r => {
-    html += `<div class="tip-card">
-      <div class="tip-icon">${r.icon || '💡'}</div>
-      <div><div class="tip-title">${r.title}</div><div class="tip-text">${r.content || ''}</div></div>
-    </div>`;
-  });
-  html += `</div></div>`;
-  return html;
-}
-
-/* ── 찜 목록 뷰 ── */
-function renderFavoritesView() {
-  const favIds = Object.keys(favState).filter(k => favState[k]);
-  if (!favIds.length) {
-    return `<div class="fav-empty"><div class="fe-icon">🤍</div><div style="font-weight:600;margin-bottom:4px;">찜한 장소가 없어요</div><div style="font-size:11px;color:var(--mid)">카드의 🤍 버튼을 눌러 찜해보세요</div></div>`;
-  }
-  let html = `<div class="day-heading"><h2>찜 목록 <span style="font-size:14px;color:var(--coral)">❤️ ${favIds.length}</span></h2></div>`;
-  const schedFavs = DATA.schedule.filter(r => favState[scheduleCardId(r)]);
-  if (schedFavs.length) {
-    html += `<div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px">일정</div>`;
-    schedFavs.forEach(row => {
-      const id = scheduleCardId(row);
-      const hasCoords = row.lat && row.lng;
-      const lat = parseFloat(row.lat), lng = parseFloat(row.lng);
-      const addr = row.addr || '';
-      const name = row.name || '';
-      const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
-      html += `<div class="stop-item" style="padding-left:14px">
-        <div class="stop-card" data-card-id="${id}" ${pinCall}>
-          ${favBtnHtml(id)}
-          <div class="sc-time">Day ${row.day} · ${row.time||''}</div>
-          <div class="sc-name">${name}</div>
-          <div class="sc-desc">${row.description||''}</div>
-          ${memoHtml(id)}
-        </div>
-      </div>`;
-    });
-  }
-  const foodFavs = DATA.food.filter(r => favState[foodCardId(r)]);
-  if (foodFavs.length) {
-    html += `<div style="font-size:11px;font-weight:600;color:var(--mid);margin:12px 0 8px;text-transform:uppercase;letter-spacing:0.4px">맛집</div>`;
-    html += `<div class="food-grid">`;
-    foodFavs.forEach(r => {
-      const id = foodCardId(r);
-      const hasCoords = r.lat && r.lng;
-      const lat = parseFloat(r.lat), lng = parseFloat(r.lng);
-      const addr = r.addr || '';
-      const name = r.name || '';
-      const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
-      html += `<div class="food-card" data-card-id="${id}" ${pinCall} style="cursor:pointer">
-        ${favBtnHtml(id)}
-        <div class="food-emoji" style="background:#${r.bg_color||'F5F5F5'}">${r.emoji||'🍽️'}</div>
-        <div class="food-body">
-          <div class="food-name">Day ${r.day} · ${name}</div>
-          <div class="food-desc">${r.description||''}</div>
-          <div class="food-price">${r.price_level||''}</div>
-          ${memoHtml(id)}
-        </div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-  return html;
-}
-
+/* ── day buttons ── */
 function renderDayButtons() {
-  const days = getDays();
-  const dayLabels = { 0:'출발', 1:'하버', 2:'본다이', 3:'맨리', 4:'블루산', 5:'왓슨', 6:'달링', 7:'마지막', 8:'귀국' };
-  let html = '';
-  days.forEach(d => {
-    const label = dayLabels[d] || `D${d}`;
-    html += `<button class="day-btn" onclick="selectDay(${d},this)" title="Day ${d}">
-      <span class="d-num">${d}</span>
-      <span class="d-lbl">${label}</span>
-    </button>`;
-  });
-  document.getElementById('day-buttons-container').innerHTML = html;
+  const days=getDays();
+  const labels={0:'출발',1:'하버',2:'본다이',3:'맨리',4:'블루산',5:'왓슨',6:'달링',7:'마지막',8:'귀국'};
+  document.getElementById('day-buttons-container').innerHTML = days.map(d=>`<button class="day-btn" onclick="selectDay(${d},this)" title="Day ${d}"><span class="d-num">${d}</span><span class="d-lbl">${labels[d]||`D${d}`}</span></button>`).join('');
 }
 
 function renderAll() {
   renderDayButtons();
-  const days = getDays();
-  let html = '';
-  days.forEach(d => { html += renderSchedule(d); });
-  document.getElementById('timeline-content').innerHTML = html;
+  const days=getDays();
+  document.getElementById('timeline-content').innerHTML = days.map(d=>renderSchedule(d)).join('');
 }
 
-/* ═══════════════════════════════════════════════════
-   8. 찜 토글
-═══════════════════════════════════════════════════ */
-function toggleFav(id, e) {
+/* ═══════════════════════════════════════════════
+   SCHEDULE CRUD
+═══════════════════════════════════════════════ */
+let schModalRow = null;
+
+function openSchModal(rowOrNull, e) {
   e && e.stopPropagation();
-  favState[id] = !favState[id];
-  saveFav();
-  document.querySelectorAll(`.fav-btn`).forEach(btn => {
-    const cardId = btn.closest('[data-card-id]')?.getAttribute('data-card-id');
-    if (cardId === id) {
-      btn.textContent = favState[id] ? '❤️' : '🤍';
-      btn.classList.toggle('active', favState[id]);
+  schModalRow = rowOrNull;
+  const modal = document.getElementById('sch-modal');
+  const isEdit = !!rowOrNull;
+  document.getElementById('sch-modal-title').textContent = isEdit ? '일정 수정' : '일정 추가';
+  document.getElementById('sch-delete-btn').style.display = isEdit ? '' : 'none';
+  if (isEdit) {
+    document.getElementById('sch-edit-id').value  = rowOrNull.id || rowOrNull._cardId || '';
+    document.getElementById('sch-day').value       = rowOrNull.day||'';
+    document.getElementById('sch-time').value      = rowOrNull.time||'';
+    document.getElementById('sch-name').value      = rowOrNull.name||'';
+    document.getElementById('sch-desc').value      = rowOrNull.description||'';
+    document.getElementById('sch-type').value      = rowOrNull.type||'sight';
+    document.getElementById('sch-tags').value      = rowOrNull.tags||'';
+    document.getElementById('sch-lat').value       = rowOrNull.lat||'';
+    document.getElementById('sch-lng').value       = rowOrNull.lng||'';
+    document.getElementById('sch-addr').value      = rowOrNull.addr||'';
+    document.getElementById('sch-transit').value   = rowOrNull.transit_next||'';
+    document.getElementById('sch-date').value      = rowOrNull.date||'';
+  } else {
+    ['sch-edit-id','sch-day','sch-time','sch-name','sch-desc','sch-tags','sch-lat','sch-lng','sch-addr','sch-transit','sch-date'].forEach(id=>{ document.getElementById(id).value=''; });
+    document.getElementById('sch-type').value='sight';
+  }
+  modal.classList.add('show');
+}
+function closeSchModal(){ document.getElementById('sch-modal').classList.remove('show'); }
+
+async function saveScheduleItem() {
+  const name = document.getElementById('sch-name').value.trim();
+  const day  = document.getElementById('sch-day').value.trim();
+  if (!name || !day) { showToast('⚠️ 날짜와 장소명을 입력해주세요'); return; }
+  const editId = document.getElementById('sch-edit-id').value.trim();
+  const data = {
+    id: editId || `sch_${day}_${name.replace(/\s+/g,'_')}_${Date.now()}`,
+    day, time:document.getElementById('sch-time').value.trim(),
+    name, description:document.getElementById('sch-desc').value.trim(),
+    type:document.getElementById('sch-type').value,
+    tags:document.getElementById('sch-tags').value.trim(),
+    lat:document.getElementById('sch-lat').value.trim(),
+    lng:document.getElementById('sch-lng').value.trim(),
+    addr:document.getElementById('sch-addr').value.trim(),
+    transit_next:document.getElementById('sch-transit').value.trim(),
+    date:document.getElementById('sch-date').value.trim(),
+  };
+  closeSchModal();
+  const result = await apiPost({ action:'update_schedule', id: data.id, data: {...data, _append:!editId} });
+  if (result.ok) {
+    // 로컬 DATA 갱신
+    if (editId) {
+      const idx = DATA.schedule.findIndex(r => r.id === editId || scheduleCardId(r) === editId);
+      if (idx>=0) DATA.schedule[idx] = data; else DATA.schedule.push(data);
+    } else {
+      DATA.schedule.push(data);
     }
-  });
-  if (currentCat === 'favorites') {
-    document.getElementById('timeline-content').innerHTML = renderFavoritesView();
+    DATA.schedule.sort((a,b)=>Number(a.day)-Number(b.day)||(a.time||'').localeCompare(b.time||''));
+    renderAll();
+    updateView();
   }
 }
 
-/* ═══════════════════════════════════════════════════
-   9. 전체 검색
-═══════════════════════════════════════════════════ */
-function openSearch() {
-  document.getElementById('search-backdrop').classList.add('show');
-  setTimeout(() => document.getElementById('search-input').focus(), 50);
+function deleteScheduleItem() {
+  const editId = document.getElementById('sch-edit-id').value.trim();
+  if (!editId) { closeSchModal(); return; }
+  confirmDeleteSchedule(editId, editId);
+  closeSchModal();
 }
 
-function closeSearch(e) {
-  if (e && e.target !== document.getElementById('search-backdrop')) return;
-  document.getElementById('search-backdrop').classList.remove('show');
-  document.getElementById('search-input').value = '';
-  document.getElementById('search-results').innerHTML = '<div class="search-empty">검색어를 입력하세요</div>';
+async function confirmDeleteSchedule(rowId, cardId, e) {
+  e && e.stopPropagation();
+  if (!confirm('이 일정을 삭제할까요?')) return;
+  const result = await apiPost({ action:'delete', sheet:'schedule', id:rowId });
+  if (result.ok) {
+    DATA.schedule = DATA.schedule.filter(r => r.id !== rowId && scheduleCardId(r) !== cardId);
+    renderAll();
+    updateView();
+  }
 }
 
-document.addEventListener('keydown', e => {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
-  if (e.key === 'Escape') { document.getElementById('search-backdrop').classList.remove('show'); }
-});
+/* ═══════════════════════════════════════════════
+   EXPENSE CRUD
+═══════════════════════════════════════════════ */
+function openExpModal(){ document.getElementById('exp-modal').classList.add('show'); }
+function closeExpModal(){ document.getElementById('exp-modal').classList.remove('show'); }
 
-function highlight(text, query) {
-  if (!query) return text;
-  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-  return text.replace(re, '<mark class="sri-mark">$1</mark>');
+async function saveExpense() {
+  const item   = document.getElementById('exp-item').value.trim();
+  const amount = document.getElementById('exp-amount').value.trim();
+  if (!item || !amount) { showToast('⚠️ 항목명과 금액을 입력해주세요'); return; }
+  const id = 'exp_' + Date.now();
+  const data = {
+    id,
+    day:      document.getElementById('exp-day').value.trim(),
+    date:     document.getElementById('exp-date').value.trim(),
+    category: document.getElementById('exp-cat').value,
+    item,
+    amount:   parseFloat(amount).toFixed(2),
+    currency: document.getElementById('exp-currency').value,
+    paid_by:  document.getElementById('exp-paidby').value.trim()||'나',
+    note:     document.getElementById('exp-note').value.trim(),
+    created_at: new Date().toISOString()
+  };
+  closeExpModal();
+  const result = await apiPost({ action:'append', sheet:'expenses', data });
+  if (result.ok) {
+    DATA.expenses.push(data);
+    if (currentCat === 'expenses') {
+      document.getElementById('timeline-content').innerHTML = renderExpensesView();
+    }
+  }
 }
 
+async function deleteExpense(id, e) {
+  e && e.stopPropagation();
+  if (!id || !confirm('이 경비를 삭제할까요?')) return;
+  const result = await apiPost({ action:'delete', sheet:'expenses', id });
+  if (result.ok) {
+    DATA.expenses = DATA.expenses.filter(r => r.id !== id);
+    document.getElementById('timeline-content').innerHTML = renderExpensesView();
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════════════ */
+function openSearch(){ document.getElementById('search-backdrop').classList.add('show'); setTimeout(()=>document.getElementById('search-input').focus(),50); }
+function closeSearch(e){ if(e&&e.target!==document.getElementById('search-backdrop'))return; document.getElementById('search-backdrop').classList.remove('show'); document.getElementById('search-input').value=''; document.getElementById('search-results').innerHTML='<div class="search-empty">검색어를 입력하세요</div>'; }
+document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSearch();} if(e.key==='Escape')document.getElementById('search-backdrop').classList.remove('show'); });
+function hl(t,q){ if(!q)return t; return t.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),'<mark class="sri-mark">$1</mark>'); }
 function doSearch(q) {
-  q = q.trim();
-  const el = document.getElementById('search-results');
-  if (!q) { el.innerHTML = '<div class="search-empty">검색어를 입력하세요</div>'; return; }
-
-  const results = { schedule: [], food: [], tips: [] };
-  DATA.schedule.forEach(r => {
-    const text = [r.name, r.description, r.tags].join(' ');
-    if (text.toLowerCase().includes(q.toLowerCase())) results.schedule.push(r);
-  });
-  DATA.food.forEach(r => {
-    const text = [r.name, r.description].join(' ');
-    if (text.toLowerCase().includes(q.toLowerCase())) results.food.push(r);
-  });
-  DATA.tips.forEach(r => {
-    const text = [r.title, r.content].join(' ');
-    if (text.toLowerCase().includes(q.toLowerCase())) results.tips.push(r);
-  });
-
-  const total = results.schedule.length + results.food.length + results.tips.length;
-  if (!total) { el.innerHTML = `<div class="search-empty">검색 결과가 없습니다 — <strong>${q}</strong></div>`; return; }
-
-  let html = '';
-  if (results.schedule.length) {
-    html += `<div class="search-section-header">📅 일정 (${results.schedule.length})</div>`;
-    results.schedule.forEach(r => {
-      const type = r.type || 'sight';
-      const colors = {food:'#FAECE7',coffee:'#FAEEDA',sight:'#E6F1FB',shop:'#E1F5EE',activity:'#F3E8FD',hotel:'#E1F5EE',transit:'#F1EFE8'};
-      const bg = colors[type] || '#F1EFE8';
-      const id = scheduleCardId(r);
-      html += `<div class="search-result-item" onclick="jumpToCard('${id}','schedule')">
-        <div class="sri-icon" style="background:${bg}">${r.emoji||typeIconEmoji(type)}</div>
-        <div style="flex:1;min-width:0">
-          <div class="sri-day">Day ${r.day} · ${r.time||''}</div>
-          <div class="sri-name">${highlight(r.name||'', q)}</div>
-          <div class="sri-desc">${highlight((r.description||'').slice(0,60), q)}${r.description&&r.description.length>60?'…':''}</div>
-        </div>
-      </div>`;
+  q=q.trim(); const el=document.getElementById('search-results');
+  if(!q){el.innerHTML='<div class="search-empty">검색어를 입력하세요</div>';return;}
+  const res={schedule:[],food:[],tips:[]};
+  DATA.schedule.forEach(r=>{ if([r.name,r.description,r.tags].join(' ').toLowerCase().includes(q.toLowerCase())) res.schedule.push(r); });
+  DATA.food.forEach(r=>{ if([r.name,r.description].join(' ').toLowerCase().includes(q.toLowerCase())) res.food.push(r); });
+  DATA.tips.forEach(r=>{ if([r.title,r.content].join(' ').toLowerCase().includes(q.toLowerCase())) res.tips.push(r); });
+  const total=res.schedule.length+res.food.length+res.tips.length;
+  if(!total){el.innerHTML=`<div class="search-empty">검색 결과 없음 — <strong>${q}</strong></div>`;return;}
+  let html='';
+  if(res.schedule.length){
+    html+=`<div class="search-section-header">📅 일정 (${res.schedule.length})</div>`;
+    res.schedule.forEach(r=>{
+      const type=r.type||'sight'; const colors={food:'#FAECE7',coffee:'#FAEEDA',sight:'#E6F1FB',shop:'#E1F5EE',activity:'#F3E8FD',hotel:'#E1F5EE',transit:'#F1EFE8'};
+      html+=`<div class="search-result-item" onclick="jumpToCard('${scheduleCardId(r)}','schedule')"><div class="sri-icon" style="background:${colors[type]||'#F1EFE8'}">${{food:'🍽',coffee:'☕',sight:'📍',shop:'🛍',activity:'🎯',hotel:'🏨',transit:'🚌'}[type]||'📍'}</div><div style="flex:1;min-width:0"><div class="sri-day">Day ${r.day} · ${r.time||''}</div><div class="sri-name">${hl(r.name||'',q)}</div><div class="sri-desc">${hl((r.description||'').slice(0,60),q)}</div></div></div>`;
     });
   }
-  if (results.food.length) {
-    html += `<div class="search-section-header">🍽️ 맛집 (${results.food.length})</div>`;
-    results.food.forEach(r => {
-      const id = foodCardId(r);
-      html += `<div class="search-result-item" onclick="jumpToCard('${id}','food')">
-        <div class="sri-icon" style="background:#FAECE7">${r.emoji||'🍽️'}</div>
-        <div style="flex:1;min-width:0">
-          <div class="sri-day">Day ${r.day}</div>
-          <div class="sri-name">${highlight(r.name||'', q)}</div>
-          <div class="sri-desc">${highlight((r.description||'').slice(0,60), q)}${r.description&&r.description.length>60?'…':''}</div>
-        </div>
-      </div>`;
-    });
+  if(res.food.length){
+    html+=`<div class="search-section-header">🍽️ 맛집 (${res.food.length})</div>`;
+    res.food.forEach(r=>{ html+=`<div class="search-result-item" onclick="jumpToCard('${foodCardId(r)}','food')"><div class="sri-icon" style="background:#FAECE7">${r.emoji||'🍽️'}</div><div style="flex:1;min-width:0"><div class="sri-day">Day ${r.day}</div><div class="sri-name">${hl(r.name||'',q)}</div><div class="sri-desc">${hl((r.description||'').slice(0,60),q)}</div></div></div>`; });
   }
-  if (results.tips.length) {
-    html += `<div class="search-section-header">💡 여행 팁 (${results.tips.length})</div>`;
-    results.tips.forEach(r => {
-      html += `<div class="search-result-item" onclick="jumpToTip(${r.day})">
-        <div class="sri-icon" style="background:#FAEEDA">${r.icon||'💡'}</div>
-        <div style="flex:1;min-width:0">
-          <div class="sri-day">Day ${r.day}</div>
-          <div class="sri-name">${highlight(r.title||'', q)}</div>
-          <div class="sri-desc">${highlight((r.content||'').slice(0,60), q)}${r.content&&r.content.length>60?'…':''}</div>
-        </div>
-      </div>`;
-    });
+  if(res.tips.length){
+    html+=`<div class="search-section-header">💡 팁 (${res.tips.length})</div>`;
+    res.tips.forEach(r=>{ html+=`<div class="search-result-item" onclick="jumpToTip(${r.day})"><div class="sri-icon" style="background:#FAEEDA">${r.icon||'💡'}</div><div style="flex:1;min-width:0"><div class="sri-day">Day ${r.day}</div><div class="sri-name">${hl(r.title||'',q)}</div><div class="sri-desc">${hl((r.content||'').slice(0,60),q)}</div></div></div>`; });
   }
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
-
-function typeIconEmoji(type) {
-  return {food:'🍽',coffee:'☕',sight:'📍',shop:'🛍',activity:'🎯',hotel:'🏨',transit:'🚌'}[type]||'📍';
-}
-
-function jumpToCard(id, cat) {
+function jumpToCard(id,cat){
   document.getElementById('search-backdrop').classList.remove('show');
-  const catBtn = [...document.querySelectorAll('#main-filter-bar .f-btn')].find(b => {
-    if (cat === 'schedule') return b.textContent.trim().startsWith('전체');
-    if (cat === 'food') return b.textContent.trim().startsWith('맛');
-    return false;
-  });
-  if (catBtn) selectCat(cat, catBtn);
-  const row = cat === 'food'
-    ? DATA.food.find(r => foodCardId(r) === id)
-    : DATA.schedule.find(r => scheduleCardId(r) === id);
-  if (row) {
-    const dayBtn = [...document.querySelectorAll('.day-btn')].find(b => b.querySelector('.d-num')?.textContent == row.day);
-    if (dayBtn) selectDay(Number(row.day), dayBtn);
-  }
-  setTimeout(() => {
-    const el = document.querySelector(`[data-card-id="${id}"]`);
-    if (el) { el.scrollIntoView({behavior:'smooth', block:'center'}); el.classList.add('selected'); setTimeout(() => el.classList.remove('selected'), 1800); }
-  }, 300);
+  const catBtn=[...document.querySelectorAll('#main-filter-bar .f-btn')].find(b=>cat==='schedule'?b.textContent.includes('전체'):b.textContent.includes('맛'));
+  if(catBtn) selectCat(cat,catBtn);
+  const row=cat==='food'?DATA.food.find(r=>foodCardId(r)===id):DATA.schedule.find(r=>scheduleCardId(r)===id);
+  if(row){ const db=[...document.querySelectorAll('.day-btn')].find(b=>b.querySelector('.d-num')?.textContent==row.day); if(db)selectDay(Number(row.day),db); }
+  setTimeout(()=>{ const el=document.querySelector(`[data-card-id="${id}"]`); if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('selected');setTimeout(()=>el.classList.remove('selected'),1800);} },300);
 }
+function jumpToTip(day){ document.getElementById('search-backdrop').classList.remove('show'); const b=[...document.querySelectorAll('#main-filter-bar .f-btn')].find(b=>b.textContent.includes('팁')); if(b)selectCat('tips',b); const db=[...document.querySelectorAll('.day-btn')].find(b=>b.querySelector('.d-num')?.textContent==day); if(db)selectDay(Number(day),db); }
 
-function jumpToTip(day) {
-  document.getElementById('search-backdrop').classList.remove('show');
-  const tipsBtn = [...document.querySelectorAll('#main-filter-bar .f-btn')].find(b => b.textContent.includes('팁'));
-  if (tipsBtn) selectCat('tips', tipsBtn);
-  const dayBtn = [...document.querySelectorAll('.day-btn')].find(b => b.querySelector('.d-num')?.textContent == day);
-  if (dayBtn) selectDay(Number(day), dayBtn);
-}
-
-/* ═══════════════════════════════════════════════════
-   10. Info 탭 렌더링
-═══════════════════════════════════════════════════ */
-let currentInfoCat = 'flight';
-
-function getInfoBy(cat) { return DATA.info.filter(r => r.category === cat); }
+/* ═══════════════════════════════════════════════
+   INFO TAB
+═══════════════════════════════════════════════ */
+let currentInfoCat='flight', infoTabActive=false;
+function getInfoBy(cat){ return DATA.info.filter(r=>r.category===cat); }
 
 function renderInfoContent(cat) {
-  const rows = getInfoBy(cat);
-  let html = '';
-  if (cat === 'flight')         html += renderInfoCard('✈️', '항공편 정보', 'teal', rows);
-  else if (cat === 'exchange')  html += renderExchangeCard(rows);
-  else if (cat === 'hotel')     html += renderInfoCard('🏨', '숙소 정보', 'blue', rows);
-  else if (cat === 'transport') html += renderInfoCard('🚌', '교통 정보', 'amber', rows);
-  else if (cat === 'budget')    html += renderBudgetCard(rows);
-  else if (cat === 'checklist') html += renderChecklistCard(rows);
-
-  if (!rows.length && cat !== 'checklist' && cat !== 'budget') {
-    html = `<div style="text-align:center;padding:40px 20px;color:var(--mid);">
-      <div style="font-size:32px;margin-bottom:10px;">📭</div>
-      <div style="font-size:13px;font-weight:500;">데이터가 없습니다</div>
-      <div style="font-size:11px;margin-top:5px;opacity:0.7;">Google Sheets의 info 시트에 category: <strong>${cat}</strong> 데이터를 추가하세요</div>
-    </div>`;
-  }
-
-  document.getElementById('info-content').innerHTML = html;
-  if (cat === 'budget') {
-    setTimeout(() => {
-      document.querySelectorAll('.budget-item-bar[data-pct]').forEach(bar => {
-        bar.style.width = bar.getAttribute('data-pct') + '%';
-      });
-    }, 50);
-  }
+  const rows=getInfoBy(cat);
+  let html='';
+  if(cat==='flight')         html=renderInfoCard('✈️','항공편 정보','teal',rows);
+  else if(cat==='exchange')  html=renderExchangeCard(rows);
+  else if(cat==='hotel')     html=renderInfoCard('🏨','숙소 정보','blue',rows);
+  else if(cat==='transport') html=renderInfoCard('🚌','교통 정보','amber',rows);
+  else if(cat==='budget')    html=renderBudgetCard(rows);
+  else if(cat==='checklist') html=renderChecklistCard(rows);
+  if(!rows.length && cat!=='checklist' && cat!=='budget') html=`<div style="text-align:center;padding:40px 20px;color:var(--mid)"><div style="font-size:32px;margin-bottom:10px">📭</div><div style="font-size:13px">데이터 없음</div></div>`;
+  document.getElementById('info-content').innerHTML=html;
+  if(cat==='budget') setTimeout(()=>{ document.querySelectorAll('.budget-item-bar[data-pct]').forEach(b=>b.style.width=b.getAttribute('data-pct')+'%'); },50);
 }
-
-function renderInfoCard(iconEmoji, title, colorClass, rows) {
-  if (!rows.length) return '';
-  let html = `<div class="info-section"><div class="info-card">
-    <div class="info-card-header ${colorClass}"><span class="ich-badge">${iconEmoji}</span>${title}</div>
-    <div class="info-rows">`;
-  rows.forEach(r => {
-    const val = r.value || '';
-    const isURL = val.startsWith('http://') || val.startsWith('https://');
-    const valueHtml = isURL
-      ? `<a href="${val}" target="_blank" rel="noopener" class="info-link">🔗 바로가기</a>`
-      : val;
-    html += `<div class="info-row">
-      <div class="info-row-icon">${r.icon || ''}</div>
-      <div class="info-row-text">
-        <div class="info-row-label">${r.label || ''}</div>
-        <div class="info-row-value">${valueHtml}</div>
-      </div>
-    </div>`;
-  });
-  html += `</div></div></div>`;
-  return html;
+function renderInfoCard(icon,title,cc,rows){
+  if(!rows.length)return'';
+  let html=`<div class="info-section"><div class="info-card"><div class="info-card-header ${cc}"><span class="ich-badge">${icon}</span>${title}</div><div class="info-rows">`;
+  rows.forEach(r=>{const v=r.value||'';const isURL=v.startsWith('http');html+=`<div class="info-row"><div class="info-row-icon">${r.icon||''}</div><div class="info-row-text"><div class="info-row-label">${r.label||''}</div><div class="info-row-value">${isURL?`<a href="${v}" target="_blank" class="info-link">🔗 바로가기</a>`:v}</div></div></div>`;});
+  return html+'</div></div></div>';
 }
-
-function renderExchangeCard(rows) {
-  if (!rows.length && !liveRate) return '';
-  const rateRow = rows.find(r => r.label && r.label.includes('환율')) || rows[0];
-  const calcRow = rows.find(r => r.label && r.label.includes('환전'));
-  const liveRateStr = liveRate ? Math.round(liveRate).toLocaleString() + ' 원' : null;
-  const displayRate = liveRateStr || (rateRow ? rateRow.value : '-');
-  const liveBadge = liveRate ? `<span class="exchange-live-badge">실시간</span>` : '';
-
-  let html = `<div class="info-section"><div class="info-card">
-    <div class="info-card-header amber"><span class="ich-badge">💱</span>환율 정보${liveBadge}</div>
-    <div class="exchange-big">
-      <div class="exchange-rate-display">1 AUD = ${displayRate}</div>
-      <div class="exchange-rate-sub">${liveRate ? '실시간 AUD → KRW 환율' : '현재 AUD → KRW 환율'}</div>
-    </div>`;
-
-  if (liveRate) {
-    const amounts = [10, 50, 100, 500];
-    html += `<div style="padding:10px 14px 4px">`;
-    amounts.forEach(aud => {
-      const krw = (liveRate * aud).toLocaleString('ko-KR', {maximumFractionDigits:0});
-      html += `<div class="info-row" style="padding:8px 0;border-bottom:1px solid var(--gray-light)">
-        <div class="info-row-icon">💵</div>
-        <div class="info-row-text">
-          <div class="info-row-label">AUD ${aud}</div>
-          <div class="info-row-value">₩ ${krw}</div>
-        </div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-
-  if (calcRow) {
-    html += `<div class="exchange-calc">
-      <div class="exchange-calc-label">💡 ${calcRow.label}</div>
-      <div class="exchange-calc-val">${calcRow.value}</div>
-    </div>`;
-  }
-
-  const others = rows.filter(r => r !== rateRow && r !== calcRow);
-  if (others.length) {
-    html += `<div class="info-rows">`;
-    others.forEach(r => {
-      html += `<div class="info-row">
-        <div class="info-row-icon">${r.icon || ''}</div>
-        <div class="info-row-text">
-          <div class="info-row-label">${r.label || ''}</div>
-          <div class="info-row-value">${r.value || ''}</div>
-        </div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-  html += `</div></div>`;
-  return html;
+function renderExchangeCard(rows){
+  const rateRow=rows.find(r=>r.label?.includes('환율'))||rows[0];
+  const displayRate=liveRate?Math.round(liveRate).toLocaleString()+' 원':(rateRow?.value||'-');
+  let html=`<div class="info-section"><div class="info-card"><div class="info-card-header amber"><span class="ich-badge">💱</span>환율 정보${liveRate?`<span class="exchange-live-badge">실시간</span>`:''}</div><div class="exchange-big"><div class="exchange-rate-display">1 AUD = ${displayRate}</div><div class="exchange-rate-sub">AUD → KRW</div></div>`;
+  if(liveRate){html+=`<div style="padding:10px 14px 4px">`;[10,50,100,500].forEach(a=>{html+=`<div class="info-row" style="padding:8px 0;border-bottom:1px solid var(--gray-light)"><div class="info-row-icon">💵</div><div class="info-row-text"><div class="info-row-label">AUD ${a}</div><div class="info-row-value">₩ ${Math.round(liveRate*a).toLocaleString()}</div></div></div>`; });html+=`</div>`;}
+  return html+'</div></div>';
 }
-
-function renderBudgetCard(rows) {
-  if (!rows.length) return '';
-  const totalRow = rows.find(r => r.label && (r.label.includes('합계') || r.label.includes('총')));
-  const itemRows = rows.filter(r => r !== totalRow);
-  function parseAmt(val) {
-    if (!val) return 0;
-    const m = val.replace(/,/g, '').match(/[\d.]+/);
-    return m ? parseFloat(m[0]) : 0;
-  }
-  const maxAmt = Math.max(...itemRows.map(r => parseAmt(r.value)), 1);
-  const barColors = ['#1A6B5A','#378ADD','#D85A30','#BA7517','#9B59B6','#5F5E5A'];
-  let html = `<div class="info-section"><div class="info-card">
-    <div class="info-card-header coral"><span class="ich-badge">💰</span>여행 예산</div>
-    <div class="budget-bar-wrap">`;
-  if (totalRow) {
-    html += `<div class="budget-total">
-      <div class="budget-total-label">총 예산</div>
-      <div class="budget-total-value">${totalRow.value}</div>
-    </div>`;
-  }
-  html += `<div class="budget-items">`;
-  itemRows.forEach((r, i) => {
-    const amt = parseAmt(r.value);
-    const pct = maxAmt > 0 ? Math.round((amt / maxAmt) * 100) : 0;
-    html += `<div class="budget-item">
-      <div class="budget-item-label">${r.icon || ''} ${r.label || ''}</div>
-      <div class="budget-item-bar-wrap">
-        <div class="budget-item-bar" data-pct="${pct}" style="background:${barColors[i % barColors.length]};width:0%"></div>
-      </div>
-      <div class="budget-item-val">${r.value}</div>
-    </div>`;
-  });
-  html += `</div></div></div></div>`;
-  return html;
+function renderBudgetCard(rows){
+  if(!rows.length)return'';
+  const totalRow=rows.find(r=>r.label?.includes('합계')||r.label?.includes('총'));
+  const itemRows=rows.filter(r=>r!==totalRow);
+  function pa(v){if(!v)return 0;const m=v.replace(/,/g,'').match(/[\d.]+/);return m?parseFloat(m[0]):0;}
+  const maxA=Math.max(...itemRows.map(r=>pa(r.value)),1);
+  const cols=['#1A6B5A','#378ADD','#D85A30','#BA7517','#9B59B6','#5F5E5A'];
+  let html=`<div class="info-section"><div class="info-card"><div class="info-card-header coral"><span class="ich-badge">💰</span>여행 예산</div><div class="budget-bar-wrap">`;
+  if(totalRow)html+=`<div class="budget-total"><div class="budget-total-label">총 예산</div><div class="budget-total-value">${totalRow.value}</div></div>`;
+  html+=`<div class="budget-items">`;
+  itemRows.forEach((r,i)=>{const a=pa(r.value);const p=Math.round((a/maxA)*100);html+=`<div class="budget-item"><div class="budget-item-label">${r.icon||''} ${r.label||''}</div><div class="budget-item-bar-wrap"><div class="budget-item-bar" data-pct="${p}" style="background:${cols[i%cols.length]};width:0%"></div></div><div class="budget-item-val">${r.value}</div></div>`;});
+  return html+'</div></div></div></div>';
 }
-
-function renderChecklistCard(rows) {
-  rows.forEach((r, i) => {
-    const key = `chk_${i}`;
-    if (!(key in checklistState)) checklistState[key] = false;
-  });
-  const total = rows.length;
-  const done = rows.filter((r, i) => checklistState[`chk_${i}`]).length;
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  let html = `<div class="info-section"><div class="info-card">
-    <div class="info-card-header gray"><span class="ich-badge">📋</span>준비물 체크리스트</div>
-    <div style="padding:10px 14px 4px;">
-      <div class="checklist-progress">
-        <div class="checklist-progress-bar-wrap">
-          <div class="checklist-progress-bar" style="width:${pct}%"></div>
-        </div>
-        <div class="checklist-progress-label">${done}/${total}</div>
-      </div>`;
-  if (rows.length) {
-    html += `<div class="checklist-grid">`;
-    rows.forEach((r, i) => {
-      const checked = checklistState[`chk_${i}`];
-      html += `<div class="checklist-item${checked ? ' checked' : ''}" onclick="toggleCheck(${i})">
-        <div class="checklist-check">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="checklist-icon">${r.icon || '📌'}</div>
-        <div class="checklist-label">${r.title || r.label || r.value || ''}</div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-  html += `</div></div></div>`;
-  return html;
+function renderChecklistCard(rows){
+  rows.forEach((_,i)=>{ const k=`chk_${i}`; if(!(k in checklistState))checklistState[k]=false; });
+  const total=rows.length,done=rows.filter((_,i)=>checklistState[`chk_${i}`]).length;
+  const pct=total>0?Math.round((done/total)*100):0;
+  let html=`<div class="info-section"><div class="info-card"><div class="info-card-header gray"><span class="ich-badge">📋</span>준비물 체크리스트</div><div style="padding:10px 14px 4px"><div class="checklist-progress"><div class="checklist-progress-bar-wrap"><div class="checklist-progress-bar" style="width:${pct}%"></div></div><div class="checklist-progress-label">${done}/${total}</div></div>`;
+  if(rows.length){html+=`<div class="checklist-grid">`;rows.forEach((r,i)=>{const ck=checklistState[`chk_${i}`];html+=`<div class="checklist-item${ck?' checked':''}" onclick="toggleCheck(${i})"><div class="checklist-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="checklist-icon">${r.icon||'📌'}</div><div class="checklist-label">${r.title||r.label||r.value||''}</div></div>`;});html+=`</div>`;}
+  return html+'</div></div></div>';
 }
+function toggleCheck(idx){const k=`chk_${idx}`;checklistState[k]=!checklistState[k];localStorage.setItem('checklistState',JSON.stringify(checklistState));renderInfoContent(currentInfoCat);}
 
-function toggleCheck(idx) {
-  const key = `chk_${idx}`;
-  checklistState[key] = !checklistState[key];
-  localStorage.setItem('checklistState', JSON.stringify(checklistState));
-  renderInfoContent(currentInfoCat);
-}
-
-/* ═══════════════════════════════════════════════════
-   11. Info 탭 UI
-═══════════════════════════════════════════════════ */
-let infoTabActive = false;
-
-function selectInfoTab(btn) {
-  infoTabActive = true;
-  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+function selectInfoTab(btn){
+  infoTabActive=true;
+  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('main-filter-bar').style.display = 'none';
-  document.getElementById('info-filter-bar').style.display = '';
+  document.getElementById('main-filter-bar').style.display='none';
+  document.getElementById('info-filter-bar').style.display='';
   document.getElementById('type-filter-bar').classList.add('hidden');
-  document.getElementById('place-info').classList.remove('show');
-  document.getElementById('gmaps-btn').classList.remove('show');
-  document.getElementById('timeline-panel').style.display = 'none';
-  if (isMobile()) {
-    document.getElementById('map-panel-el').style.display = 'none';
-    const toggleBtn = document.getElementById('map-toggle-btn');
-    if (toggleBtn) toggleBtn.style.display = 'none';
-  } else {
-    document.getElementById('map-panel-el').style.display = 'none';
-  }
+  closePlace();
+  document.getElementById('timeline-panel').style.display='none';
+  if(isMobile()){ document.getElementById('map-panel-el').style.display='none'; document.getElementById('map-toggle-btn').style.display='none'; }
+  else document.getElementById('map-panel-el').style.display='none';
   document.getElementById('info-overlay').classList.add('show');
-  selectInfoCat('flight', document.querySelector('#info-filter-bar .f-btn'));
+  selectInfoCat('flight',document.querySelector('#info-filter-bar .f-btn'));
 }
-
-function selectInfoCat(cat, btn) {
-  currentInfoCat = cat;
-  document.querySelectorAll('#info-filter-bar .f-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+function selectInfoCat(cat,btn){
+  currentInfoCat=cat;
+  document.querySelectorAll('#info-filter-bar .f-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
   renderInfoContent(cat);
 }
-
-function exitInfoTab() {
-  infoTabActive = false;
-  document.getElementById('main-filter-bar').style.display = '';
-  document.getElementById('info-filter-bar').style.display = 'none';
+function exitInfoTab(){
+  infoTabActive=false;
+  document.getElementById('main-filter-bar').style.display='';
+  document.getElementById('info-filter-bar').style.display='none';
   document.getElementById('info-overlay').classList.remove('show');
-  document.getElementById('timeline-panel').style.display = '';
-  if (currentCat === 'schedule') document.getElementById('type-filter-bar').classList.remove('hidden');
-  if (isMobile()) {
-    document.getElementById('map-panel-el').style.display = '';
-    const toggleBtn = document.getElementById('map-toggle-btn');
-    if (toggleBtn) toggleBtn.style.display = '';
-    applyTimelineOffset();
-    setTimeout(() => { if (map) map.invalidateSize(); }, 50);
-  } else {
-    document.getElementById('map-panel-el').style.display = '';
-    setTimeout(() => { if (map) map.invalidateSize(); }, 50);
-  }
+  document.getElementById('timeline-panel').style.display='';
+  if(currentCat==='schedule')document.getElementById('type-filter-bar').classList.remove('hidden');
+  if(isMobile()){ document.getElementById('map-panel-el').style.display=''; document.getElementById('map-toggle-btn').style.display=''; applyTimelineOffset(); setTimeout(()=>{if(map)map.invalidateSize();},50); }
+  else{ document.getElementById('map-panel-el').style.display=''; setTimeout(()=>{if(map)map.invalidateSize();},50); }
 }
 
-/* ═══════════════════════════════════════════════════
-   12. 지도 & 마커
-═══════════════════════════════════════════════════ */
-const dayColors = { 0:'#E74C3C', 1:'#1A6B5A', 2:'#D85A30', 3:'#378ADD', 4:'#9B59B6', 5:'#BA7517', 6:'#16A085', 7:'#34495E', 8:'#7F8C8D' };
-const dayViews = {
-  'all': { center:[-33.8500, 151.2100], zoom: 11 },
-  0:    { center:[37.4602, 126.4407], zoom: 13 },
-  1:    { center:[-33.8600, 151.2100], zoom: 14 },
-  2:    { center:[-33.9060, 151.2680], zoom: 13 },
-  3:    { center:[-33.8200, 151.2600], zoom: 13 },
-  4:    { center:[-33.7353, 150.3113], zoom: 13 },
-  5:    { center:[-33.8550, 151.2400], zoom: 13 },
-  6:    { center:[-33.8730, 151.1990], zoom: 13 },
-  7:    { center:[-33.8730, 151.2080], zoom: 13 },
-  8:    { center:[-33.9399, 151.1753], zoom: 13 }
-};
+/* ═══════════════════════════════════════════════
+   MAP
+═══════════════════════════════════════════════ */
+const dayColors={0:'#E74C3C',1:'#1A6B5A',2:'#D85A30',3:'#378ADD',4:'#9B59B6',5:'#BA7517',6:'#16A085',7:'#34495E',8:'#7F8C8D'};
+const dayViews={'all':{center:[-33.85,151.21],zoom:11},0:{center:[37.46,126.44],zoom:13},1:{center:[-33.86,151.21],zoom:14},2:{center:[-33.906,151.268],zoom:13},3:{center:[-33.82,151.26],zoom:13},4:{center:[-33.735,150.311],zoom:13},5:{center:[-33.855,151.24],zoom:13},6:{center:[-33.873,151.199],zoom:13},7:{center:[-33.873,151.208],zoom:13},8:{center:[-33.94,151.175],zoom:13}};
+let map,scheduleMarkers=[],foodMarkers=[],activeMarker=null;
+let currentDay='all', currentCat='schedule', currentTypeFilter='all';
 
-let map, scheduleMarkers = [], foodMarkers = [], activeMarker = null;
-let currentDay = 'all', currentCat = 'schedule', currentTypeFilter = 'all';
-
-function initMap() {
-  if (map) { map.remove(); map = null; }
-  map = L.map('leaflet-map', { zoomControl: true }).setView([-33.85, 151.21], 11);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '© CartoDB © OSM', maxZoom: 19
-  }).addTo(map);
+function initMap(){
+  if(map){map.remove();map=null;}
+  map=L.map('leaflet-map',{zoomControl:true}).setView([-33.85,151.21],11);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB © OSM',maxZoom:19}).addTo(map);
   renderScheduleMarkers('all');
 }
-
-function makeIcon(color, size = 16, day = null) {
-  const label = day !== null ? `<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:${size*0.55}px;line-height:1;color:#fff;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,0.35);pointer-events:none;user-select:none;">${day}</span>` : '';
-  return L.divIcon({
-    className: '',
-    html: `<div style="position:relative;width:${size}px;height:${size}px;background:${color};border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.28);display:flex;align-items:center;justify-content:center;">${label}</div>`,
-    iconSize:[size,size], iconAnchor:[size/2,size/2]
+function makeIcon(color,size=16,day=null){
+  const label=day!==null?`<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:${size*.55}px;color:#fff;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.35)">${day}</span>`:'';
+  return L.divIcon({className:'',html:`<div style="position:relative;width:${size}px;height:${size}px;background:${color};border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.28)">${label}</div>`,iconSize:[size,size],iconAnchor:[size/2,size/2]});
+}
+function makePinIcon(color){return L.divIcon({className:'',html:`<div style="width:34px;height:34px;background:${color};border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.3)"></div>`,iconSize:[34,34],iconAnchor:[17,34]});}
+function makeFoodIcon(emoji){return L.divIcon({className:'',html:`<div style="width:32px;height:32px;background:#D85A30;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:15px">${emoji}</div>`,iconSize:[32,32],iconAnchor:[16,16]});}
+function renderScheduleMarkers(dayFilter){
+  scheduleMarkers.forEach(m=>map.removeLayer(m));scheduleMarkers=[];
+  DATA.schedule.filter(r=>r.lat&&r.lng&&r.type!=='transit').filter(r=>dayFilter==='all'||Number(r.day)==dayFilter).forEach(r=>{
+    const m=L.marker([parseFloat(r.lat),parseFloat(r.lng)],{icon:makeIcon(dayColors[r.day]||'#1A6B5A',26,r.day)}).addTo(map).bindTooltip(`[Day ${r.day}] ${r.name}`,{direction:'top',offset:[0,-10]});
+    m.on('click',()=>showInfo(r.name,r.addr||''));scheduleMarkers.push(m);
   });
 }
-
-function makePinIcon(color) {
-  return L.divIcon({
-    className: '',
-    html: `<div style="width:34px;height:34px;background:${color};border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.3);"></div>`,
-    iconSize:[34,34], iconAnchor:[17,34]
+function renderFoodMarkers(dayFilter){
+  foodMarkers.forEach(m=>map.removeLayer(m));foodMarkers=[];
+  DATA.food.filter(r=>r.lat&&r.lng).filter(r=>dayFilter==='all'||Number(r.day)==dayFilter).forEach(r=>{
+    const m=L.marker([parseFloat(r.lat),parseFloat(r.lng)],{icon:makeFoodIcon(r.emoji||'🍽️')}).addTo(map).bindTooltip('🍴 '+r.name,{direction:'top',offset:[0,-14]});
+    m.on('click',()=>showInfo(r.name,r.addr||''));foodMarkers.push(m);
   });
 }
+function clearAllMarkers(){scheduleMarkers.forEach(m=>map.removeLayer(m));scheduleMarkers=[];foodMarkers.forEach(m=>map.removeLayer(m));foodMarkers=[];}
 
-function makeFoodIcon(emoji) {
-  return L.divIcon({
-    className: '',
-    html: `<div style="width:32px;height:32px;background:#D85A30;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.30);display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;">${emoji}</div>`,
-    iconSize:[32,32], iconAnchor:[16,16]
-  });
-}
-
-function renderScheduleMarkers(dayFilter) {
-  scheduleMarkers.forEach(m => map.removeLayer(m)); scheduleMarkers = [];
-  DATA.schedule
-    .filter(r => r.lat && r.lng && r.type !== 'transit')
-    .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
-    .forEach(r => {
-      const color = dayColors[r.day] || '#1A6B5A';
-      const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeIcon(color, 26, r.day) })
-        .addTo(map)
-        .bindTooltip('[Day ' + r.day + '] ' + r.name, { direction:'top', offset:[0,-10] });
-      m.on('click', () => showInfo(r.name, r.addr || ''));
-      scheduleMarkers.push(m);
-    });
-}
-
-function renderFoodMarkers(dayFilter) {
-  foodMarkers.forEach(m => map.removeLayer(m)); foodMarkers = [];
-  DATA.food
-    .filter(r => r.lat && r.lng)
-    .filter(r => dayFilter === 'all' || Number(r.day) == dayFilter)
-    .forEach(r => {
-      const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeFoodIcon(r.emoji||'🍽️') })
-        .addTo(map)
-        .bindTooltip('🍴 ' + r.name, { direction:'top', offset:[0,-14] });
-      m.on('click', () => showInfo(r.name, r.addr || ''));
-      foodMarkers.push(m);
-    });
-}
-
-function clearAllMarkers() {
-  scheduleMarkers.forEach(m => map.removeLayer(m)); scheduleMarkers = [];
-  foodMarkers.forEach(m => map.removeLayer(m));     foodMarkers = [];
-}
-
-/* ═══════════════════════════════════════════════════
-   13. UI 인터랙션
-═══════════════════════════════════════════════════ */
-function selectDay(day, btn) {
-  if (infoTabActive) exitInfoTab();
-  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+/* ═══════════════════════════════════════════════
+   UI NAV
+═══════════════════════════════════════════════ */
+function selectDay(day,btn){
+  if(infoTabActive)exitInfoTab();
+  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('info-day-btn').classList.remove('active');
-  btn.classList.add('active');
-  currentDay = day;
-  closePlace();
-  const v = dayViews[day] || dayViews['all'];
-  if (map) map.flyTo(v.center, v.zoom, { duration: 1.0 });
-  if (currentCat === 'food') renderFoodMarkers(day);
-  else renderScheduleMarkers(day);
+  btn.classList.add('active'); currentDay=day; closePlace();
+  const v=dayViews[day]||dayViews['all'];
+  if(map)map.flyTo(v.center,v.zoom,{duration:1.0});
+  if(currentCat==='food')renderFoodMarkers(day); else renderScheduleMarkers(day);
   updateView();
 }
-
-/* ═══════════════════════════════════════════════════
-   [FIX] selectCat: 찜 목록에서 다른 탭 복귀 시 renderAll() 호출
-═══════════════════════════════════════════════════ */
-function selectCat(cat, btn) {
-  document.querySelectorAll('#main-filter-bar .f-btn').forEach(b => b.classList.remove('active'));
+function selectCat(cat,btn){
+  document.querySelectorAll('#main-filter-bar .f-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-
-  const prevCat = currentCat;
-  currentCat = cat;
-  closePlace();
-
-  // 찜 목록에서 다른 탭으로 복귀하면 일정 DOM을 새로 그려야 함
-  if (prevCat === 'favorites' && cat !== 'favorites') {
-    renderAll();
-  }
-
-  // 타입 필터바: schedule 탭에서만 표시
-  const typeBar = document.getElementById('type-filter-bar');
-  if (cat === 'schedule') typeBar.classList.remove('hidden');
-  else typeBar.classList.add('hidden');
-
-  if (cat === 'food') {
-    clearAllMarkers(); renderFoodMarkers(currentDay);
-    if (foodMarkers.length) {
-      const group = L.featureGroup(foodMarkers);
-      map.fitBounds(group.getBounds().pad(0.25), { duration: 0.8 });
-    }
-  } else if (cat === 'favorites') {
-    clearAllMarkers();
-    const favIds = Object.keys(favState).filter(k => favState[k]);
-    DATA.schedule.filter(r => favIds.includes(scheduleCardId(r)) && r.lat && r.lng).forEach(r => {
-      const m = L.marker([parseFloat(r.lat), parseFloat(r.lng)], { icon: makeIcon('#D85A30', 26, r.day) }).addTo(map);
-      m.on('click', () => showInfo(r.name, r.addr||''));
-      scheduleMarkers.push(m);
-    });
-  } else {
-    clearAllMarkers(); renderScheduleMarkers(currentDay);
-  }
+  const prev=currentCat; currentCat=cat; closePlace();
+  if(prev==='favorites'&&cat!=='favorites') renderAll();
+  document.getElementById('type-filter-bar').classList.toggle('hidden', cat!=='schedule');
+  if(cat==='food'){ clearAllMarkers();renderFoodMarkers(currentDay); if(foodMarkers.length){const g=L.featureGroup(foodMarkers);map.fitBounds(g.getBounds().pad(.25),{duration:.8});} }
+  else if(cat==='favorites'){ clearAllMarkers(); const favIds=Object.keys(favState).filter(k=>favState[k]); DATA.schedule.filter(r=>favIds.includes(scheduleCardId(r))&&r.lat&&r.lng).forEach(r=>{const m=L.marker([parseFloat(r.lat),parseFloat(r.lng)],{icon:makeIcon('#D85A30',26,r.day)}).addTo(map);m.on('click',()=>showInfo(r.name,r.addr||''));scheduleMarkers.push(m);}); }
+  else if(cat==='expenses'){ clearAllMarkers(); }
+  else{ clearAllMarkers();renderScheduleMarkers(currentDay); }
   updateView();
 }
-
-/* ── 타입 필터 ── */
-function selectTypeFilter(type, btn) {
-  document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  currentTypeFilter = type;
-  applyTypeFilter();
+function selectTypeFilter(type,btn){
+  document.querySelectorAll('.type-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active'); currentTypeFilter=type; applyTypeFilter();
 }
-
-function applyTypeFilter() {
-  document.querySelectorAll('.stop-item[data-type]').forEach(item => {
-    const t = item.getAttribute('data-type');
-    if (currentTypeFilter === 'all' || t === currentTypeFilter) {
-      item.classList.remove('type-hidden');
-    } else {
-      item.classList.add('type-hidden');
-    }
+function applyTypeFilter(){
+  document.querySelectorAll('.stop-item[data-type]').forEach(item=>{
+    item.classList.toggle('type-hidden', currentTypeFilter!=='all'&&item.getAttribute('data-type')!==currentTypeFilter);
   });
 }
-
-function updateView() {
-  if (currentCat === 'favorites') {
-    document.getElementById('timeline-content').innerHTML = renderFavoritesView();
-    return;
-  }
-  document.querySelectorAll('.day-section').forEach(ds => {
-    const dayId = ds.getAttribute('data-day');
-    const show = (currentDay === 'all' || currentDay == dayId);
-    ds.classList.toggle('visible', show);
-    if (show) {
-      ds.querySelectorAll('.cat-section').forEach(cs => {
-        cs.classList.toggle('visible', cs.getAttribute('data-cat') === currentCat);
-      });
-    }
+function updateView(){
+  if(currentCat==='favorites'){ document.getElementById('timeline-content').innerHTML=renderFavoritesView(); return; }
+  if(currentCat==='expenses'){ document.getElementById('timeline-content').innerHTML=renderExpensesView(); return; }
+  document.querySelectorAll('.day-section').forEach(ds=>{
+    const dayId=ds.getAttribute('data-day');
+    const show=(currentDay==='all'||currentDay==dayId);
+    ds.classList.toggle('visible',show);
+    if(show) ds.querySelectorAll('.cat-section').forEach(cs=>cs.classList.toggle('visible',cs.getAttribute('data-cat')===currentCat));
   });
-  if (currentCat === 'schedule') applyTypeFilter();
+  if(currentCat==='schedule')applyTypeFilter();
 }
 
-function _pinMapCore(name, coords, addr, el) {
-  if (el) el.classList.add('selected');
-  if (map) {
-    map.flyTo([coords.lat, coords.lng], 16, { duration: 0.85 });
-    if (activeMarker) map.removeLayer(activeMarker);
-    const col = dayColors[currentDay] || '#1A6B5A';
-    activeMarker = L.marker([coords.lat, coords.lng], { icon: makePinIcon(col), zIndexOffset: 1000 })
-      .addTo(map)
-      .bindTooltip(name, { permanent:false, direction:'top', offset:[0,-38] });
-  }
-  showInfo(name, addr);
-}
-
-function showInfo(name, addr) {
-  document.getElementById('place-name').textContent = name;
-  document.getElementById('place-addr').textContent = addr;
+/* ── map pin / info ── */
+function showInfo(name,addr){
+  document.getElementById('place-name').textContent=name;
+  document.getElementById('place-addr').textContent=addr;
   document.getElementById('place-info').classList.add('show');
-  const btn = document.getElementById('gmaps-btn');
-  btn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name+' '+addr)}`;
-  btn.classList.add('show');
+  const b=document.getElementById('gmaps-btn');
+  b.href=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name+' '+addr)}`;
+  b.classList.add('show');
 }
-
-function closePlace() {
+function closePlace(){
   document.getElementById('place-info').classList.remove('show');
   document.getElementById('gmaps-btn').classList.remove('show');
-  document.querySelectorAll('.stop-card, .food-card').forEach(c => c.classList.remove('selected'));
-  if (activeMarker && map) { map.removeLayer(activeMarker); activeMarker = null; }
+  document.querySelectorAll('.stop-card,.food-card').forEach(c=>c.classList.remove('selected'));
+  if(activeMarker&&map){map.removeLayer(activeMarker);activeMarker=null;}
+}
+function _pinMapCore(name,coords,addr,el){
+  if(el)el.classList.add('selected');
+  if(map){ map.flyTo([coords.lat,coords.lng],16,{duration:.85}); if(activeMarker)map.removeLayer(activeMarker); const col=dayColors[currentDay]||'#1A6B5A'; activeMarker=L.marker([coords.lat,coords.lng],{icon:makePinIcon(col),zIndexOffset:1000}).addTo(map).bindTooltip(name,{permanent:false,direction:'top',offset:[0,-38]}); }
+  showInfo(name,addr);
+}
+function pinMap(name,coords,addr,el){
+  if(isMobile()&&!mapExpanded){ mapExpanded=true; document.getElementById('map-panel-el').classList.remove('map-collapsed'); updateToggleUI(); applyTimelineOffset(); setTimeout(()=>{if(map)map.invalidateSize();_pinMapCore(name,coords,addr,el);},300); return; }
+  _pinMapCore(name,coords,addr,el);
 }
 
-function pinMap(name, coords, addr, el) {
-  if (isMobile() && !mapExpanded) {
-    mapExpanded = true;
-    const panel = document.getElementById('map-panel-el');
-    panel.classList.remove('map-collapsed');
-    updateToggleUI();
-    applyTimelineOffset();
-    setTimeout(() => { if (map) map.invalidateSize(); _pinMapCore(name, coords, addr, el); }, 300);
-    return;
-  }
-  _pinMapCore(name, coords, addr, el);
+/* ═══════════════════════════════════════════════
+   MOBILE
+═══════════════════════════════════════════════ */
+const PX={sidebar:44,topbar:44,filter:38,typeFilter:34,map:200,toggle:32};
+const TOP={map:PX.sidebar+PX.topbar+PX.filter+PX.typeFilter,toggle:PX.sidebar+PX.topbar+PX.filter+PX.typeFilter+PX.map,timeline:PX.sidebar+PX.topbar+PX.filter+PX.typeFilter+PX.map+PX.toggle,toggleCollapsed:PX.sidebar+PX.topbar+PX.filter+PX.typeFilter,timelineCollapsed:PX.sidebar+PX.topbar+PX.filter+PX.typeFilter+PX.toggle};
+let mapExpanded=true;
+function isMobile(){ return window.innerWidth<=768; }
+function applyTimelineOffset(){
+  if(!isMobile())return;
+  const tl=document.getElementById('timeline-panel'),btn=document.getElementById('map-toggle-btn');
+  if(tl)tl.style.top=(mapExpanded?TOP.timeline:TOP.timelineCollapsed)+'px';
+  if(btn)btn.style.top=(mapExpanded?TOP.toggle:TOP.toggleCollapsed)+'px';
 }
-
-/* ═══════════════════════════════════════════════════
-   14. 모바일 지도 토글
-═══════════════════════════════════════════════════ */
-const PX = { sidebar:44, topbar:44, filter:38, typeFilter:34, map:200, toggle:32 };
-const TOP = {
-  map:               PX.sidebar + PX.topbar + PX.filter + PX.typeFilter,
-  toggle:            PX.sidebar + PX.topbar + PX.filter + PX.typeFilter + PX.map,
-  timeline:          PX.sidebar + PX.topbar + PX.filter + PX.typeFilter + PX.map + PX.toggle,
-  toggleCollapsed:   PX.sidebar + PX.topbar + PX.filter + PX.typeFilter,
-  timelineCollapsed: PX.sidebar + PX.topbar + PX.filter + PX.typeFilter + PX.toggle,
-};
-
-let mapExpanded = true;
-function isMobile() { return window.innerWidth <= 768; }
-
-function applyTimelineOffset() {
-  if (!isMobile()) return;
-  const tl  = document.getElementById('timeline-panel');
-  const btn = document.getElementById('map-toggle-btn');
-  if (tl)  tl.style.top  = (mapExpanded ? TOP.timeline  : TOP.timelineCollapsed) + 'px';
-  if (btn) btn.style.top = (mapExpanded ? TOP.toggle     : TOP.toggleCollapsed)   + 'px';
+function updateToggleUI(){
+  const btn=document.getElementById('map-toggle-btn'),pill=document.getElementById('map-toggle-pill');
+  if(!btn)return; btn.classList.toggle('collapsed',!mapExpanded);
+  if(pill)pill.textContent=mapExpanded?'접기':'지도 보기';
 }
-
-function updateToggleUI() {
-  const btn  = document.getElementById('map-toggle-btn');
-  const pill = document.getElementById('map-toggle-pill');
-  if (!btn) return;
-  btn.classList.toggle('collapsed', !mapExpanded);
-  if (pill) pill.textContent = mapExpanded ? '접기' : '지도 보기';
+function toggleMap(){
+  mapExpanded=!mapExpanded;
+  const p=document.getElementById('map-panel-el');
+  if(mapExpanded){p.classList.remove('map-collapsed');setTimeout(()=>{if(map)map.invalidateSize();},290);}
+  else p.classList.add('map-collapsed');
+  updateToggleUI(); applyTimelineOffset();
 }
-
-function toggleMap() {
-  mapExpanded = !mapExpanded;
-  const panel = document.getElementById('map-panel-el');
-  if (mapExpanded) {
-    panel.classList.remove('map-collapsed');
-    setTimeout(() => { if (map) map.invalidateSize(); }, 290);
-  } else {
-    panel.classList.add('map-collapsed');
-  }
-  updateToggleUI();
-  applyTimelineOffset();
+function initMobile(){
+  setTimeout(()=>{if(map)map.invalidateSize();},50);
+  if(isMobile()){applyTimelineOffset();updateToggleUI();}
+  else{document.getElementById('timeline-panel').style.top='';document.getElementById('map-toggle-btn').style.top='';}
 }
-
-function initMobile() {
-  setTimeout(() => { if (map) map.invalidateSize(); }, 50);
-  if (isMobile()) {
-    applyTimelineOffset();
-    updateToggleUI();
-  } else {
-    const tl  = document.getElementById('timeline-panel');
-    const btn = document.getElementById('map-toggle-btn');
-    if (tl)  tl.style.top  = '';
-    if (btn) btn.style.top = '';
-  }
-}
-
-window.addEventListener('resize', initMobile);
+window.addEventListener('resize',initMobile);
 </script>
 </body>
 </html>
