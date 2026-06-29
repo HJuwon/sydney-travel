@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sydney Travel Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div class="loading-logo">
+    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+  </div>
+  <div class="loading-title">Sydney Travel Plan</div>
+  <div class="loading-sub" id="loading-msg">데이터 파일을 불러오는 중...</div>
+  <div class="loading-bar-wrap"><div class="loading-bar" id="loading-bar"></div></div>
+</div>
+
+<div id="file-zone">
+  <div class="loading-logo" style="background:var(--teal)">
+    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+  </div>
+  <div class="fz-title">Sydney Travel Plan</div>
+  <div class="fz-sub" id="fz-error-msg">Google Sheets 데이터를 불러오지 못했습니다</div>
+  <button id="load-btn" class="show" onclick="location.reload()" style="display:block;margin-top:8px;">다시 시도</button>
+  <div style="font-size:11px;color:var(--mid);margin-top:12px;">💡 Google Sheets 공유 설정이 <strong>링크가 있는 모든 사용자 (뷰어)</strong>인지 확인해 주세요</div>
+</div>
+
+<!-- 검색 모달 -->
+<div class="search-backdrop" id="search-backdrop" onclick="closeSearch(event)">
+  <div class="search-modal" role="dialog" aria-label="전체 검색">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" id="search-input" placeholder="일정, 맛집, 팁 검색..." autocomplete="off" oninput="doSearch(this.value)">
+      <button class="search-close-btn" onclick="closeSearch()">ESC</button>
+    </div>
+    <div class="search-results" id="search-results">
+      <div class="search-empty">검색어를 입력하세요</div>
+    </div>
+  </div>
+</div>
+
+<!-- 항목 추가 모달 -->
+<div class="add-backdrop" id="add-backdrop" onclick="closeAddModal(event)">
+  <div class="add-modal" role="dialog" aria-label="항목 추가">
+    <div class="add-modal-header">
+      <div class="add-modal-title" id="add-modal-title">항목 추가</div>
+      <button class="add-modal-close" onclick="closeAddModal()" aria-label="닫기">✕</button>
+    </div>
+    <div class="add-modal-body" id="add-modal-body"></div>
+    <div class="add-modal-footer">
+      <div class="add-status" id="add-status"></div>
+      <button class="add-btn-cancel" onclick="closeAddModal()">취소</button>
+      <button class="add-btn-submit" id="add-submit-btn" onclick="submitAdd()">추가</button>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app" style="display:none">
+  <nav class="sidebar">
+    <div class="sidebar-logo" title="Sydney Travel Plan">
+      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    <button class="info-day-btn" id="info-day-btn" onclick="selectInfoTab(this)" title="여행 정보">
+      <span class="d-num">ℹ</span>
+      <span class="d-lbl">정보</span>
+    </button>
+    <div class="sidebar-sep"></div>
+    <button class="day-btn active" onclick="selectDay('all',this)" title="전체 일정">
+      <span class="d-num" style="font-size:13px;font-weight:600;">All</span>
+      <span class="d-lbl">전체</span>
+    </button>
+    <div id="day-buttons-container" style="display:contents"></div>
+    <div class="sidebar-sep"></div>
+    <button class="sb-icon" title="검색 (⌘K)" onclick="openSearch()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <button class="sb-icon" id="dark-toggle-btn" title="다크모드 토글" onclick="toggleDarkMode()">
+      <svg id="dark-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+    <div class="sb-icon" title="설정">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </div>
+  </nav>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-title" id="topbar-title">Sydney <em>Travel Plan</em></div>
+      <div class="tb-time" id="sydney-clock">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="sydney-time-text">--:--</span>
+        <span style="opacity:0.7">SYD</span>
+      </div>
+      <div class="tb-weather" id="weather-badge" onclick="toggleWeatherPopup(event)">
+        <span id="weather-icon-now">🌤</span>
+        <span id="weather-temp-now">--°C</span>
+        <div class="weather-popup" id="weather-popup">
+          <div class="weather-title">Sydney 주간 날씨</div>
+          <div class="weather-days" id="weather-days-row">
+            <div class="weather-day-card"><div style="font-size:10px;color:var(--mid)">불러오는 중...</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tb-badge" id="topbar-badge-days">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        7박 · 8일
+      </div>
+    </header>
+
+    <div class="filter-bar" id="main-filter-bar">
+      <button class="f-btn active" onclick="selectCat('schedule',this)">
+        <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        전체 일정
+      </button>
+      <button class="f-btn" onclick="selectCat('food',this)">
+        <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        맛집
+      </button>
+      <button class="f-btn" onclick="selectCat('sights',this)">
+        <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        관광지
+      </button>
+      <button class="f-btn" onclick="selectCat('tips',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        여행 팁
+      </button>
+      <button class="f-btn" id="fav-filter-btn" onclick="selectCat('favorites',this)">
+        ❤️ 찜 목록
+      </button>
+    </div>
+
+    <div class="type-filter-bar" id="type-filter-bar">
+      <button class="type-chip active" onclick="selectTypeFilter('all',this)">전체</button>
+      <button class="type-chip" onclick="selectTypeFilter('sight',this)">🔵 관광</button>
+      <button class="type-chip" onclick="selectTypeFilter('food',this)">🔴 음식</button>
+      <button class="type-chip" onclick="selectTypeFilter('coffee',this)">🟡 카페</button>
+      <button class="type-chip" onclick="selectTypeFilter('activity',this)">🟣 액티비티</button>
+      <button class="type-chip" onclick="selectTypeFilter('shop',this)">🟢 쇼핑</button>
+      <button class="type-chip" onclick="selectTypeFilter('hotel',this)">🏨 숙소</button>
+      <button class="f-btn" id="route-toggle-btn" onclick="toggleRoute(this)">🗺 이동 경로선</button>
+    </div>
+
+    <div class="filter-bar" id="info-filter-bar" style="display:none;">
+      <button class="f-btn active" onclick="selectInfoCat('flight',this)">✈️ 항공</button>
+      <button class="f-btn" onclick="selectInfoCat('exchange',this)">💱 환율</button>
+      <button class="f-btn" onclick="selectInfoCat('hotel',this)">🏨 숙소</button>
+      <button class="f-btn" onclick="selectInfoCat('transport',this)">🚌 교통</button>
+      <button class="f-btn" onclick="selectInfoCat('budget',this)">💰 예산</button>
+      <button class="f-btn" onclick="selectInfoCat('checklist',this)">📋 체크리스트</button>
+    </div>
+
+    <div class="content-area" id="content-area">
+      <div class="timeline-panel" id="timeline-panel">
+        <div id="timeline-content"></div>
+      </div>
+      <div class="info-overlay" id="info-overlay">
+        <div id="info-content"></div>
+      </div>
+      <div class="map-panel" id="map-panel-el">
+        <div id="leaflet-map"></div>
+        <a class="map-gmaps-btn" id="gmaps-btn" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Google Maps
+        </a>
+        <div class="map-place-info" id="place-info">
+          <button class="mpi-close" onclick="closePlace()">✕</button>
+          <div class="mpi-name" id="place-name"></div>
+          <div class="mpi-addr" id="place-addr"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="map-toggle-btn" id="map-toggle-btn" onclick="toggleMap()">
+  <svg class="map-toggle-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+  <span class="map-toggle-label">지도</span>
+  <span class="map-toggle-pill" id="map-toggle-pill">접기</span>
+  <svg class="chevron" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- ── 스크립트 로드 순서 (전역 스코프 공유, classic scripts) ── -->
+<script src="config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/memo.js"></script>
+<script src="js/map.js"></script>
+<script src="js/render.js"></script>
+<script src="js/add.js"></script>
+<script src="js/search.js"></script>
+<script src="js/info.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
