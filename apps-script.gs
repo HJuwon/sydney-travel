@@ -115,7 +115,9 @@ function updateItem(ss, data) {
   if (!sheet) {
     return _json({ ok: false, error: 'sheet not found: ' + sheetName });
   }
-  const values = sheet.getDataRange().getValues();
+  const range   = sheet.getDataRange();
+  const values  = range.getValues();         // 원본 타입 보존 (쓰기용)
+  const display = range.getDisplayValues();  // 화면 표시 문자열 (매칭용 — CSV와 동일)
   const headers = values[0].map(function (h) { return String(h).trim(); });
   const matchKeys = Object.keys(match);
 
@@ -123,7 +125,9 @@ function updateItem(ss, data) {
     var ok = true;
     for (var k = 0; k < matchKeys.length; k++) {
       var col = headers.indexOf(matchKeys[k]);
-      if (col === -1 || String(values[r][col]).trim() !== String(match[matchKeys[k]]).trim()) {
+      // 시간/숫자 등 서식이 적용된 셀은 getValues()가 Date/number를 돌려주므로
+      // 클라이언트(CSV 표시값)와 비교하려면 getDisplayValues()를 써야 한다.
+      if (col === -1 || String(display[r][col]).trim() !== String(match[matchKeys[k]]).trim()) {
         ok = false; break;
       }
     }
