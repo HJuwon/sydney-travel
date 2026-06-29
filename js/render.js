@@ -47,6 +47,11 @@ function addBtnHtml(cat, day, label) {
   return `<button class="add-item-btn" onclick="openAddModal('${cat}',${day})">${ADD_ICON} ${label}</button>`;
 }
 
+// 카드 수정 버튼 (idx = DATA[cat] 내 절대 인덱스)
+function editBtnHtml(cat, idx) {
+  return `<button class="edit-btn" onclick="openEditModal('${cat}',${idx},event)" title="수정">✏️</button>`;
+}
+
 /* ── 일정 렌더링 ── */
 function renderSchedule(day) {
   const rows = DATA.schedule.filter(r => Number(r.day) === day);
@@ -65,12 +70,14 @@ function renderSchedule(day) {
     const addr = row.addr || '';
     const name = row.name || '';
     const id = scheduleCardId(row);
+    const idx = DATA.schedule.indexOf(row);
     const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
 
     html += `<div class="stop-item" data-type="${type}">
       <div class="stop-dot type-${type}">${icon}</div>
       <div class="stop-card" data-card-id="${id}" ${pinCall}>
         ${favBtnHtml(id)}
+        ${editBtnHtml('schedule', idx)}
         <div class="sc-time">${row.time || ''}</div>
         <div class="sc-name">${name}</div>
         <div class="sc-desc">${row.description || ''}</div>
@@ -103,10 +110,12 @@ function renderFoodSection(day) {
     const addr = r.addr || '';
     const name = r.name || '';
     const id = foodCardId(r);
+    const idx = DATA.food.indexOf(r);
     const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
     const cursorStyle = hasCoords ? 'cursor:pointer;' : '';
     html += `<div class="food-card" data-card-id="${id}" ${pinCall} style="${cursorStyle}">
       ${favBtnHtml(id)}
+      ${editBtnHtml('food', idx)}
       <div class="food-emoji" style="background:#${r.bg_color || 'F5F5F5'}">${r.emoji || '🍽️'}</div>
       <div class="food-body">
         <div class="food-name">${name}${hasCoords?'<span style="font-size:9px;color:#D85A30;font-weight:600;margin-left:3px;">📍</span>':''}</div>
@@ -127,7 +136,9 @@ function renderSightSection(day) {
   let html = `<div class="cat-section" data-cat="sights">`;
   html += `<div class="day-heading"><h2>Day ${day} · 주요 관광지</h2></div>`;
   rows.forEach(r => {
+    const idx = DATA.sights.indexOf(r);
     html += `<div class="sight-card">
+      ${editBtnHtml('sights', idx)}
       <div class="sight-icon">${r.icon || '📍'}</div>
       <div><div class="sight-title">${r.title}</div><div class="sight-text">${r.description || ''}</div></div>
     </div>`;
@@ -143,7 +154,9 @@ function renderTipsSection(day) {
   html += `<div class="day-heading"><h2>Day ${day} · 여행 팁</h2></div>`;
   html += `<div class="tips-list">`;
   rows.forEach(r => {
+    const idx = DATA.tips.indexOf(r);
     html += `<div class="tip-card">
+      ${editBtnHtml('tips', idx)}
       <div class="tip-icon">${r.icon || '💡'}</div>
       <div><div class="tip-title">${r.title}</div><div class="tip-text">${r.content || ''}</div></div>
     </div>`;

@@ -312,6 +312,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .fav-btn.active { animation: favPop 0.25s ease; }
 @keyframes favPop { 0%{transform:scale(1)} 50%{transform:scale(1.35)} 100%{transform:scale(1)} }
 
+/* ── 카드 수정 버튼 ── */
+.edit-btn {
+  position: absolute; top: 8px; right: 34px;
+  width: 24px; height: 24px; border-radius: 50%;
+  border: none; background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; line-height: 1; opacity: 0.5;
+  transition: opacity 0.15s, transform 0.15s, background 0.15s;
+  z-index: 2;
+}
+.edit-btn:hover { opacity: 1; transform: scale(1.15); background: var(--gray-light); }
+/* 찜 버튼이 없는 카드는 오른쪽 끝에 배치 */
+.sight-card, .tip-card { position: relative; }
+.sight-card .edit-btn, .tip-card .edit-btn { right: 8px; }
+
 /* ── 메모 영역 ── */
 .memo-area {
   margin-top: 7px;
@@ -353,7 +368,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .memo-save-status.error  { color: var(--coral); }
 
 .sc-time { font-size: 10px; font-weight: 600; color: var(--mid); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
-.sc-name { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 3px; line-height: 1.35; padding-right: 20px; }
+.sc-name { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 3px; line-height: 1.35; padding-right: 46px; }
 .sc-desc { font-size: 11.5px; color: var(--mid); line-height: 1.5; }
 .sc-tags { display: flex; gap: 4px; margin-top: 7px; flex-wrap: wrap; }
 .sc-tag { font-size: 10px; padding: 2px 8px; border-radius: 100px; font-weight: 500; }

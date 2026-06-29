@@ -36,6 +36,9 @@ function doPost(e) {
     if (action === 'addItem') {
       return addItem(ss, data);
     }
+    if (action === 'updateItem') {
+      return updateItem(ss, data);
+    }
     // 기본: 메모 저장 (구버전 호환)
     return saveMemo(ss, data);
   } catch (err) {
@@ -97,4 +100,43 @@ function addItem(ss, data) {
   });
   sheet.appendRow(newRow);
   return _json({ ok: true, added: true, sheet: sheetName });
+}
+
+/* ── 항목 수정 (match 로 행을 찾아 row 값으로 덮어씀) ── */
+function updateItem(ss, data) {
+  const sheetName = data.sheet;
+  const incoming = data.row || {};
+  const match = data.match || {};
+  const allowed = ['schedule', 'food', 'tips', 'sights'];
+  if (allowed.indexOf(sheetName) === -1) {
+    return _json({ ok: false, error: 'invalid sheet: ' + sheetName });
+  }
+  const sheet = ss.getSheetByName(sheetName);
+  if (!sheet) {
+    return _json({ ok: false, error: 'sheet not found: ' + sheetName });
+  }
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0].map(function (h) { return String(h).trim(); });
+  const matchKeys = Object.keys(match);
+
+  for (var r = 1; r < values.length; r++) {
+    var ok = true;
+    for (var k = 0; k < matchKeys.length; k++) {
+      var col = headers.indexOf(matchKeys[k]);
+      if (col === -1 || String(values[r][col]).trim() !== String(match[matchKeys[k]]).trim()) {
+        ok = false; break;
+      }
+    }
+    if (!ok) continue;
+    // 일치하는 행 발견 → incoming 에 있는 헤더만 덮어쓰기
+    for (var c = 0; c < headers.length; c++) {
+      var h = headers[c];
+      if (incoming[h] !== undefined && incoming[h] !== null) {
+        values[r][c] = incoming[h];
+      }
+    }
+    sheet.getRange(r + 1, 1, 1, headers.length).setValues([values[r]]);
+    return _json({ ok: true, updated: true, sheet: sheetName, row: r + 1 });
+  }
+  return _json({ ok: true, updated: false, error: 'matching row not found' });
 }

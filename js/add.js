@@ -1,15 +1,16 @@
 /* ═══════════════════════════════════════════════════
-   add.js — 앱 안에서 일정/맛집/팁/관광지 직접 추가
+   add.js — 앱 안에서 일정/맛집/팁/관광지 추가 + 수정
    ─────────────────────────────────────────────────
-   입력값을 Apps Script(GAS_URL)로 POST하여 해당 시트에 행을 추가하고,
-   화면에도 즉시 반영합니다. (GAS는 apps-script.gs 최신 코드로 배포 필요)
+   • 추가: Apps Script(addItem)로 시트에 행 append
+   • 수정: Apps Script(updateItem)로 기존 행을 match 후 덮어씀
+   둘 다 화면에 즉시 반영합니다. (GAS는 apps-script.gs 최신 코드로 배포 필요)
 ═══════════════════════════════════════════════════ */
 
 // 카테고리별 입력 필드 정의 (key 는 시트의 헤더명과 정확히 일치해야 함)
 const ADD_FIELDS = {
   schedule: [
-    { key:'day',   label:'Day (일차)', type:'number', required:true, half:true },
-    { key:'order', label:'순서',       type:'number', half:true },
+    { key:'day',   label:'Day (일차)', type:'number', required:true, half:true, min:0 },
+    { key:'order', label:'순서',       type:'number', half:true, min:0 },
     { key:'time',  label:'시간',        placeholder:'09:00', half:true },
     { key:'type',  label:'유형',        type:'select', half:true,
       options:['sight','food','coffee','shop','activity','hotel','transit'] },
@@ -25,7 +26,7 @@ const ADD_FIELDS = {
     { key:'title1',label:'Day 제목 (새 Day일 때)', placeholder:'하버 브릿지', half:true },
   ],
   food: [
-    { key:'day',   label:'Day (일차)', type:'number', required:true, half:true },
+    { key:'day',   label:'Day (일차)', type:'number', required:true, half:true, min:0 },
     { key:'emoji', label:'이모지',      placeholder:'🍜', half:true },
     { key:'name',  label:'맛집명',      required:true },
     { key:'description', label:'설명',  type:'textarea' },
@@ -36,13 +37,13 @@ const ADD_FIELDS = {
     { key:'addr',  label:'주소' },
   ],
   tips: [
-    { key:'day',   label:'Day (일차)', type:'number', required:true, half:true },
+    { key:'day',   label:'Day (일차)', type:'number', required:true, half:true, min:0 },
     { key:'icon',  label:'아이콘 (이모지)', placeholder:'💡', half:true },
     { key:'title', label:'제목',        required:true },
     { key:'content', label:'내용',       type:'textarea' },
   ],
   sights: [
-    { key:'day',   label:'Day (일차)', type:'number', required:true, half:true },
+    { key:'day',   label:'Day (일차)', type:'number', required:true, half:true, min:0 },
     { key:'icon',  label:'아이콘 (이모지)', placeholder:'📍', half:true },
     { key:'title', label:'제목',        required:true },
     { key:'description', label:'설명',   type:'textarea' },
@@ -50,41 +51,68 @@ const ADD_FIELDS = {
 };
 
 const ADD_META = {
-  schedule: { sheet:'schedule', title:'일정',   emoji:'📅' },
-  food:     { sheet:'food',     title:'맛집',   emoji:'🍽️' },
-  tips:     { sheet:'tips',     title:'여행 팁', emoji:'💡' },
-  sights:   { sheet:'sights',   title:'관광지', emoji:'🗽' },
+  schedule: { sheet:'schedule', title:'일정',   emoji:'📅', matchKeys:['day','name','time'] },
+  food:     { sheet:'food',     title:'맛집',   emoji:'🍽️', matchKeys:['day','name'] },
+  tips:     { sheet:'tips',     title:'여행 팁', emoji:'💡', matchKeys:['day','title'] },
+  sights:   { sheet:'sights',   title:'관광지', emoji:'🗽', matchKeys:['day','title'] },
 };
 
 let _addCat = null;
+let _addMode = 'add';   // 'add' | 'edit'
+let _editIdx = -1;      // 수정 시 DATA[cat] 내 절대 인덱스
+let _editMatch = null;  // 수정 시 원본 행을 찾기 위한 match 객체
 
-function openAddModal(cat, day) {
-  _addCat = cat;
-  const meta = ADD_META[cat];
+/* HTML 이스케이프 */
+function _escAttr(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+function _escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* 모달 폼 빌드 (추가/수정 공용) — values: 미리 채울 값 객체 */
+function buildAddForm(cat, values) {
   const fields = ADD_FIELDS[cat];
-  if (!meta || !fields) return;
-
-  document.getElementById('add-modal-title').innerHTML = `${meta.emoji} <em>${meta.title}</em> 추가`;
-
   let html = '';
   let i = 0;
   while (i < fields.length) {
     const f = fields[i];
     if (f.half && fields[i+1] && fields[i+1].half) {
-      html += `<div class="add-field-row">${fieldHtml(f, day)}${fieldHtml(fields[i+1], day)}</div>`;
+      html += `<div class="add-field-row">${fieldHtml(f, values)}${fieldHtml(fields[i+1], values)}</div>`;
       i += 2;
     } else {
-      html += fieldHtml(f, day);
+      html += fieldHtml(f, values);
       i += 1;
     }
   }
   document.getElementById('add-modal-body').innerHTML = html;
+}
 
+function fieldHtml(f, values) {
+  const reqMark = f.required ? '<span class="req">*</span>' : '';
+  const v = (values && values[f.key] !== undefined && values[f.key] !== null) ? String(values[f.key]) : '';
+  const minAttr = (f.min !== undefined) ? ` min="${f.min}"` : '';
+  let control;
+  if (f.type === 'textarea') {
+    control = `<textarea name="${f.key}" placeholder="${f.placeholder||''}">${_escHtml(v)}</textarea>`;
+  } else if (f.type === 'select') {
+    const opts = f.options.map(o => `<option value="${o}"${o === v ? ' selected' : ''}>${o}</option>`).join('');
+    control = `<select name="${f.key}">${opts}</select>`;
+  } else {
+    const type = f.type === 'number' ? 'number' : 'text';
+    control = `<input type="${type}" name="${f.key}"${minAttr} placeholder="${f.placeholder||''}" value="${_escAttr(v)}">`;
+  }
+  return `<div class="add-field">
+    <label class="add-field-label">${f.label}${reqMark}</label>
+    ${control}
+  </div>`;
+}
+
+function _openModal() {
   const status = document.getElementById('add-status');
   status.textContent = '';
   status.className = 'add-status';
   document.getElementById('add-submit-btn').disabled = false;
-
   document.getElementById('add-backdrop').classList.add('show');
   setTimeout(() => {
     const first = document.querySelector('#add-modal-body input, #add-modal-body select, #add-modal-body textarea');
@@ -92,23 +120,35 @@ function openAddModal(cat, day) {
   }, 60);
 }
 
-function fieldHtml(f, day) {
-  const reqMark = f.required ? '<span class="req">*</span>' : '';
-  const prefill = (f.key === 'day' && day !== undefined && day !== null) ? String(day) : '';
-  let control;
-  if (f.type === 'textarea') {
-    control = `<textarea name="${f.key}" placeholder="${f.placeholder||''}"></textarea>`;
-  } else if (f.type === 'select') {
-    const opts = f.options.map(o => `<option value="${o}">${o}</option>`).join('');
-    control = `<select name="${f.key}">${opts}</select>`;
-  } else {
-    const type = f.type === 'number' ? 'number' : 'text';
-    control = `<input type="${type}" name="${f.key}" placeholder="${f.placeholder||''}" value="${prefill}">`;
-  }
-  return `<div class="add-field">
-    <label class="add-field-label">${f.label}${reqMark}</label>
-    ${control}
-  </div>`;
+/* 추가 모달 */
+function openAddModal(cat, day) {
+  const meta = ADD_META[cat];
+  if (!meta || !ADD_FIELDS[cat]) return;
+  _addCat = cat; _addMode = 'add'; _editIdx = -1; _editMatch = null;
+
+  document.getElementById('add-modal-title').innerHTML = `${meta.emoji} <em>${meta.title}</em> 추가`;
+  document.getElementById('add-submit-btn').textContent = '추가';
+  const prefill = (day !== undefined && day !== null) ? { day: String(day) } : {};
+  buildAddForm(cat, prefill);
+  _openModal();
+}
+
+/* 수정 모달 — idx: DATA[cat] 내 절대 인덱스 */
+function openEditModal(cat, idx, e) {
+  if (e) e.stopPropagation();
+  const meta = ADD_META[cat];
+  const orig = (DATA[cat] || [])[idx];
+  if (!meta || !orig) return;
+  _addCat = cat; _addMode = 'edit'; _editIdx = idx;
+
+  // 원본 행을 찾기 위한 match (수정 전 값 기준)
+  _editMatch = {};
+  meta.matchKeys.forEach(k => { _editMatch[k] = (orig[k] !== undefined && orig[k] !== null) ? orig[k] : ''; });
+
+  document.getElementById('add-modal-title').innerHTML = `${meta.emoji} <em>${meta.title}</em> 수정`;
+  document.getElementById('add-submit-btn').textContent = '저장';
+  buildAddForm(cat, orig);
+  _openModal();
 }
 
 function closeAddModal(e) {
@@ -122,6 +162,7 @@ async function submitAdd() {
   const fields = ADD_FIELDS[cat];
   const status = document.getElementById('add-status');
   const submitBtn = document.getElementById('add-submit-btn');
+  const isEdit = (_addMode === 'edit');
 
   // 값 수집
   const row = {};
@@ -142,63 +183,90 @@ async function submitAdd() {
   status.className = 'add-status saving';
   status.textContent = '저장 중...';
 
+  // GAS 미설정 → 로컬에만 반영
   if (!GAS_URL) {
-    // 시트 저장 불가 → 로컬에만 추가
-    applyNewRowLocally(cat, row);
+    if (isEdit) applyEditLocally(cat, _editIdx, row);
+    else applyNewRowLocally(cat, row);
     status.className = 'add-status error';
-    status.textContent = '⚠ Apps Script URL이 없어 시트에 저장되지 않았습니다 (화면에만 추가됨).';
+    status.textContent = '⚠ Apps Script URL이 없어 시트에 저장되지 않았습니다 (화면에만 반영됨).';
     submitBtn.disabled = false;
     setTimeout(() => document.getElementById('add-backdrop').classList.remove('show'), 1200);
     return;
   }
 
+  const payload = isEdit
+    ? { action: 'updateItem', sheet: meta.sheet, match: _editMatch, row }
+    : { action: 'addItem',    sheet: meta.sheet, row };
+
   try {
     const res = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'addItem', sheet: meta.sheet, row })
+      body: JSON.stringify(payload)
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     let data = {};
     try { data = await res.json(); } catch(_) {}
 
-    if (!data.added) {
-      // 구버전 GAS(메모만 처리)일 가능성
-      status.className = 'add-status error';
-      status.textContent = '⚠ 시트 추가 응답이 없습니다. Apps Script를 최신 apps-script.gs로 재배포하세요.';
+    if (isEdit) {
+      if (!data.updated) {
+        status.className = 'add-status error';
+        status.textContent = data.added === undefined && data.ok
+          ? '⚠ 수정할 행을 못 찾았습니다 (Apps Script 재배포 또는 원본 변경 확인).'
+          : '⚠ 수정 응답이 없습니다. Apps Script를 최신 apps-script.gs로 재배포하세요.';
+        applyEditLocally(cat, _editIdx, row);
+        submitBtn.disabled = false;
+        return;
+      }
+      applyEditLocally(cat, _editIdx, row);
+      status.className = 'add-status';
+      status.textContent = '✓ 수정되었습니다';
+    } else {
+      if (!data.added) {
+        status.className = 'add-status error';
+        status.textContent = '⚠ 시트 추가 응답이 없습니다. Apps Script를 최신 apps-script.gs로 재배포하세요.';
+        applyNewRowLocally(cat, row);
+        submitBtn.disabled = false;
+        return;
+      }
       applyNewRowLocally(cat, row);
-      submitBtn.disabled = false;
-      return;
+      status.className = 'add-status';
+      status.textContent = '✓ 추가되었습니다';
     }
-
-    // 성공 → 화면 반영
-    applyNewRowLocally(cat, row);
-    status.className = 'add-status';
-    status.textContent = '✓ 추가되었습니다';
     setTimeout(() => document.getElementById('add-backdrop').classList.remove('show'), 800);
   } catch(e) {
     status.className = 'add-status error';
-    status.textContent = '⚠ 저장 실패: ' + e.message + ' (화면에만 추가됨)';
-    applyNewRowLocally(cat, row);
+    status.textContent = '⚠ 저장 실패: ' + e.message + ' (화면에만 반영됨)';
+    if (isEdit) applyEditLocally(cat, _editIdx, row);
+    else applyNewRowLocally(cat, row);
     submitBtn.disabled = false;
   }
 }
 
-// 새 행을 DATA에 추가하고 현재 화면을 다시 그림
+/* 새 행을 DATA에 추가하고 현재 화면을 다시 그림 */
 function applyNewRowLocally(cat, row) {
   DATA[cat] = DATA[cat] || [];
   DATA[cat].push({ ...row });
+  _refreshTimeline();
+}
 
-  renderAll();          // 타임라인/일자 버튼 재구성
-  setActiveDayBtn();    // 활성 일자 버튼 복원
-  updateView();         // 현재 카테고리/일자 보이기
+/* 기존 행 수정 반영 */
+function applyEditLocally(cat, idx, row) {
+  if (!DATA[cat] || !DATA[cat][idx]) return;
+  DATA[cat][idx] = { ...DATA[cat][idx], ...row };
+  _refreshTimeline();
+}
 
-  // 마커 갱신
+/* 타임라인/마커 재구성 (현재 보기 유지) */
+function _refreshTimeline() {
+  renderAll();
+  setActiveDayBtn();
+  updateView();
   if (currentCat === 'food') { clearAllMarkers(); renderFoodMarkers(currentDay); }
   else if (currentCat !== 'favorites') { clearAllMarkers(); renderScheduleMarkers(currentDay); }
 }
 
-// renderAll() 이후 currentDay 에 맞는 일자 버튼 활성화 복원
+/* renderAll() 이후 currentDay 에 맞는 일자 버튼 활성화 복원 */
 function setActiveDayBtn() {
   if (infoTabActive) return;
   document.querySelectorAll('.day-btn').forEach(b => {
