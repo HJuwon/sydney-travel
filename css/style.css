@@ -327,6 +327,40 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
 .sight-card, .tip-card { position: relative; }
 .sight-card .edit-btn, .tip-card .edit-btn { right: 8px; }
 
+/* ── 일정 카드 드래그 핸들 (순서 변경) ── */
+.drag-handle {
+  position: absolute; top: 8px; right: 60px;
+  width: 24px; height: 24px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: grab; opacity: 0.4; touch-action: none; z-index: 2;
+  transition: opacity 0.15s, background 0.15s;
+}
+.drag-handle:hover { opacity: 1; background: var(--gray-light); }
+.drag-handle:active { cursor: grabbing; }
+.drag-handle svg { width: 16px; height: 16px; fill: var(--mid); stroke: none; }
+/* 세 번째 아이콘(핸들)이 시간/장소명 글씨와 겹치지 않도록 여백 확보 */
+.stop-card .sc-time { padding-right: 84px; }
+.stop-card .sc-name { padding-right: 84px; }
+
+/* 드래그 중 시각 효과 */
+.stop-item.dragging { opacity: 0.55; }
+.stop-item.dragging .stop-card { border-color: var(--teal); box-shadow: 0 8px 22px rgba(0,0,0,0.18); }
+body.dragging-active, body.dragging-active .stop-card { cursor: grabbing !important; user-select: none; }
+
+/* 순서 저장 토스트 */
+.reorder-toast {
+  position: fixed; left: 50%; bottom: 24px;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--dark); color: #fff;
+  padding: 9px 16px; border-radius: 100px;
+  font-size: 12px; font-weight: 600; white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25); z-index: 9999;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.reorder-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.reorder-toast.err { background: #C0392B; }
+
 /* ── 메모 영역 ── */
 .memo-area {
   margin-top: 7px;

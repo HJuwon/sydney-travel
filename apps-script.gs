@@ -39,6 +39,9 @@ function doPost(e) {
     if (action === 'updateItem') {
       return updateItem(ss, data);
     }
+    if (action === 'reorderDay') {
+      return reorderDay(ss, data);
+    }
     // 기본: 메모 저장 (구버전 호환)
     return saveMemo(ss, data);
   } catch (err) {
@@ -143,4 +146,54 @@ function updateItem(ss, data) {
     return _json({ ok: true, updated: true, sheet: sheetName, row: r + 1 });
   }
   return _json({ ok: true, updated: false, error: 'matching row not found' });
+}
+
+/* ── 같은 Day 내 순서 변경 (행 '내용'을 새 순서대로 물리 행에 다시 기록) ──
+   data.order : 해당 Day 행들의 '기존 상대 인덱스'를 새 순서로 나열한 순열
+                예) 3개 행이 [A,B,C] 인데 [A,C,B] 로 바꾸려면 order = [0,2,1] */
+function reorderDay(ss, data) {
+  const sheetName = data.sheet;
+  const day = data.day;
+  const order = data.order || [];
+  const allowed = ['schedule', 'food', 'tips', 'sights'];
+  if (allowed.indexOf(sheetName) === -1) {
+    return _json({ ok: false, error: 'invalid sheet: ' + sheetName });
+  }
+  const sheet = ss.getSheetByName(sheetName);
+  if (!sheet) {
+    return _json({ ok: false, error: 'sheet not found: ' + sheetName });
+  }
+  const range = sheet.getDataRange();
+  const values = range.getValues();   // 원본 타입(Date 등) 그대로 읽어 그대로 다시 씀 → 손상 없음
+  const headers = values[0].map(function (h) { return String(h).trim(); });
+  const dayCol = headers.indexOf('day');
+  if (dayCol === -1) {
+    return _json({ ok: false, reordered: false, error: 'no day column' });
+  }
+  // 해당 Day 의 물리 행을 시트 순서대로 수집
+  const dayRows = [];   // { rowNum: 1-based, vals: [...] }
+  for (var r = 1; r < values.length; r++) {
+    if (String(values[r][dayCol]).trim() === String(day).trim()) {
+      dayRows.push({ rowNum: r + 1, vals: values[r] });
+    }
+  }
+  // 순열 검증 (길이 + 0..n-1 중복 없는지)
+  if (order.length !== dayRows.length) {
+    return _json({ ok: false, reordered: false, error: 'order length mismatch',
+      expected: dayRows.length, got: order.length });
+  }
+  var seen = {};
+  for (var i = 0; i < order.length; i++) {
+    var p = Number(order[i]);
+    if (isNaN(p) || p < 0 || p >= dayRows.length || seen[p]) {
+      return _json({ ok: false, reordered: false, error: 'invalid order permutation' });
+    }
+    seen[p] = true;
+  }
+  // 새 순서대로 내용을 같은 물리 행 슬롯에 다시 기록
+  var newVals = order.map(function (origIdx) { return dayRows[origIdx].vals; });
+  for (var j = 0; j < dayRows.length; j++) {
+    sheet.getRange(dayRows[j].rowNum, 1, 1, headers.length).setValues([newVals[j]]);
+  }
+  return _json({ ok: true, reordered: true, sheet: sheetName, day: day, count: dayRows.length });
 }

@@ -52,6 +52,12 @@ function editBtnHtml(cat, idx) {
   return `<button class="edit-btn" onclick="openEditModal('${cat}',${idx},event)" title="수정">✏️</button>`;
 }
 
+// 드래그 핸들 (일정 카드 순서 변경용 — sort.js 의 startCardDrag 호출)
+const GRIP_ICON = `<svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg>`;
+function dragHandleHtml() {
+  return `<div class="drag-handle" title="드래그하여 순서 변경" onpointerdown="startCardDrag(event,this)">${GRIP_ICON}</div>`;
+}
+
 /* ── 일정 렌더링 ── */
 function renderSchedule(day) {
   const rows = DATA.schedule.filter(r => Number(r.day) === day);
@@ -60,7 +66,7 @@ function renderSchedule(day) {
   let html = `<div class="day-section visible" id="day-${day}" data-day="${day}">`;
   html += `<div class="cat-section visible" data-cat="schedule">`;
   html += `<div class="day-heading"><h2>Day ${day} · ${dayTitle}</h2><p>${dateStr}</p></div>`;
-  rows.forEach((row) => {
+  rows.forEach((row, ri) => {
     const type = (row.type || 'sight').trim();
     const icon = typeIcons[type] || typeIcons.sight;
     const tags = (row.tags || '').split(',').map(t => t.trim()).filter(Boolean);
@@ -73,11 +79,12 @@ function renderSchedule(day) {
     const idx = DATA.schedule.indexOf(row);
     const pinCall = hasCoords ? `onclick="pinMap('${name.replace(/'/g,"\\'")}',{lat:${lat},lng:${lng}},'${addr.replace(/'/g,"\\'")}',this)"` : '';
 
-    html += `<div class="stop-item" data-type="${type}">
+    html += `<div class="stop-item" data-type="${type}" data-day="${day}" data-rel="${ri}">
       <div class="stop-dot type-${type}">${icon}</div>
       <div class="stop-card" data-card-id="${id}" ${pinCall}>
         ${favBtnHtml(id)}
         ${editBtnHtml('schedule', idx)}
+        ${dragHandleHtml()}
         <div class="sc-time">${row.time || ''}</div>
         <div class="sc-name">${name}</div>
         <div class="sc-desc">${row.description || ''}</div>
